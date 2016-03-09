@@ -4,28 +4,25 @@ using namespace std;
 
 bool Find(vector<vector<int> > array, int target)
 {
-	bool result = false;
-	// get array's row and column size
+	// get the size of array's row and column
 	int total_row = array.size();
 	int total_column = array[0].size();
-	int row = 0, column = total_column - 1;  // top-right position
-	// continue while not find target number and position is valid
-	while(result != true && row < total_row && column >= 0)
+	for(int row = 0, column = total_column - 1; row < total_row && column >= 0; )
 	{
-		if(array[row][column] == target)  // find
+		if(array[row][column] == target)  // find the target
 		{
-			result = true;
+			return true;
 		}
-		else if(array[row][column] < target)  // delete this row
+		if(array[row][column] > target)  // move to left by one position
 		{
-			row++;
+			--column;
 		}
-		else if(array[row][column] > target)  // delete this column
+		else  // move down by one position
 		{
-			column--;
+			++row;
 		}
 	}
-	return result;
+	return false;
 }
 
 int main()

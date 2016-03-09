@@ -3,39 +3,33 @@ using namespace std;
 
 void ReplaceSpace(char str[], int length)  // length is the total  size of str array
 {
-	if(str == NULL || length <= 0)  // check null pointer
+	// size is the number of str's characters; space is the number of str's spaces
+	int size = 0, space = 0;
+	for(; str[size]; ++size)  // exit when str[size] == '\0', i.e., str[size] == 0
 	{
-		return;
-	}
-	int old_length = 0, new_length = 0, space_number = 0;
-	// traverse the str array to get old length and space number
-	for(int index = 0; str[index] != 0; index++)
-	{
-		old_length++;
-		if(str[index] == ' ')
+		if(str[size] == ' ')
 		{
-			space_number++;
+			++space;
 		}
 	}
-	old_length++;  // don't forget the '\0'
-	new_length = old_length + 2 * space_number;  // change from " " to "%20"
-	if(new_length > length)
+	// old_index/new_index points to the end of old/new string
+	// DON'T forget the last null character, it marks the end of string,
+	// otherwise old_index = size - 1.
+	int old_index = size, new_index = size + space * 2;
+	// when the two indexes are equal, there is no need to move character.
+	while(old_index != new_index)
 	{
-		return;
-	}
-	int old_end = old_length - 1, new_end = new_length - 1;  // two indexes to manipulate array
-	for(; old_end >= 0; old_end--)
-	{
-		if(str[old_end] != ' ')  // not space: copy character
+		if(str[old_index] == ' ')  // ' ' -> "%20"
 		{
-			str[new_end--] = str[old_end];
+			str[new_index--] = '0';
+			str[new_index--] = '2';
+			str[new_index--] = '%';
 		}
-		else  // space: change from " " to "%20"
+		else  // copy
 		{
-			str[new_end--] = '0';
-			str[new_end--] = '2';
-			str[new_end--] = '%';
+			str[new_index--] = str[old_index];
 		}
+		--old_index;
 	}
 }
 
