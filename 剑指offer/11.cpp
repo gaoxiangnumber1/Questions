@@ -14,15 +14,15 @@ bool Equal(double num1, double num2)
 	return false;
 }
 
-double PowerWithNonNegative(double base, int exponent)
+double PowerWithNonNegative(double base, int exponent)  // exponent must >= 0
 {
 	if(exponent == 0)
 	{
-		return 1;
+		return 1;  // x^0 = 1
 	}
 	if(exponent == 1)
 	{
-		return base;
+		return base;  // x^1 = x
 	}
 
 	double result = PowerWithNonNegative(base, exponent >> 1);  // >> is more efficient than /
@@ -54,9 +54,13 @@ double Power(double base, int exponent)
 
 int main()
 {
+	double base = 0;
+	int exponent = 0;
 	while(1)
 	{
-
+		cout << "Input 2 numbers(double, int): ";
+		cin >> base >> exponent;
+		cout << Power(base, exponent) << endl;
 	}
 
 	return 0;
@@ -64,5 +68,13 @@ int main()
 
 /*
 Test data:
-
+-2 -3
+-2 0
+-2 5
+0 -2
+0 0
+0 2
+2 -3
+2 0
+2 5
 */
