@@ -14,6 +14,8 @@ bool Equal(double num1, double num2)
 	return false;
 }
 
+/*
+// recursive quick power
 double PowerWithNonNegative(double base, int exponent)  // exponent must >= 0
 {
 	if(exponent == 0)
@@ -33,6 +35,7 @@ double PowerWithNonNegative(double base, int exponent)  // exponent must >= 0
 	}
 	return result;
 }
+*/
 
 double Power(double base, int exponent)
 {
@@ -43,7 +46,19 @@ double Power(double base, int exponent)
 	}
 
 	int abs_exponent = exponent >= 0 ? exponent : -exponent;  // exponent's absolute value
-	double result = PowerWithNonNegative(base, abs_exponent);
+	//double result = PowerWithNonNegative(base, abs_exponent);
+	// PowerWithNonNegative is a kind of recursive quick power,
+	// which is slower than the following loop quick power.
+	double result = 1.0;
+	while(abs_exponent != 0)
+	{
+		if(abs_exponent & 0x1 == 1)  // the lowest bit is 1
+		{
+			result *= base;
+		}
+		abs_exponent >>= 1;  // move to right 1 bit
+		base *= base;
+	}
 
 	if(exponent < 0)
 	{
@@ -67,14 +82,16 @@ int main()
 }
 
 /*
-Test data:
+Function Test Data:
 -2 -3
 -2 0
 -2 5
-0 -2
-0 0
 0 2
 2 -3
 2 0
 2 5
+Edge Test Data:
+0 0
+Negative Test Data:
+0 -2
 */
