@@ -24,7 +24,8 @@ void Print(char *number, int length)
 	int index = 0;  // Don't forget make index 0
 	for(; index < length && number[index] == '0'; ++index);
 	// now, number[index] is the first non-zero character, i.e., the begin of actual number
-	// "index < length" MUST be the first predicate, otherwise number[index] may be out of bounds
+	// "index < length" MUST be the first predicate,
+	// otherwise number[index] may be out of bounds
 
 	if(index == length)  // no valid number(i.e., all zero), no need output
 	{
@@ -111,9 +112,9 @@ void Solution2(int bits_number)
 	char number[bits_number];
 	// Permutation: assign value from the most significant bit to the least significant bit,
 	// each time, we first hold higher bits value, then permute next lower bit in [0, 9]
-	for(int index = 0; index < 10; ++index)
+	for(int num = 0; num < 10; ++num)
 	{
-		number[0] = index + '0';
+		number[0] = num + '0';
 		Permutation(number, bits_number, 0);
 	}
 }
