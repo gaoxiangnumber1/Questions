@@ -59,11 +59,43 @@ ListNode *FindKthToTail(ListNode *pListHead, unsigned int k)
 	return array[length - k];
 }
 
+ListNode *FindKthToTail(ListNode *pListHead, unsigned int k)
+{
+	// negative data:
+	// for number k: 1. negative number: -1, -2...; 2. zero: 0
+	// for linked list head: 1.	null pointer
+	if(pListHead == NULL || k > 0x7fffffff || k == 0)
+	{
+		return NULL;
+	}
+
+	ListNode *pointer = pListHead;
+	for(int index = 1; index <= k - 1; ++index)  // move k - 1 steps
+	{
+		// negative data:
+		// for number k: 3. bigger than length
+		if(pointer->next == NULL)
+		{
+			return NULL;
+		}
+		pointer = pointer->next;
+	}
+
+	// now, k must be in [1, length], i.e., the function data
+	ListNode *result = pListHead;
+	while(pointer->next != NULL)
+	{
+		pointer = pointer->next;
+		result = result->next;
+	}
+	return result;
+}
+
 int main()
 {
 	while(1)
 	{
-
+		;
 	}
 
 	return 0;
