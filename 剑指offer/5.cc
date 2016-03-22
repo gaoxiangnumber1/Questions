@@ -1,60 +1,47 @@
-/**
-* struct ListNode {
-* int val;
-*
- struct ListNode *next;
-*
- ListNode(int x) :
-*
- val(x), next(NULL) {
-*
- }
-* };
+/*
+------------------------------Function Test Data------------------------------
+normal linked list is ok
+
+---------------------------------Edge Test Data--------------------------------
+none
+
+------------------------------Negative Test Data------------------------------
+1. linked list is a null pointer
+
 */
-class Solution
+
+struct ListNode
 {
-public:
-	vector<int> printListFromTailToHead(struct ListNode* head)
-	{
-		vector<int> result;
-		while(head != NULL)
-		{
-			result.insert(result.begin(), (*head).val);
-			head = (*head).next;
-		}
-		return result;
-	}
+	int val;
+	struct ListNode *next;
+	ListNode(int x): val(x), next(NULL) {}
 };
 
-/**
-* struct ListNode {
-*
- int val;
-*
- struct ListNode *next;
-*
- ListNode(int x) :
-*
- val(x), next(NULL) {
-*
- }
-* };
-*/
-class Solution
+// solution1:
+vector<int> printListFromTailToHead1(struct ListNode* head)
 {
-public:
 	vector<int> result;
-	vector<int> printListFromTailToHead(struct ListNode* head)
+	while(head)
 	{
-		if(head != NULL)
-		{
-			if(head->next)
-			{
-				printListFromTailToHead(head->next);
-			}
-			result.push_back(head->val);
-		}
-		return result;
+		result.insert(result.begin(), (*head).val);
+		head = (*head).next;
 	}
-};
 
+	return result;
+}
+
+// solution2:
+vector<int> result;
+vector<int> printListFromTailToHead(struct ListNode* head)
+{
+	if(head)
+	{
+		if(head->next)
+		{
+			printListFromTailToHead(head->next);
+		}
+		result.push_back(head->val);
+	}
+
+	return result;
+}
