@@ -3,13 +3,10 @@
 1. negative integer
 2. zero
 3. positive integer
-
 ---------------------------------Edge Test Data--------------------------------
 none
-
 ------------------------------Negative Test Data------------------------------
 none
-
 */
 
 #include<iostream>
@@ -19,6 +16,7 @@ int NumberOf11(int n)  // cast n to unsigned int
 {
 	unsigned int num2 = (unsigned int)n;
 	int result = 0;
+
 	while(num2)
 	{
 		if(num2 & 0x1)
@@ -27,6 +25,7 @@ int NumberOf11(int n)  // cast n to unsigned int
 		}
 		num2 >>= 1;
 	}
+
 	return result;
 }
 
@@ -34,6 +33,7 @@ int NumberOf12(int n)  // keep n unchanged
 {
 	int flag = 1;
 	int result = 0;
+
 	while(flag)
 	{
 		if(n & flag)
@@ -42,17 +42,20 @@ int NumberOf12(int n)  // keep n unchanged
 		}
 		flag <<= 1;
 	}
+
 	return result;
 }
 
 int NumberOf13(int n)
 {
 	int result = 0;
+
 	while(n)
 	{
 		++result;
 		n = n & (n - 1);
 	}
+
 	return result;
 }
 
@@ -67,6 +70,5 @@ int main()
 		cout << NumberOf12(num) << '\t';
 		cout << NumberOf13(num) << '\n';
 	}
-
 	return 0;
 }
