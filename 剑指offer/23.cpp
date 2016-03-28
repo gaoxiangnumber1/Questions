@@ -22,7 +22,7 @@ struct TreeNode
 	TreeNode *right;
 };
 
-vector<int> Print(TreeNode *root)
+vector<int> PrintFromTopToBottom(TreeNode *root)
 {
 	vector<int> result;
 	queue<TreeNode *> print;
