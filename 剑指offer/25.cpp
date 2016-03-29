@@ -20,23 +20,28 @@ struct TreeNode
 	TreeNode *left;
 	TreeNode *right;
 };
-？？？？？？？？？？？
-void DFS(vector<vector<int> > &result, vector<int> &path, TreeNode *root, int expectNumber, int sum)
+
+vector<vector<int> > result;  // global variable
+
+void DFS(vector<int> &path, TreeNode *root, int expectNumber, int sum)
 {
 	path.push_back(root->val);
 	sum += root->val;
 
-	if(!root->left && !root->right && sum == expectNumber)  // find a path
+	if(!(root->left) && !(root->right) && sum == expectNumber)  // find a path
 	{
 		result.push_back(path);
 	}
-	else if(root->left)
+	else  // NOTE: the next condition can be all satisfied!!!!
 	{
-		DFS(result, path, root->left, expectNumber, sum);
-	}
-	else if(root->right)
-	{
-		DFS(result, path, root->right, expectNumber, sum);
+		if(root->left)
+		{
+			DFS(path, root->left, expectNumber, sum);
+		}
+		if(root->right)
+		{
+			DFS(path, root->right, expectNumber, sum);
+		}
 	}
 	// we must delete this root's element before returning to caller
 	path.pop_back();
@@ -44,7 +49,6 @@ void DFS(vector<vector<int> > &result, vector<int> &path, TreeNode *root, int ex
 
 vector<vector<int> > FindPath(TreeNode *root, int expectNumber)
 {
-	vector<vector<int> > result;
 	vector<int> path;
 	int sum = 0;
 
@@ -53,7 +57,7 @@ vector<vector<int> > FindPath(TreeNode *root, int expectNumber)
 	{
 		return result;
 	}
-	DFS(result, path, root, expectNumber, sum);
+	DFS(path, root, expectNumber, sum);
 	return result;
 }
 
