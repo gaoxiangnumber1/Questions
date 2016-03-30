@@ -55,7 +55,7 @@ void CloneRandom(RandomListNode *head)
 
 RandomListNode *CloneSplit(RandomListNode *head)
 {
-	RandomListNode *old_node = head, *new_node = head->next;
+	RandomListNode *old_node = head, *new_node = head->next, *new_head = head->next;
 	while(old_node)  // while(new_node) is also ok.
 	{
 		old_node->next = new_node->next;
@@ -63,19 +63,23 @@ RandomListNode *CloneSplit(RandomListNode *head)
 		new_node->next = (old_node ? old_node->next : NULL);
 		new_node = new_node->next;
 	}
-	return head->next;
+	/*
+	"return head->next" is WRONG!!!
+	Because the 2 lists are split and head->next is the old head->next->next!!!
+	*/
+	return new_head;
 }
 
-RandomListNode *Clone(RandomListNode *pHead)
+RandomListNode *Clone(RandomListNode *head)
 {
-	if(!pHead)
+	if(!head)
 	{
 		return NULL;
 	}
 
-	CloneNext(pHead);
-	CloneRandom(pHead);
-	return CloneSplit(pHead);
+	CloneNext(head);
+	CloneRandom(head);
+	return CloneSplit(head);
 }
 
 int main()
