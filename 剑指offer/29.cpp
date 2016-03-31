@@ -8,14 +8,10 @@ none
 ------------------------------Negative Test Data------------------------------
 empty vector
 
-
-
-
-
-aaa
 */
 
 #include<vector>
+#include<map>
 #include<iostream>
 using namespace std;
 
@@ -35,7 +31,7 @@ int Partition(vector<int> &numbers, int first, int last)  // numbers[first, last
 	return divide;
 }
 
-int MoreThanHalfNum_Solution(vector<int> numbers)// 已通过^_^
+int MoreThanHalfNum_Solution1(vector<int> numbers)  // have passed. Good job!
 {
 	int length = numbers.size();
 	// negative data:
@@ -77,10 +73,74 @@ int MoreThanHalfNum_Solution(vector<int> numbers)// 已通过^_^
 	return 0;  // no
 }
 
+int MoreThanHalfNum_Solution2(vector<int> numbers)  // not test!!!
+{
+	int length = numbers.size();
+	// negative data:
+	if(length <= 0)
+	{
+		return 0;
+	}
+
+	int result = numbers[0];  // initial value
+	int cnt = 1;  // initial time
+	for(int index = 1; index < length; ++index)
+	{
+		if(cnt == 0)  // change result
+		{
+			result = numbers[index];
+			cnt = 1;
+		}
+		else if(result == numbers[index])
+		{
+			++cnt;
+		}
+		else  // cnt != 0 && result != numbers[index]
+		{
+			--cnt;
+		}
+	}
+
+	// check whether result appears more than half times or not,
+	int time = 0;
+	for(int index = 0; index < length; ++index)
+	{
+		if(numbers[index] == result)
+		{
+			++time;
+		}
+	}
+	if(time > (length >> 1))  // yes
+	{
+		return result;
+	}
+	return 0;  // no
+}
+
+int MoreThanHalfNum_Solution3(vector<int> numbers)  // not test!!!
+{
+	int length = numbers.size();
+	// negative data:
+	if(length <= 0)
+	{
+		return 0;
+	}
+
+	map<int, int> cnt;
+	for(int index = 0; index < length; ++index)
+	{
+		if(++cnt[numbers[index]] > (length >> 1))
+		{
+			return numbers[index];
+		}
+	}
+	return 0;
+}
+
 int main()
 {
-	vector<int> numbers = {1,2,3,4,4,4,4,4,5};
-	cout << Solution(numbers);
+	vector<int> numbers = {4,4,4,4,4,1,2,3,5};
+	cout << MoreThanHalfNum_Solution3(numbers);
 
 	return 0;
 }

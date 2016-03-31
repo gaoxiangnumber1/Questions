@@ -20,15 +20,24 @@ void Recursive(string str, int first, int last)  // get the permutation of str[f
 {
 	if(first == last)  // no need to swap element, so we get one permutation
 	{
+		for(int index = 0; index < result.size(); ++index)
+		{
+			if(result[index] == str)
+			{
+				return;  // already exist in result
+			}
+		}
 		result.push_back(str);
 	}
 	else
 	{
-		for(int index = first; index <= last; index++)
+		for(int index = first; index <= last; ++index)
 		{
 			swap(str[first], str[index]);  // exchange the first element with all elements one by one
 			Recursive(str, first + 1, last);  // get the permutation of str[first + 1, last]
-			swap(str[first], str[index]);  // recover the exchange
+			// if we don't pass string by reference or pointer,
+			// we can modify string without recover it.
+			//swap(str[first], str[index]);  // recover the exchange
 		}
 	}
 }
@@ -61,4 +70,3 @@ int main()
 	}
 	return 0;
 }
-
