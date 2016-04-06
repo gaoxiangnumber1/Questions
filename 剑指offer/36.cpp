@@ -40,6 +40,8 @@ int MergeSort(vector<int> &data, int first, int last, vector<int> temp)
 			all_count += right - (middle + 1) + 1;
 			temp[index--] = data[left--];
 		}
+		// No need at all:
+		/*
 		else if(data[left] == data[right])  // Note: we have to traverse sub-right-part.
 		{
 			for(int index2 = right - 1; index2 >= middle + 1; --index2)
@@ -52,6 +54,7 @@ int MergeSort(vector<int> &data, int first, int last, vector<int> temp)
 			}
 			temp[index--] = data[left--];
 		}
+		*/
 		else
 		{
 			temp[index--] = data[right--];
@@ -98,7 +101,7 @@ int main()
 		{
 			cin >> data[index];
 		}
-		cout << Pair(data) << endl;
+		cout << InversePairs(data) << endl;
 	}
 
 	return 0;

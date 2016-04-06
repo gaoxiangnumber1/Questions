@@ -40,12 +40,9 @@ int FirstNotRepeatingChar(string str)
 		if(cnt[key][1] == 0)  // The first appear time
 		{
 			cnt[key][0] = index;
-			cnt[key][1] = 1;
 		}
-		else
-		{
-			++cnt[key][1];
-		}
+		// No matter whether it has appeared or not:
+		++cnt[key][1];
 	}
 
 	// Traverse string to get the first char that appears only one time
