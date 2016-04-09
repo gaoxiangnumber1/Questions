@@ -33,7 +33,18 @@ int TreeDepth(TreeNode *pRoot)
 }
 
 /*Question 2:*/
-bool IsBalanced_Solution(TreeNode *pRoot)
+int TreeDepth(TreeNode *pRoot)
+{
+	if(pRoot)
+	{
+		int left = TreeDepth(pRoot->left);
+		int right = TreeDepth(pRoot->right);
+		return left > right ? left + 1 : right + 1;
+	}
+	return 0;
+}
+
+bool IsBalanced_Solution1(TreeNode *pRoot)
 {
 	if(!pRoot)
 	{
@@ -43,7 +54,7 @@ bool IsBalanced_Solution(TreeNode *pRoot)
 	int left = TreeDepth(pRoot->left);
 	int right = TreeDepth(pRoot->right);
 	int diff = left - right;
-	if(-1 <= diff && diff <= 1)
+	if(-1 <= diff && diff <= 1)  // Reference: <Code Complete>
 	{
 		return IsBalanced_Solution(pRoot->left) && IsBalanced_Solution(pRoot->right);
 	}
@@ -71,7 +82,7 @@ bool Post(TreeNode *pRoot, int &depth)
 	return false;
 }
 
-bool IsBalanced_Solution(TreeNode *pRoot)
+bool IsBalanced_Solution2(TreeNode *pRoot)
 {
 	int depth = 0;
 	return Post(pRoot, depth);
