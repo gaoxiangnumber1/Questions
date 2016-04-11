@@ -14,7 +14,7 @@ length <= 0
 using namespace std;
 /**************************Question 1**************************/
 // If permitted to create new string and modify new string:
-string ReverseSentence(string str)
+string ReverseSentence1(string str)
 {
 	string result = str;
 	int length = str.size();
@@ -64,7 +64,7 @@ void Reverse(string &str, int first, int last)
 	}
 }
 
-string ReverseSentence(string str)
+string ReverseSentence2(string str)
 {
 	int length = str.size();
 	if(length <= 0)
@@ -93,6 +93,17 @@ string ReverseSentence(string str)
 }
 
 /**************************Question 2**************************/
+string LeftRotateString(string str, int n)
+{
+	int length = str.size();
+	if(length > 0 && (0 < n && n < length))
+	{
+		Reverse(str, 0, n - 1);
+		Reverse(str, n, length - 1);
+		Reverse(str, 0, length - 1);
+	}
+	return str;
+}
 
 int main()
 {
@@ -100,9 +111,10 @@ int main()
 	{
 		cout << "Input: ";
 		string str;
-		getline(cin, str);
-		cout << "###" << Fun1(str) << "###\n";
-		cout << "###" << Fun2(str) << "###\n";
+		int n;
+		cin >> str;
+		cin >> n;
+		cout << "###" << Fun(str, n) << "###\n";
 	}
 
 	return 0;
