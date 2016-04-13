@@ -9,7 +9,7 @@
 #include <iostream>
 #include <string>
 using namespace std;
-const int SIZE = 6;
+const int kMax = 6;
 
 void Recursive(int left, int sum, int cnt[])
 {
@@ -19,7 +19,7 @@ void Recursive(int left, int sum, int cnt[])
 	}
 	else
 	{
-		for(int value = 1; value <= SIZE; ++value)
+		for(int value = 1; value <= kMax; ++value)
 		{
 			Recursive(left - 1, value + sum, cnt);
 		}
@@ -50,21 +50,21 @@ void Print(int num)
 
 	// First, we allocate an array to store each sum's times,
 	// that is, cnt[sum] is the times of sum.
-	int max_sum = SIZE * num;
+	int max_sum = kMax * num;
 	int cnt[max_sum + 1];
-	for(int index = num; index <= max_sum; ++index)
+	for(int sum = num; sum <= max_sum; ++sum)
 	{
-		cnt[index] = 0;
+		cnt[sum] = 0;
 	}
 
 	// Second, get each sum recursively.
-	for(int value = 1; value <= SIZE; ++value)
+	for(int value = 1; value <= kMax; ++value)
 	{
 		Recursive(num - 1, value, cnt);
 	}
 
 	// Third, print the answer:
-	int total = Pow(SIZE, num);
+	int total = Pow(kMax, num);
 	for(int sum = num; sum <= max_sum; ++sum)
 	{
 		double ratio = (double)cnt[sum] / total;
@@ -74,7 +74,7 @@ void Print(int num)
 
 int main()
 {
-	for(int num = 1; num <= 10; ++num)
+	for(int num = 1; num <= 100; ++num)
 	{
 		cout << "###################################################\n";
 		Print(num);
