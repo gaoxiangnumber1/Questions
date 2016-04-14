@@ -1,16 +1,20 @@
 /*
 ------------------------------Function Test Data------------------------------
+normal vector
 
 --------------------------------Edge Test Data--------------------------------
 
+none
+
 ------------------------------Negative Test Data------------------------------
+empty vector
 
 */
 #include <iostream>
 #include <vector>
 using namespace std;
 
-const int kMax = 14;
+const int kMax = 14;  // Don't use #define
 
 // This sort algorithm is based on counting sort(O(n)), but unstable and quicker.
 void NonStableCountingSort(vector<int> &number, int first, int last)
