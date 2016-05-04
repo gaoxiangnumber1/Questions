@@ -16,26 +16,12 @@ over/underflow
 
 */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#include <stdlib.h>
 #include <iostream>
 using namespace std;
 
 bool g_valid = true;  // Global variable to indicate whether input is valid?
+
+#define Error() g_valid = false; return 0;  // Just for efficiency
 
 int StrToInt(string str)
 {
@@ -43,8 +29,7 @@ int StrToInt(string str)
 	// Negative data: empty string ""
 	if(length <= 0)
 	{
-		g_valid = false;
-		return 0;
+		Error();
 	}
 	int index = 0;
 	// If str begin with '+' or '-', then number should begin with [1],
@@ -54,8 +39,7 @@ int StrToInt(string str)
 		// str = "+" or "-"
 		if(length == 1)
 		{
-			g_valid = false;
-			return 0;
+			Error();
 		}
 		++index;
 	}
@@ -69,16 +53,14 @@ int StrToInt(string str)
 			// Negative data: over/underflow
 			if(0x7fffffff < result || result < (signed int)0x80000000)
 			{
-				g_valid = false;
-				return 0;
+				Error();
 			}
 			++index;
 		}
 		// Negative data: character that is not number / '+' / '-'
 		else
 		{
-			g_valid = false;
-			return 0;
+			Error();
 		}
 	}
 	result = (int)result;
