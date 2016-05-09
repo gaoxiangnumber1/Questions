@@ -7,7 +7,6 @@ none
 
 ------------------------------Negative Test Data------------------------------
 length <= 0
-
 */
 
 #include <iostream>

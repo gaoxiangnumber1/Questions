@@ -17,12 +17,12 @@ using namespace std;
 
 bool duplicate(int numbers[], int length, int *duplication)
 {
-	// Negative data: 1 & 2
+	// Negative data 1 & 2:
 	if(!numbers || length <= 0)
 	{
 		return false;
 	}
-	// Negative data: 3
+	// Negative data 3:
 	for(int index = 0; index < length; ++index)
 	{
 		if(length - 1 < numbers[index] || numbers[index] < 0)
