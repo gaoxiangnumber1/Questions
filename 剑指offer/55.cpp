@@ -46,7 +46,7 @@ public:
 
 	char FirstAppearingOnce()
 	{
-		char result = '#';
+		char result = '#';  // If there is no such character that appears once, return '#'.
 		int min_index = kMax;
 
 		for(int ch = 0; ch < 256; ++ch)

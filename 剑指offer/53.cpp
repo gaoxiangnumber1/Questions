@@ -3,9 +3,9 @@
 normal string
 
 --------------------------------Edge Test Data--------------------------------
-1. *str = 0 && *pattern = 0
-2. *str != 0 && *pattern = 0
-3. *str = 0 && *pattern != 0
+1. *str = 0	&&	*pattern = 0
+2. *str != 0	&&	*pattern = 0
+3. *str = 0	&&	*pattern != 0
 
 ------------------------------Negative Test Data------------------------------
 str = NULL || pattern = NULL
@@ -31,9 +31,9 @@ bool Match(char *str, char *pattern)
 		{
 			return Match(str + 1, pattern + 2)  // Move to the next state.
 			       || Match(str + 1, pattern)  // Stay on this state
-			       || Match(str, pattern + 2);  // Ignore this char.
+			       || Match(str, pattern + 2);  // Ignore this state.
 		}
-		return Match(str, pattern + 2);  // Ignore this char.
+		return Match(str, pattern + 2);  // Ignore this state.
 	}
 
 	// Up to now, *(pattern + 1) != '*'

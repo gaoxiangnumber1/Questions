@@ -25,7 +25,7 @@ bool duplicate(int numbers[], int length, int *duplication)
 	// Negative data 3:
 	for(int index = 0; index < length; ++index)
 	{
-		if(length - 1 < numbers[index] || numbers[index] < 0)
+		if(numbers[index] < 0 || numbers[index] > length - 1)
 		{
 			return false;
 		}
