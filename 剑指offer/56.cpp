@@ -12,11 +12,6 @@ empty list
 #include <iostream>
 using namespace std;
 
-
-
-
-
-
 struct ListNode
 {
 	int val;
