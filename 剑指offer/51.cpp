@@ -11,15 +11,6 @@ none
 3. some elements' value is not in [0, length - 1]
 
 */
-
-
-
-
-
-
-
-
-
 #include <iostream>
 using namespace std;
 
