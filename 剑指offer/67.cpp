@@ -31,14 +31,14 @@ int GetSum(int num)
 // Check whether we can reach cell[row][col]:
 bool Check(int row, int col, bool *reach)
 {
-	// In matrix and have not reached:
-	if((0 <= row && row <= g_rows - 1) && (0 <= col && col <= g_cols - 1) &&
-	        (GetSum(row) + GetSum(col) <= g_threshold) &&
-	        reach[row * g_cols + col] == false)
+	int index = row * g_cols + col;
+	if((0 <= row && row <= g_rows - 1) && (0 <= col && col <= g_cols - 1)  // In matrix
+		&& (GetSum(row) + GetSum(col) <= g_threshold)
+		&& reach[index] == false  /* Haven't reached. */)
 	{
-		return true;
+		reach[index] = true;
 	}
-	return false;
+	return reach[index];
 }
 
 int Backtrack(int row, int col, bool *reach)
@@ -46,12 +46,8 @@ int Backtrack(int row, int col, bool *reach)
 	int result = 0;
 	if(Check(row, col, reach))
 	{
-		reach[row * g_cols + col] = true;
-		result = 1 +
-		         Backtrack(row - 1, col, reach) +
-		         Backtrack(row + 1, col, reach) +
-		         Backtrack(row, col - 1, reach) +
-		         Backtrack(row, col + 1, reach);
+		result = 1 + Backtrack(row - 1, col, reach) + Backtrack(row + 1, col, reach) +
+		         Backtrack(row, col - 1, reach) + Backtrack(row, col + 1, reach);
 	}
 	return result;
 }
