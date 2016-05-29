@@ -15,8 +15,6 @@ using namespace std;
 // We don't need pass the following 3 parameters when checking.
 int g_rows = 0, g_cols = 0, g_threshold = 0;
 
-
-
 // Get the sum of individual number in this "num".
 // e.g.: num = 1234, then return 10(= 1 + 2 + 3 + 4).
 int GetSum(int num)
