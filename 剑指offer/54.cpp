@@ -1,89 +1,75 @@
 /*
 ------------------------------Function Test Data------------------------------
-rows > 0 && cols > 0 && threshold >= 0
+Normal number string
 
 --------------------------------Edge Test Data--------------------------------
 none
 
 ------------------------------Negative Test Data------------------------------
-rows <= 0 || cols <= 0 || threshold < 0
+NULL pointer
 */
 
 #include <iostream>
 using namespace std;
 
-// We don't need pass the following 3 parameters when checking.
-int g_rows = 0, g_cols = 0, g_threshold = 0;
-
-void Backtrack(int row, int col, bool reach[][])
+bool IsNumber(char *&string)
 {
-	if(Check(row, col))
+	if(*string == '-' || *string == '+')
 	{
-		reach[row][col] = true;
-		Backtrack(row - 1, col);
-		Backtrack(row + 1, col);
-		Backtrack(row, col - 1);
-		Backtrack(row, col + 1);
+		++string;
 	}
+	if(!('0' <= *string && *string <= '9'))  // At least one digit.
+	{
+		return false;
+	}
+	while('0' <= *string && *string <= '9')
+	{
+		++string;
+	}
+	return true;
 }
 
-bool Check(int row, int col)
+bool isNumeric(char *string)
 {
-	// In matrix:
-	if((0 =< row && row <= g_rows - 1) && (0 =< col && col <= g_cols - 1))
+	// Negative data: null pointer
+	if(string == NULL)
 	{
-		// Check sum:
-	}
-}
-
-int Fun(int threshold, int rows, int cols)
-{
-	// Negative data:
-	if(rows <= 0 || cols <= 0 || threshold < 0)
-	{
-		return 0;
+		return false;
 	}
 
-	// Assign to global variable:
-	g_rows = rows;
-	g_cols = cols;
-	g_threshold = threshold;
-
-	// Use this array to count how many cells that we can reach:
-	bool reach[rows][cols];
-	for(int row = 0; row < rows; ++row)
+	// string must begin with number.
+	if(!IsNumber(string))
 	{
-		for(int col = 0; col < cols; ++col)
+		return false;
+	}
+	// Now, *string must be '.', 'e/E' or '\0', we first judge '.'.
+	if(*string == '.')
+	{
+		++string;
+		if(!IsNumber(string))
 		{
-			reach[row][col] = true;
+			return false;
 		}
 	}
-
-	// Backtrack this matrix from (0, 0)
-	Backtrack(0, 0, reach);
-
-	// Count cells number:
-	int result = 0;
-	for(int row = 0; row < rows; ++row)
+	// Now, *string must be 'e/E' or '\0', we first judge 'e/E'.
+	if(*string == 'e' || *string == 'E')
 	{
-		for(int col = 0; col < cols; ++col)
+		++string;
+		if(!IsNumber(string))
 		{
-			if(reach[row][col] == true)
-			{
-				++result;
-			}
+			return false;
 		}
 	}
-
-	return result;
+	// Now, *string must be '\0', otherwise false.
+	if(*string == 0)
+	{
+		return true;
+	}
+	return false;
 }
 
 int main()
 {
-	while(1)
-	{
-
-	}
 
 	return 0;
 }
