@@ -11,29 +11,6 @@
 
 -4- 功能测试：每份代码首先列出测试数据（分为3类：功能测试、边界测试、负面测试）。在写代码之前，先想好所有可能的测试数据非常重要！
 
-# 关于我
-我叫高祥，目前就读于山东大学计算机科学与技术专业，大二学生。
-
-热爱Linux C/C++服务器端开发，目标是大学毕业后能进入北美/国内大型互联网公司，从事高性能服务器开发工作。
-
-与所有的大学生共勉的一句话：“别纠结于选择，重要的是坚持。”——阿里PageFault
-
-----------目标书籍
-
-C++：C++ Primer（已完成）、Effective C++（正在读）、Inside the C++ Object Model、STL源码剖析
-
-OS：CSAPP（已完成）、Modern Operating System（已完成）、APUE（正在读）
-
-NET：Top-Down（已完成）、TCPIPV1、UNP（正在读）
-
-Algorithm：剑指Offer（正在读）、编程之美、Crack the Coding Interview、Leetcode
-
-----------目标学习的开源项目
-
-muduo（正在学习）
-STL：2016-07继续
-Nginx
-
 -----------------------------------
 
 感谢您的阅读！如果您有任何建议、想法想和我交流，请发送邮件至gaoxiangnumber1@126.com.
