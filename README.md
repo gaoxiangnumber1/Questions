@@ -1,7 +1,7 @@
-## Interview Coding Questions: 剑指Offer & Crack the Coding Interview & 编程之美 & Leetcode
-1. 内容：本项目包含 剑指Offer & Crack the Coding Interview & 编程之美 & Leetcode的所有题目的正确可运行的Cpp代码。
-2. 目的：锻炼数据结构与算法的学习 & 求职互联网公司招聘准备
-3. 与同类代码相比的优点：
+## Interview Coding Questions: 剑指Offer
+ 1. 内容：本项目包含 剑指Offer题目的正确可运行的Cpp代码。
+ 2. 目的：锻炼数据结构与算法的学习 & 求职互联网公司招聘准备
+ 3. 与同类代码相比的优点：
  - 100%通过测试，使用g++编译全部通过，运行正确。
  - 代码风格良好：采用ANSI缩进风格，其余细节依据Google C++ Style Guide编写。
  - 注释完善：每种解法均实现，分步骤进行注释，关键代码处添加提醒。
