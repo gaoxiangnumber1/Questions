@@ -9,21 +9,6 @@ none
 none
 */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #include<iostream>
 using namespace std;
 
