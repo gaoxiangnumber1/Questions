@@ -46,6 +46,14 @@ ListNode* LoopMerge(ListNode* pHead1, ListNode* pHead2)
 		node2 = node2->next;
 	}
 
+
+
+
+
+
+
+
+//gaoxiangnumber1
 	while(node1 && node2)  // when both linked list are not empty
 	{
 		if(node1->val <= node2->val)
