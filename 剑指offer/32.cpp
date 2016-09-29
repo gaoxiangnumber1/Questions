@@ -1,15 +1,11 @@
 /*
 ------------------------------Function Test Data------------------------------
 n > 1
-
 --------------------------------Edge Test Data--------------------------------
 n = 1
-
 ------------------------------Negative Test Data------------------------------
 n < 1
-
 */
-
 #include <vector>
 #include <iostream>
 using namespace std;
@@ -122,6 +118,4 @@ int main()
 	{
 		cout << ((Fun1(num) == Fun2(num)) ? "YES\n" : "NO\n");
 	}
-
-	return 0;
 }
