@@ -62,9 +62,6 @@ bool HasSubtree(TreeNode *pRoot1, TreeNode *pRoot2)
 	return result;
 }
 
-/*
-Update on 2016/0912*/
-
 int main()
 {
 	while(1)
