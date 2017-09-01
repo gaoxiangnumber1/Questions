@@ -9,6 +9,8 @@ none
 1. linked list is a null pointer
 
 */
+#include <bits/stdc++.h>
+using namespace std;
 
 struct ListNode
 {
@@ -44,4 +46,9 @@ vector<int> printListFromTailToHead(struct ListNode* head)
 	}
 
 	return result;
+}
+
+int main()
+{
+
 }
