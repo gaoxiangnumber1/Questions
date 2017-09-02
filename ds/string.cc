@@ -1,5 +1,10 @@
-#include <bits/stdc++.h>
-using namespace std;
+#include <stdio.h>
+#include <string.h>
+#include <utility>
+#include <vector>
+using std::swap;
+using std::vector;
+using std::move;
 
 class String
 {
