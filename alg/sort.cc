@@ -92,23 +92,23 @@ void ShellSort(int *data, int first, int last)
 int Partition(int *data, int first, int last) // O(n)
 {
 	int pivot = data[last - 1];
-	int not_greater_count = 0;
+	int divide = first;
 	for(int index = first; index < last - 1; ++index)
 	{
 		if(data[index] <= pivot)
 		{
-			++not_greater_count;
-			if(index != first + not_greater_count - 1)
+			if(data[index] != data[divide])
 			{
-				swap(data[index], data[first + not_greater_count - 1]);
+				swap(data[index], data[divide]);
 			}
+			++divide;
 		}
 	}
-	if(first + not_greater_count != last - 1)
+	if(data[divide] != data[last - 1])
 	{
-		swap(data[first + not_greater_count], data[last - 1]);
+		swap(data[divide], data[last - 1]);
 	}
-	return first + not_greater_count;
+	return divide;
 }
 // TC: Best = O(nlogn), Average = O(nlogn), Worst = O(n^2)
 // SC: Best = O(logn), Worst = O(n)
@@ -124,6 +124,10 @@ void QuickSort(int *data, int first, int last) // [first, last)
 	QuickSort(data, first, divide);
 	QuickSort(data, divide + 1, last);
 	// Combine: sub arrays are sorted, no work is needed to combine them.
+}
+void QuickSortLinkedList()
+{
+	// ../ds/linked_list.cc
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void Merge(int *data, int first, int middle, int last, int *helper) // O(n)
@@ -176,6 +180,10 @@ void MergeSort(int *data, int first, int last) // [first, last)
 {
 	int helper[last]; // helper temporary stores the sorted subarrays in Merge.
 	MergeSortMain(data, first, last, helper);
+}
+void MergeSortLinkedList()
+{
+	// ../ds/linked_list.cc
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void FixDown(int *data, int parent_index, int length)

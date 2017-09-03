@@ -170,7 +170,7 @@ void LinkedList<T>::ShowContent() const
 template<typename T>
 void Partition(Node<T> *first, Node<T> *&right, Node<T> *&left, Node<T> *last)
 {
-	int pivot = last->data_;
+	T pivot = last->data_;
 	Node<T> *divide = first;
 	for(Node<T> *node = first; node != last; node = node->next_)
 	{
@@ -188,7 +188,7 @@ void Partition(Node<T> *first, Node<T> *&right, Node<T> *&left, Node<T> *last)
 	{
 		swap(divide->data_, last->data_);
 	}
-	left = (divide == last) ? last : divide->next_; // Adjust 0 node to 1 node to end recursive.
+	left = (divide == last ? last : divide->next_); // Adjust 0 node to 1 node to end recursive.
 }
 template<typename T>
 // Sort nodes in [first, last], assume input is valid(at least 1 node).
@@ -218,6 +218,8 @@ void TestQuickSort()
 		object.ShowContent();
 	}
 }
+void MergeSort();
+void TestMergeSort();
 
 int main()
 {
