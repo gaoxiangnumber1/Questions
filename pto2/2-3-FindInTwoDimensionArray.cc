@@ -1,28 +1,32 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-// T(n) = O(n+m) S(n) = O(1)
-bool FindInTwoDimensionArray(const vector<vector<int>> &data, int target)
+class Solution
 {
-	int total_row = static_cast<int>(data.size());
-	int total_col = (total_row != 0 ? static_cast<int>(data[0].size()) : 0);
-	for(int row = 0, col = total_col - 1; row < total_row && col >= 0;)
+public:
+	// T(n) = O(n+m) S(n) = O(1)
+	bool FindInTwoDimensionArray(const vector<vector<int>> &data, int target)
 	{
-		if(data[row][col] < target)
+		int total_row = static_cast<int>(data.size());
+		int total_col = (total_row != 0 ? static_cast<int>(data[0].size()) : 0);
+		for(int row = 0, col = total_col - 1; row < total_row && col >= 0;)
 		{
-			++row;
+			if(data[row][col] < target)
+			{
+				++row;
+			}
+			else if(data[row][col] == target)
+			{
+				return true;
+			}
+			else
+			{
+				--col;
+			}
 		}
-		else if(data[row][col] == target)
-		{
-			return true;
-		}
-		else
-		{
-			--col;
-		}
+		return false;
 	}
-	return false;
-}
+};
 
 void Test()
 {
@@ -34,12 +38,13 @@ void Test()
 		5, 19, 30 } };
 	vector<vector<int>> bad_vec;
 	vector<vector<int>> test_vec = { { -16, 2, 3, 30 }, { -17, 6, 12, 31 } };
+	Solution s;
 	for(int row = 0; row < static_cast<int>(test_vec.size()); ++row)
 	{
 		for(int col = 0; col < static_cast<int>(test_vec[row].size()); ++col)
 		{
-			if(FindInTwoDimensionArray(good_vec, test_vec[row][col]) != (row == 0)
-				|| FindInTwoDimensionArray(bad_vec, test_vec[row][col]) != false)
+			if(s.FindInTwoDimensionArray(good_vec, test_vec[row][col]) != (row == 0)
+				|| s.FindInTwoDimensionArray(bad_vec, test_vec[row][col]) != false)
 			{
 				printf("Case not pass: target = %d\n", test_vec[row][col]);
 				assert(0);

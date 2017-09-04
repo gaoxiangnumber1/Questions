@@ -4,12 +4,15 @@ template<typename T>
 class BinaryTree
 {
 public:
-	BinaryTree(): root_(nullptr) {}
+	BinaryTree() :
+		root_(nullptr)
+	{
+	}
 	~BinaryTree();
 
 	void CreateCompleteBinaryTreeByLevel();
-	void CreateTreeByPreAndIn();
-	void CreateTreeByPostAndIn();
+	void ConstructBinaryTreeFromPreAndInOrder();
+	void ConstructBinaryTreeFromPostAndInOrder();
 	// No `CreateTreeByPreAndPost` because we must need In to know scope [first, last),
 	// otherwise the recursion won't stop.
 	void PreOrderRecursive() const;
@@ -59,7 +62,7 @@ void BinaryTree<T>::CreateCompleteBinaryTreeByLevel()
 	}
 }
 template<typename T>
-void BinaryTree<T>::CreateTreeByPreAndIn()
+void BinaryTree<T>::ConstructBinaryTreeFromPreAndInOrder()
 {
 	int data_number;
 	scanf("%d", &data_number);
@@ -73,10 +76,10 @@ void BinaryTree<T>::CreateTreeByPreAndIn()
 		scanf("%d", &in[index]);
 	}
 	int pre_index = 0;
-	::CreateTreeByPreAndIn(root_, pre, pre_index, in, 0, data_number);
+	::ConstructBinaryTreeFromPreAndInOrder(root_, pre, pre_index, in, 0, data_number);
 }
 template<typename T>
-void BinaryTree<T>::CreateTreeByPostAndIn()
+void BinaryTree<T>::ConstructBinaryTreeFromPostAndInOrder()
 {
 	int data_number;
 	scanf("%d", &data_number);
@@ -90,7 +93,7 @@ void BinaryTree<T>::CreateTreeByPostAndIn()
 		scanf("%d", &in[index]);
 	}
 	int post_index = data_number - 1;
-	::CreateTreeByPostAndIn(root_, post, post_index, in, 0, data_number);
+	::ConstructBinaryTreeFromPostAndInOrder(root_, post, post_index, in, 0, data_number);
 }
 template<typename T>
 void BinaryTree<T>::PreOrderRecursive() const
@@ -155,9 +158,9 @@ void BinaryTree<T>::NodeCount() const
 int main()
 {
 	printf("0: Exit\n"
-	       "1: CreateCompleteBinaryTreeByLevel\n"
-	       "2: CreateTreeByPreAndIn\n"
-	       "3: CreateTreeByPostAndIn\n");
+		"1: CreateCompleteBinaryTreeByLevel\n"
+		"2: ConstructBinaryTreeFromPreAndInOrder\n"
+		"3: ConstructBinaryTreeFromPostAndInOrder\n");
 	int operation;
 	while(scanf("%d", &operation) == 1)
 	{
@@ -170,10 +173,10 @@ int main()
 			tree.CreateCompleteBinaryTreeByLevel();
 			break;
 		case 2:
-			tree.CreateTreeByPreAndIn();
+			tree.ConstructBinaryTreeFromPreAndInOrder();
 			break;
 		case 3:
-			tree.CreateTreeByPostAndIn();
+			tree.ConstructBinaryTreeFromPostAndInOrder();
 			break;
 		default:
 			return 0;
@@ -190,25 +193,25 @@ int main()
 	}
 }
 /*
-1 11 1 2 3 4 5 6 7 8 9 10 11
-2 11 1 2 4 5 6 7 3 8 10 9 11 4 2 6 7 5 1 8 10 3 9 11
-3 11 4 7 6 5 2 10 8 11 9 3 1 4 2 6 7 5 1 8 10 3 9 11
-PreOrder:   1 2 4 8 9 5 10 11 3 6 7
-InOrder:    8 4 9 2 10 5 11 1 6 3 7
-PostOrder:  8 9 4 10 11 5 2 6 7 3 1
-LevelOrder: 1 2 3 4 5 6 7 8 9 10 11
-Height:     4
-NodeCount:  11
-PreOrder:   1 2 4 5 6 7 3 8 10 9 11
-InOrder:    4 2 6 7 5 1 8 10 3 9 11
-PostOrder:  4 7 6 5 2 10 8 11 9 3 1
-LevelOrder: 1 2 3 4 5 8 9 6 10 11 7
-Height:     5
-NodeCount:  11
-PreOrder:   1 2 4 5 6 7 3 8 10 9 11
-InOrder:    4 2 6 7 5 1 8 10 3 9 11
-PostOrder:  4 7 6 5 2 10 8 11 9 3 1
-LevelOrder: 1 2 3 4 5 8 9 6 10 11 7
-Height:     5
-NodeCount:  11
-*/
+ 1 11 1 2 3 4 5 6 7 8 9 10 11
+ 2 11 1 2 4 5 6 7 3 8 10 9 11 4 2 6 7 5 1 8 10 3 9 11
+ 3 11 4 7 6 5 2 10 8 11 9 3 1 4 2 6 7 5 1 8 10 3 9 11
+ PreOrder:   1 2 4 8 9 5 10 11 3 6 7
+ InOrder:    8 4 9 2 10 5 11 1 6 3 7
+ PostOrder:  8 9 4 10 11 5 2 6 7 3 1
+ LevelOrder: 1 2 3 4 5 6 7 8 9 10 11
+ Height:     4
+ NodeCount:  11
+ PreOrder:   1 2 4 5 6 7 3 8 10 9 11
+ InOrder:    4 2 6 7 5 1 8 10 3 9 11
+ PostOrder:  4 7 6 5 2 10 8 11 9 3 1
+ LevelOrder: 1 2 3 4 5 8 9 6 10 11 7
+ Height:     5
+ NodeCount:  11
+ PreOrder:   1 2 4 5 6 7 3 8 10 9 11
+ InOrder:    4 2 6 7 5 1 8 10 3 9 11
+ PostOrder:  4 7 6 5 2 10 8 11 9 3 1
+ LevelOrder: 1 2 3 4 5 8 9 6 10 11 7
+ Height:     5
+ NodeCount:  11
+ */

@@ -6,10 +6,10 @@ template<typename T>
 class ThreadSafeSingleton
 {
 public:
-	ThreadSafeSingleton() = delete;
-	ThreadSafeSingleton(const ThreadSafeSingleton&) = delete;
-	ThreadSafeSingleton &operator=(const ThreadSafeSingleton&) = delete;
-	~ThreadSafeSingleton() = delete;
+	ThreadSafeSingleton() = delete; // Constructor.
+	ThreadSafeSingleton(const ThreadSafeSingleton&) = delete; // Copy constructor.
+	ThreadSafeSingleton &operator=(const ThreadSafeSingleton&) = delete; // Copy assignment.
+	~ThreadSafeSingleton() = delete; // Destructor.
 
 	static T &Instance()
 	{

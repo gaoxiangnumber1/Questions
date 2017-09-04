@@ -11,38 +11,43 @@ struct ListNode
 	}
 };
 
-// T(n) = O(n) S(n) = O(n)
-vector<int> ReversePrintLinkedListStack(ListNode *node)
+class Solution
 {
-	stack<int> s;
-	while(node != nullptr)
+public:
+	// T(n) = O(n) S(n) = O(n)
+	vector<int> ReversePrintLinkedListStack(ListNode *node)
 	{
-		s.push(node->val);
-		node = node->next;
+		stack<int> s;
+		while(node != nullptr)
+		{
+			s.push(node->val);
+			node = node->next;
+		}
+		vector<int> vec;
+		while(s.empty() == false)
+		{
+			vec.push_back(s.top());
+			s.pop();
+		}
+		return vec;
 	}
-	vector<int> vec;
-	while(s.empty() == false)
+	// T(n) = O(n) S(n) = O(n)
+	vector<int> ReversePrintLinkedListRecursive(ListNode *node)
 	{
-		vec.push_back(s.top());
-		s.pop();
+		if(node == nullptr)
+		{
+			vec_.clear();
+		}
+		else
+		{
+			ReversePrintLinkedListRecursive(node->next);
+			vec_.push_back(node->val);
+		}
+		return vec_;
 	}
-	return vec;
-}
-// T(n) = O(n) S(n) = O(n)
-vector<int> g_vec;
-vector<int> ReversePrintLinkedListRecursive(ListNode *node)
-{
-	if(node == nullptr)
-	{
-		g_vec.clear();
-	}
-	else
-	{
-		ReversePrintLinkedListRecursive(node->next);
-		g_vec.push_back(node->val);
-	}
-	return g_vec;
-}
+private:
+	vector<int> vec_;
+};
 
 void Test()
 {
@@ -54,18 +59,21 @@ void Test()
 	node1.next = &node2;
 	node2.next = &node3;
 	vector<int> output1 = { 3 };
-	assert(memcmp(output1.data(), ReversePrintLinkedListStack(&node3).data(), output1.size()) == 0);
+	Solution s;
 	assert(
-		memcmp(output1.data(), ReversePrintLinkedListRecursive(&node3).data(), output1.size())
+		memcmp(output1.data(), s.ReversePrintLinkedListStack(&node3).data(), output1.size()) == 0);
+	assert(
+		memcmp(output1.data(), s.ReversePrintLinkedListRecursive(&node3).data(), output1.size())
 			== 0);
 	vector<int> output2 = { 3, 2, 1, 0 };
-	assert(memcmp(output2.data(), ReversePrintLinkedListStack(&node0).data(), output2.size()) == 0);
 	assert(
-		memcmp(output2.data(), ReversePrintLinkedListRecursive(&node0).data(), output2.size())
+		memcmp(output2.data(), s.ReversePrintLinkedListStack(&node0).data(), output2.size()) == 0);
+	assert(
+		memcmp(output2.data(), s.ReversePrintLinkedListRecursive(&node0).data(), output2.size())
 			== 0);
 	assert(
-		ReversePrintLinkedListStack(nullptr).size() == 0
-			&& ReversePrintLinkedListRecursive(nullptr).size() == 0);
+		s.ReversePrintLinkedListStack(nullptr).size() == 0
+			&& s.ReversePrintLinkedListRecursive(nullptr).size() == 0);
 	printf("All case pass.\n");
 }
 

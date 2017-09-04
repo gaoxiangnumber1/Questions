@@ -7,15 +7,11 @@
 template<typename T>
 struct BinaryNode
 {
-	BinaryNode(const T &data,
-	           BinaryNode<T> *left = nullptr,
-	           BinaryNode<T> *right = nullptr,
-	           int weight = 0):
-		data_(data),
-		left_(left),
-		right_(right),
-		weight_(weight)
-	{}
+	BinaryNode(const T &data, BinaryNode<T> *left = nullptr, BinaryNode<T> *right = nullptr,
+		int weight = 0) :
+		data_(data), left_(left), right_(right), weight_(weight)
+	{
+	}
 
 	T data_;
 	BinaryNode<T> *left_;
@@ -35,37 +31,34 @@ void Delete(BinaryNode<T> *&root)
 	}
 }
 template<typename T>
-void CreateTreeByPreAndIn(BinaryNode<T> *&root,
-                          T *pre,
-                          int &pre_index, // MUST &!
-                          T *in,
-                          int in_first,
-                          int in_last) // [in_last, in_last)
+void ConstructBinaryTreeFromPreAndInOrder(BinaryNode<T> *&root, T *pre, int &pre_index, T *in,
+	int in_first, int in_last) // [in_last, in_last)
 {
 	if(in_first < in_last)
 	{
-		int index = in_first;
-		for(; index < in_last && pre[pre_index] != in[index]; ++index);
+		int in_index = in_first;
+		for(; in_index < in_last && pre[pre_index] != in[in_index]; ++in_index)
+			;
 		root = new BinaryNode<T>(pre[pre_index++]);
-		CreateTreeByPreAndIn(root->left_, pre, pre_index, in, in_first, index);
-		CreateTreeByPreAndIn(root->right_, pre, pre_index, in, index + 1, in_last);
+		ConstructBinaryTreeFromPreAndInOrder(root->left_, pre, pre_index, in, in_first, in_index);
+		ConstructBinaryTreeFromPreAndInOrder(root->right_, pre, pre_index, in, in_index + 1,
+			in_last);
 	}
 }
 template<typename T>
-void CreateTreeByPostAndIn(BinaryNode<T> *&root,
-                           T *post,
-                           int &post_index,
-                           T *in,
-                           int in_first,
-                           int in_last) // [in_last, in_last)
+void ConstructBinaryTreeFromPostAndInOrder(BinaryNode<T> *&root, T *post, int &post_index, T *in,
+	int in_first, int in_last) // [in_last, in_last)
 {
 	if(in_first < in_last)
 	{
-		int index = in_first;
-		for(; index < in_last && post[post_index] != in[index]; ++index);
+		int in_index = in_first;
+		for(; in_index < in_last && post[post_index] != in[in_index]; ++in_index)
+			;
 		root = new BinaryNode<T>(post[post_index--]);
-		CreateTreeByPostAndIn(root->right_, post, post_index, in, index + 1, in_last);
-		CreateTreeByPostAndIn(root->left_, post, post_index, in, in_first, index);
+		ConstructBinaryTreeFromPostAndInOrder(root->right_, post, post_index, in, in_index + 1,
+			in_last);
+		ConstructBinaryTreeFromPostAndInOrder(root->left_, post, post_index, in, in_first,
+			in_index);
 	}
 }
 template<typename T>
@@ -147,8 +140,8 @@ void PostOrderLoop(BinaryNode<T> *root)
 			root = stack.Top();
 			stack.Pop();
 			Visit(root);
-			while(stack.Empty() == false &&
-			        (stack.Top()->right_ == nullptr || stack.Top()->right_ == root))
+			while(stack.Empty() == false
+				&& (stack.Top()->right_ == nullptr || stack.Top()->right_ == root))
 			{
 				root = stack.Top();
 				stack.Pop();

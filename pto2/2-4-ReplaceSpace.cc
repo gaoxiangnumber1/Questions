@@ -1,36 +1,40 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-// T(n) = O(n) S(n)=O(1)
-void ReplaceSpace(char *str, int max_length)
+class Solution
 {
-	if(str == nullptr || *str == 0) // Negative test.
+public:
+	// T(n) = O(n) S(n)=O(1)
+	void ReplaceSpace(char *str, int max_length)
 	{
-		return;
-	}
-
-	int length = 0, space = 0;
-	for(; str[length] != 0; str[length] == ' ' ? ++space : 0, ++length)
-		;
-	if(length + space * 2 > max_length) // Negative test
-	{
-		return;
-	}
-
-	for(int before = length, after = length + space * 2; before != after; --before)
-	{
-		if(str[before] != ' ')
+		if(str == nullptr || *str == 0) // Negative test.
 		{
-			str[after--] = str[before];
+			return;
 		}
-		else
+
+		int length = 0, space = 0;
+		for(; str[length] != 0; str[length] == ' ' ? ++space : 0, ++length)
+			;
+		if(length + space * 2 > max_length) // Negative test
 		{
-			str[after--] = '0';
-			str[after--] = '2';
-			str[after--] = '%';
+			return;
+		}
+
+		for(int before = length, after = length + space * 2; before != after; --before)
+		{
+			if(str[before] != ' ')
+			{
+				str[after--] = str[before];
+			}
+			else
+			{
+				str[after--] = '0';
+				str[after--] = '2';
+				str[after--] = '%';
+			}
 		}
 	}
-}
+};
 
 void Test()
 {
@@ -43,9 +47,10 @@ void Test()
 	"gao", "%20", "%20%20", /*Edge Test*/
 	/*nullptr*/"", "                    " /*Negative Test*/
 	};
+	Solution s;
 	for(int index = 0; index < static_cast<int>(sizeof(input) / kLength); ++index)
 	{
-		ReplaceSpace(input[index], kLength);
+		s.ReplaceSpace(input[index], kLength);
 		if(memcmp(input[index], output[index], strlen(output[index]) + 1) != 0)
 		{
 			printf("Case not pass: wrong=`%s`, right=`%s`\n", input[index], output[index]);
@@ -53,7 +58,7 @@ void Test()
 		}
 	}
 	char *null = nullptr;
-	ReplaceSpace(null, kLength);
+	s.ReplaceSpace(null, kLength);
 	assert(null == nullptr);
 	printf("All case pass.\n");
 }
