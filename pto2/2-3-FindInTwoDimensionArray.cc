@@ -30,10 +30,10 @@ public:
 
 void Test()
 {
+	// Negative Test: empty two dimension array and arbitrary integer.
+	// Edge Test:
 	// Function Test: nonempty two dimension array and arbitrary integer.
 	// 		True: min(-16), between(2, 3), max(30). False: min(-17), between(6, 12), max(31).
-	// Edge Test:
-	// Negative Test: empty two dimension array and arbitrary integer.
 	vector<vector<int>> good_vec = { { -16, -7, 0, 8 }, { -15, 3, 10, 20 }, { 1, 4, 13, 25 }, { 2,
 		5, 19, 30 } };
 	vector<vector<int>> bad_vec;

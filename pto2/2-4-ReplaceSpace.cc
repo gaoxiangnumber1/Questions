@@ -39,13 +39,13 @@ public:
 void Test()
 {
 	const int kLength = 32;
-	char input[][kLength] = { " gao", "g ao", "gao ", "  g  ao  ", /*Function Test*/
+	char input[][kLength] = { /*nullptr*/"", "                    ", /*Negative Test*/
 	"gao", " ", "  ", /*Edge Test*/
-	/*nullptr*/"", "                    " /*Negative Test*/
+	" gao", "g ao", "gao ", "  g  ao  " /*Function Test*/
 	};
-	char output[][kLength] = { "%20gao", "g%20ao", "gao%20", "%20%20g%20%20ao%20%20", /*Function Test*/
+	char output[][kLength] = { /*nullptr*/"", "                    ", /*Negative Test*/
 	"gao", "%20", "%20%20", /*Edge Test*/
-	/*nullptr*/"", "                    " /*Negative Test*/
+	"%20gao", "g%20ao", "gao%20", "%20%20g%20%20ao%20%20" /*Function Test*/
 	};
 	Solution s;
 	for(int index = 0; index < static_cast<int>(sizeof(input) / kLength); ++index)
