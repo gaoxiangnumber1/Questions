@@ -4,6 +4,7 @@ using namespace std;
 class Solution
 {
 public:
+	// T = logn(average), n(worst) S = 1
 	int FindMinNumberInRotateArray(const vector<int> &vec)
 	{
 		if(vec.size() <= 0) // Negative test: empty array.
@@ -24,18 +25,17 @@ public:
 			{
 				return Traverse(vec, first, last);
 			}
-			if(vec[middle] >= vec[first])  // [middle] is in the 1st part.
-			{
-				first = middle;
-			}
-			else if(vec[middle] <= vec[last])  // [middle] is in the 2nd part.
+			if(vec[middle] <= vec[last])  // [middle] is in the 2nd part.
 			{
 				last = middle;
+			}
+			else if(vec[middle] >= vec[first])  // [middle] is in the 1st part.
+			{
+				first = middle;
 			}
 		}
 		return vec[last];
 	}
-
 	int Traverse(const vector<int> &vec, int first, int last)
 	{
 		int min = vec[first];

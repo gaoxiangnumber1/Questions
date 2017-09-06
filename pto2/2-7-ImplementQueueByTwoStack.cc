@@ -7,33 +7,33 @@ public:
 	// T(n) = O(1) S(n) = O(1)
 	void push(int node)
 	{
-		s1.push(node);
+		s1_.push(node);
 	}
 	// T(n) = O(1) or O(n) S(n) = O(1)
 	int pop()
 	{
-		int result = 0;
-		if(s2.empty() == true)
+		if(s1_.empty() == true && s2_.empty() == true) // Negative test.
 		{
-			while(s1.empty() == false)
+			return 0;
+		}
+
+		if(s2_.empty() == true)
+		{
+			while(s1_.empty() == false)
 			{
-				s2.push(s1.top());
-				s1.pop();
+				s2_.push(s1_.top());
+				s1_.pop();
 			}
 		}
-		if(s2.empty() == false)
-		{
-			result = s2.top();
-			s2.pop();
-		}
+		int result = s2_.top();
+		s2_.pop();
 		return result;
 	}
 
 private:
-	stack<int> s1;
-	stack<int> s2;
+	stack<int> s1_;
+	stack<int> s2_;
 };
-
 void TestImplementQueueByTwoStack()
 {
 	printf("-----TestImplementQueueByTwoStack-----\n");
@@ -62,20 +62,19 @@ public:
 	// T = O(n) S = O(1)
 	int Pop()
 	{
-		int result = 0;
-		if(q1_.empty() == false || q2_.empty() == false)
+		if(q1_.empty() == true && q2_.empty() == true)
 		{
-			queue<int> &src = (q1_.empty() == false ? q1_ : q2_);
-			queue<int> &dest = (q1_.empty() == false ? q2_ : q1_);
-			while(src.size() > 1)
-			{
-				dest.push(src.front());
-				src.pop();
-			}
-			result = src.front();
-			src.pop();
-			assert(src.empty() == true);
+			return 0;
 		}
+		queue<int> &src = (q1_.empty() == false ? q1_ : q2_);
+		queue<int> &dest = (q1_.empty() == false ? q2_ : q1_);
+		while(src.size() > 1)
+		{
+			dest.push(src.front());
+			src.pop();
+		}
+		int result = src.front();
+		src.pop();
 		return result;
 	}
 
