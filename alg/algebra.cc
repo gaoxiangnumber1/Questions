@@ -75,15 +75,15 @@ Matrix MultiMatrix(const Matrix &lhs, const Matrix &rhs)
 	}
 	return result;
 }
-Matrix MatrixQuickPower(const Matrix &matrix, int exp)
+Matrix MatrixQuickPower(const Matrix &base, int exp)
 {
 	assert(exp >= 0);
-	Matrix result(matrix.size(), vector<int>(matrix[0].size(), 0));
+	Matrix result(base.size(), vector<int>(base[0].size(), 0));
 	for(int index = 0; index < static_cast<int>(result.size()); ++index)
 	{
 		result[index][index] = 1;
 	}
-	Matrix tmp = matrix;
+	Matrix tmp = base;
 	for(; exp != 0; exp >>= 1)
 	{
 		exp & 1 ? result = MultiMatrix(result, tmp) : result;
@@ -98,15 +98,23 @@ int FibonacciLogN(int n)
 		return (n < 0 ? -1 : n);
 	}
 	Matrix state = { { 1, 1 }, { 1, 0 } };
-	state = MatrixQuickPower(state, n - 2);
-	return state[0][0] + state[1][0];
+	return MatrixQuickPower(state, n - 1)[0][0];
+}
+int Fibonacci1(int n)
+{
+	if(n < 0)
+	{
+		return -1;
+	}
+	const double sqrt5 = sqrt(5);
+	return static_cast<int>((pow((1 + sqrt5) / 2, n) - pow((1 - sqrt5) / 2, n)) / sqrt5);
 }
 void TestFibonacci()
 {
 	printf("----------TestFibonacci----------\n");
-	for(int n = -1; n < 1000; n += 3)
+	for(int n = -1; n < 40; ++n)
 	{
-		assert(FibonacciN(n) == FibonacciLogN(n));
+		assert(FibonacciN(n) == FibonacciLogN(n) && FibonacciLogN(n) == Fibonacci1(n));
 	}
 	printf("All case pass.\n");
 }

@@ -1,1 +1,1 @@
-../ds/string.cc/class String
+../ds/string.cc class String
