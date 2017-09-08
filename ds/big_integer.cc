@@ -4,11 +4,10 @@
 
 struct BigInteger
 {
-	BigInteger():
-		neg_(false),
-		size_(0),
-		num_(nullptr)
-	{}
+	BigInteger() :
+		neg_(false), size_(0), num_(nullptr)
+	{
+	}
 	BigInteger(const char *input) // Assume input is valid.
 	{
 		neg_ = input[0] == '-' ? true : false;
@@ -20,24 +19,18 @@ struct BigInteger
 			num_[index] = input[input_size - 1 - index] - '0';
 		}
 	}
-	BigInteger(bool neg, int size):
-		neg_(neg),
-		size_(size),
-		num_(new int[size_])
+	BigInteger(bool neg, int size) :
+		neg_(neg), size_(size), num_(new int[size_])
 	{
 		memset(num_, 0, size_ * sizeof(int));
 	}
-	BigInteger(const BigInteger &rhs):
-		neg_(rhs.neg_),
-		size_(rhs.size_),
-		num_(new int[size_])
+	BigInteger(const BigInteger &rhs) :
+		neg_(rhs.neg_), size_(rhs.size_), num_(new int[size_])
 	{
 		memmove(num_, rhs.num_, size_ * sizeof(int));
 	}
-	BigInteger(BigInteger &&rhs):
-		neg_(rhs.neg_),
-		size_(rhs.size_),
-		num_(rhs.num_)
+	BigInteger(BigInteger &&rhs) :
+		neg_(rhs.neg_), size_(rhs.size_), num_(rhs.num_)
 	{
 		rhs.neg_ = false;
 		rhs.size_ = 0;
@@ -56,14 +49,14 @@ struct BigInteger
 	}
 	~BigInteger()
 	{
-		delete [] num_;
+		delete[] num_;
 		num_ = nullptr;
 	}
 
 	void set_size(int new_size)
 	{
 		size_ = new_size;
-		delete [] num_;
+		delete[] num_;
 		num_ = new int[size_];
 		memset(num_, 0, size_ * sizeof(int));
 	}
@@ -120,15 +113,15 @@ struct BigInteger
 			{
 				result.num_[index] = num_[index] + rhs.num_[index];
 			}
-			memmove(result.num_ + min_size,
-			        (size_ > rhs.size_ ? num_ : rhs.num_) + min_size,
-			        (result.size_ - 1 - min_size) * sizeof(int));
+			memmove(result.num_ + min_size, (size_ > rhs.size_ ? num_ : rhs.num_) + min_size,
+				(result.size_ - 1 - min_size) * sizeof(int));
 			for(int index = 0; index < result.size_ - 1; ++index)
 			{
 				result.num_[index + 1] += result.num_[index] / 10;
 				result.num_[index] %= 10;
 			}
-			for(; result.size_ != 1 && result.num_[result.size_ - 1] == 0; --result.size_);
+			for(; result.size_ != 1 && result.num_[result.size_ - 1] == 0; --result.size_)
+				;
 		}
 		else if(neg_ == false && rhs.neg_ == true)
 		{
@@ -163,15 +156,15 @@ struct BigInteger
 				{
 					result.num_[index] = comp * (num_[index] - rhs.num_[index]);
 				}
-				memmove(result.num_ + min_size,
-				        (size_ > rhs.size_ ? num_ : rhs.num_) + min_size,
-				        (result.size_ - min_size) * sizeof(int));
+				memmove(result.num_ + min_size, (size_ > rhs.size_ ? num_ : rhs.num_) + min_size,
+					(result.size_ - min_size) * sizeof(int));
 				for(int low = 0; low < result.size_; ++low)
 				{
 					if(result.num_[low] < 0)
 					{
 						int high = low;
-						while(result.num_[++high] <= 0);
+						while(result.num_[++high] <= 0)
+							;
 						--result.num_[high];
 						while(--high != low)
 						{
@@ -180,7 +173,8 @@ struct BigInteger
 						result.num_[low] += 10;
 					}
 				}
-				for(; result.size_ != 1 && result.num_[result.size_ - 1] == 0; --result.size_);
+				for(; result.size_ != 1 && result.num_[result.size_ - 1] == 0; --result.size_)
+					;
 			}
 		}
 		else if(neg_ == false && rhs.neg_ == true)
@@ -210,7 +204,7 @@ struct BigInteger
 		{
 			result.neg_ = true;
 		}
-		result.set_size(size_ > rhs.size_ ? size_ * 2: rhs.size_ * 2);
+		result.set_size(size_ > rhs.size_ ? size_ * 2 : rhs.size_ * 2);
 		for(int index1 = 0; index1 < size_; ++index1)
 		{
 			for(int index2 = 0; index2 < rhs.size_; ++index2)
@@ -223,7 +217,8 @@ struct BigInteger
 			result.num_[index + 1] += result.num_[index] / 10;
 			result.num_[index] %= 10;
 		}
-		for(; result.size_ != 1 && result.num_[result.size_ - 1] == 0; --result.size_);
+		for(; result.size_ != 1 && result.num_[result.size_ - 1] == 0; --result.size_)
+			;
 		return result;
 	}
 	std::pair<BigInteger, BigInteger> DivideAndMod(const BigInteger &rhs) const
@@ -266,7 +261,9 @@ struct BigInteger
 					}
 				}
 				mod = temp_lhs;
-				for(; division.size_ != 1 && division.num_[division.size_ - 1] == 0; --division.size_);
+				for(; division.size_ != 1 && division.num_[division.size_ - 1] == 0;
+					--division.size_)
+					;
 			}
 		}
 		if((neg_ == true && rhs.neg_ == false) || (neg_ == false && rhs.neg_ == true))
@@ -281,8 +278,7 @@ struct BigInteger
 	int size_;
 	int *num_;
 };
-
-int main()
+void TestBigInteger()
 {
 	const int kBufferSize = 64 * 1024; // 64kB
 	char buffer[kBufferSize];
@@ -299,69 +295,93 @@ int main()
 		bi_pair.second.ShowContent();
 		printf("\n");
 	}
+	/*
+	 512 512
+	 -512 -512
+	 512 408
+	 408 512
+	 992 38
+	 38 992
+	 908 38
+	 38 908
+	 -38 -992
+	 ************************
+	 1024
+	 0
+	 262144
+	 1
+	 0
+
+	 -1024
+	 0
+	 262144
+	 1
+	 0
+
+	 920
+	 104
+	 208896
+	 1
+	 104
+
+	 920
+	 -104
+	 208896
+	 0
+	 408
+
+	 1030
+	 954
+	 37696
+	 26
+	 4
+
+	 1030
+	 -954
+	 37696
+	 0
+	 38
+
+	 946
+	 870
+	 34504
+	 23
+	 34
+
+	 946
+	 -870
+	 34504
+	 0
+	 38
+
+	 -1030
+	 954
+	 37696
+	 0
+	 -38
+	 */
 }
+
 /*
-512 512
--512 -512
-512 408
-408 512
-992 38
-38 992
-908 38
-38 908
--38 -992
-************************
-1024
-0
-262144
+Function Test Data:
 1
-0
-
--1024
-0
-262144
-1
-0
-
-920
-104
-208896
-1
-104
-
-920
--104
-208896
-0
-408
-
-1030
-954
-37696
-26
+2
+3
 4
-
-1030
--954
-37696
-0
-38
-
-946
-870
-34504
-23
-34
-
-946
--870
-34504
-0
-38
-
--1030
-954
-37696
-0
--38
+// you have to wait a VERY long time :
+10
+20
+30
+50
+60
+Edge Test Data:
+None
+Negative Test Data:
+0 -1
 */
+
+
+int main()
+{
+
+}

@@ -1,23 +1,4 @@
-/*
-Function Test Data:
-1
-2
-3
-4
-// you have to wait a VERY long time :
-10
-20
-30
-50
-60
-Edge Test Data:
-None
-Negative Test Data:
-0 -1
-*/
-
-#include<iostream>
-using namespace std;
+../ds/big_integer.cc
 
 void Print(char *number, int length)
 {

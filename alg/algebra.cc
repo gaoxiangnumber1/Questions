@@ -41,9 +41,9 @@ void TestEuclidGreatestCommonDivisor()
 ///////////////////////////////////
 int FibonacciN(int n)
 {
-	if(n < 2) // Negative and Edge test.
+	if(n <= 1) // Negative and Edge test.
 	{
-		return (n < 0 ? -1 : n);
+		return (n <= 0 ? 0 : 1);
 	}
 
 	int fn1 = 1, fn2 = 0;
@@ -93,28 +93,56 @@ Matrix MatrixQuickPower(const Matrix &base, int exp)
 }
 int FibonacciLogN(int n)
 {
-	if(n < 2)
+	if(n <= 1)
 	{
-		return (n < 0 ? -1 : n);
+		return (n <= 0 ? 0 : 1);
 	}
+
 	Matrix state = { { 1, 1 }, { 1, 0 } };
 	return MatrixQuickPower(state, n - 1)[0][0];
 }
+// https://www.zhihu.com/question/29215494 Not memorize until need.
+int FibonacciLogN2(int n)
+{
+	if(n <= 1)
+	{
+		return (n <= 0 ? 0 : 1);
+	}
+
+	int x = 1, y = 1, a = 0, b = 1, tmp = 0;
+	for(; n > 0; n >>= 1)
+	{
+		if(n & 1)
+		{
+			tmp = a * x + b * y;
+			a = x * (b - a) + a * y;
+			b = tmp;
+		}
+		tmp = 2 * x * y - x * x;
+		y = x * x + y * y;
+		x = tmp;
+	}
+	return a;
+}
 int Fibonacci1(int n)
 {
-	if(n < 0)
+	if(n <= 1)
 	{
-		return -1;
+		return (n <= 0 ? 0 : 1);
 	}
+
 	const double sqrt5 = sqrt(5);
 	return static_cast<int>((pow((1 + sqrt5) / 2, n) - pow((1 - sqrt5) / 2, n)) / sqrt5);
 }
+
 void TestFibonacci()
 {
 	printf("----------TestFibonacci----------\n");
 	for(int n = -1; n < 40; ++n)
 	{
-		assert(FibonacciN(n) == FibonacciLogN(n) && FibonacciLogN(n) == Fibonacci1(n));
+		assert(
+			FibonacciN(n) == Fibonacci1(n) && FibonacciLogN(n) == Fibonacci1(n)
+				&& FibonacciLogN2(n) == Fibonacci1(n));
 	}
 	printf("All case pass.\n");
 }
@@ -176,7 +204,7 @@ double QuickPower(double base, int exp)
 	double result = 1;
 	for(int abs_exp = abs(exp); abs_exp != 0; abs_exp >>= 1)
 	{
-		result *= (abs_exp & 1 ? base : 1);
+		abs_exp & 1 ? result *= base : result;
 		base *= base;
 	}
 	return (exp < 0 ? 1 / result : result);
@@ -184,7 +212,7 @@ double QuickPower(double base, int exp)
 void TestQuickPower()
 {
 	printf("----------TestQuickPower----------\n");
-	// Negative test: 0^(-1)
+// Negative test: 0^(-1)
 	vector<double> base = { -2, 0, 2, 0, -2, 0, 2 };
 	vector<int> exp = { -3, -3, -3, 0, 3, 3, 3 };
 	vector<double> answer = { -0.125, 0, 0.125, 1, -8, 0, 8 };
