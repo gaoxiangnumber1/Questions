@@ -218,14 +218,52 @@ void TestQuickSort()
 		object.ShowContent();
 	}
 }
-void MergeSort();
-void TestMergeSort();
+
+template<typename T>
+Node<T> *GetMiddleNode(Node<T> *first)
+{
+	if(first == nullptr || first->next_ == nullptr || first->next_->next_ == nullptr) // 0/1/2 node
+	{
+		return first;
+	}
+	// At least 3 nodes.
+	Node<T> *one_step = first->next_, *two_step = first->next_->next_;
+	while(two_step->next_ != nullptr && two_step->next_->next_ != nullptr) // Odd/Even nodes.
+	{
+		one_step = one_step->next_;
+		two_step = two_step->next_->next_;
+	}
+	return one_step;
+}
+template<typename T>
+Node<T> * MergeTwoSortedLinkedList(Node<T> * first, Node<T> *second)
+{
+	// TODO:
+	return nullptr;
+}
+template<typename T>
+Node<T> *MergeSort(Node<T> *first)
+{
+	if(first == nullptr)
+	{
+		return nullptr;
+	}
+	Node<T> *middle = GetMiddleNode(first);
+	Node<T> *middle_next = middle->next_;
+	middle->next_ = nullptr; // Temporary separate two sublists.
+	return MergeTwoSortedLinkedList(MergeSort(first), MergeSort(middle_next));
+}
+void TestMergeSort()
+{
+	Node<int> *first = nullptr;
+	MergeSort(first);
+}
 
 int main()
 {
 	LinkedList<int> object; // Stack object's dtor is auto called when scope ends.
-	printf(
-		"0: Exit\n1: Create\n2: Insert\n3: Delete\n4: Reverse\n5: QuickSort\n6: TestQuickSort\n");
+	printf("0: Exit\n1: Create\n2: Insert\n3: Delete\n4: Reverse\n"
+		"5: QuickSort\n6: TestQuickSort\n7: MergeSort\n8: TestMergeSort\n");
 
 	int operation, data, index;
 	while(scanf("%d", &operation) == 1)
@@ -258,6 +296,14 @@ int main()
 			break;
 		case 6:
 			TestQuickSort();
+			break;
+		case 7:
+			MergeSort(object.FirstNode());
+			object.ShowContent();
+			break;
+		case 8:
+			TestMergeSort();
+			break;
 		}
 	}
 }

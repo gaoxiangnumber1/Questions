@@ -1,6 +1,11 @@
 #include <string.h>
 #include <stdio.h>
 #include <utility>
+#include <stdint.h>
+#include <stdlib.h>
+#include <assert.h>
+#include <string>
+using std::string;
 
 struct BigInteger
 {
@@ -362,26 +367,61 @@ void TestBigInteger()
 	 */
 }
 
-/*
-Function Test Data:
-1
-2
-3
-4
-// you have to wait a VERY long time :
-10
-20
-30
-50
-60
-Edge Test Data:
-None
-Negative Test Data:
-0 -1
-*/
+bool Increment(string &num, int digit_number, int &now_digit_number)
+{
+	bool advance = true;
+	for(int index = 1; index <= now_digit_number && advance == true; ++index)
+	{
+		if('0' <= num[digit_number - index] && num[digit_number - index] <= '8')
+		{
+			++num[digit_number - index];
+			advance = false;
+		}
+		else
+		{
+			num[digit_number - index] = '0';
+		}
+	}
+	if(advance == true)
+	{
+		if(now_digit_number < digit_number)
+		{
+			++now_digit_number;
+			num[digit_number - now_digit_number] = '1';
+		}
+		else // Overflow
+		{
+			now_digit_number = -1;
+		}
+	}
+	return now_digit_number == -1 ? false : true;
+}
+void PrintOneToMaxNDigit(int digit_number)
+{
+	if(digit_number <= 0) // Negative test.
+	{
+		return;
+	}
 
+	// char num[digit_number + 1]; memset(num, '0', sizeof num); num[digit_number] = 0;
+	string num(digit_number, '0');
+	int now_digit_number = 1, value = 0;
+	while(Increment(num, digit_number, now_digit_number) == true)
+	{
+		assert(atoi(&num[digit_number - now_digit_number]) == ++value);
+		//printf("%s\n", num + digit_number - now_digit_number);
+	}
+}
+void TestPrintOneToMaxNDigit()
+{
+	for(int digit_number = -1; digit_number <= 7; ++digit_number)
+	{
+		PrintOneToMaxNDigit(digit_number);
+	}
+	printf("All case pass.\n");
+}
 
 int main()
 {
-
+	TestPrintOneToMaxNDigit();
 }

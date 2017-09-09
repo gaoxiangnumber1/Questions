@@ -1,15 +1,15 @@
 /*
-Function Test Data:
-node that is in the linked list and is not the first or last
+ Function Test Data:
+ node that is in the linked list and is not the first or last
 
-Edge Test Data:
-1.	first node
-2.	last node
+ Edge Test Data:
+ 1.	first node
+ 2.	last node
 
-Negative Test Data:
-1.	null pointer
-2.	node that is not in the linked list.(we assume this condition never happens)
-*/
+ Negative Test Data:
+ 1.	null pointer
+ 2.	node that is not in the linked list.(we assume this condition never happens)
+ */
 
 struct Node
 {

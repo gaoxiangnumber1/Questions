@@ -134,7 +134,6 @@ int Fibonacci1(int n)
 	const double sqrt5 = sqrt(5);
 	return static_cast<int>((pow((1 + sqrt5) / 2, n) - pow((1 - sqrt5) / 2, n)) / sqrt5);
 }
-
 void TestFibonacci()
 {
 	printf("----------TestFibonacci----------\n");

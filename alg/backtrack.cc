@@ -1,9 +1,13 @@
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 #include <utility>
+#include <string>
+#include <assert.h>
+using std::string;
 using std::swap;
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////
 const int kQueenKindNumber = 3;
 const int kMaxQueenNumber = 50;
 // [0][column]: false if no queen in this column; otherwise true.
@@ -40,16 +44,17 @@ void NQueenBacktrack(int row, const int queen_number)
 	{
 		for(int column = 0; column < queen_number; ++column)
 		{
-			if(have_queen[0][column] == true ||
-			        have_queen[1][row + column] == true ||
-			        have_queen[2][row - column + queen_number] == true)
+			if(have_queen[0][column] == true || have_queen[1][row + column] == true
+				|| have_queen[2][row - column + queen_number] == true)
 			{
 				continue;
 			}
 			position[row] = column;
-			have_queen[0][column] = have_queen[1][row + column] = have_queen[2][row - column + queen_number] = true;
+			have_queen[0][column] = have_queen[1][row + column] = have_queen[2][row - column
+				+ queen_number] = true;
 			NQueenBacktrack(row + 1, queen_number);
-			have_queen[0][column] = have_queen[1][row + column] = have_queen[2][row - column + queen_number] = false;
+			have_queen[0][column] = have_queen[1][row + column] = have_queen[2][row - column
+				+ queen_number] = false;
 		}
 	}
 }
@@ -63,8 +68,8 @@ void TestNQueen()
 {
 	printf("----------TestNQueen----------\n");
 	const int kCaseNumber = 10;
-	int queen_number[kCaseNumber] = {1,2,3,4,5,6,7,8,9,10};
-	int answer[kCaseNumber] = {1,0,0,2,10,4,40,92,352,724};
+	int queen_number[kCaseNumber] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+	int answer[kCaseNumber] = { 1, 0, 0, 2, 10, 4, 40, 92, 352, 724 };
 	for(int index = 0; index < kCaseNumber; ++index)
 	{
 		NQueen(queen_number[index]);
@@ -75,7 +80,7 @@ void TestNQueen()
 	}
 	printf("All Case pass.\n");
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////
 const int kBoardSize = 9;
 const int kPuzzleSize = kBoardSize * kBoardSize + 1;
 bool row_flag[kBoardSize][kBoardSize];
@@ -89,11 +94,9 @@ void SetFlag(int row, int column, int area, int number, bool value)
 }
 bool IsPlaced(int row, int column, int area, int number)
 {
-	return row_flag[row][number] ||
-	       column_flag[column][number] ||
-	       area_flag[area][number];
+	return row_flag[row][number] || column_flag[column][number] || area_flag[area][number];
 }
-void InitializeFlag(char(&board)[kBoardSize][kBoardSize])
+void InitializeFlag(char (&board)[kBoardSize][kBoardSize])
 {
 	memset(row_flag, false, sizeof row_flag);
 	memset(column_flag, false, sizeof column_flag);
@@ -112,7 +115,7 @@ void InitializeFlag(char(&board)[kBoardSize][kBoardSize])
 		}
 	}
 }
-bool SudokuBacktrack(char(&board)[kBoardSize][kBoardSize], int row, int column)
+bool SudokuBacktrack(char (&board)[kBoardSize][kBoardSize], int row, int column)
 {
 	if(row >= kBoardSize)
 	{
@@ -173,18 +176,13 @@ void TestSudoku()
 {
 	printf("----------TestSudoku----------\n");
 	const int kCaseNumber = 3;
-	char sudoku_puzzle[kCaseNumber][kPuzzleSize] =
-	{
+	char sudoku_puzzle[kCaseNumber][kPuzzleSize] = {
 		"000000010400000000020000000000050407008000300001090000300400200050100000000806000",
 		"000000010400000000020000000000050407008000300001090000300400200050100000000806005",
-		"693784512487512936125963874932651487568247391741398625319475268856129743274836159",
-	};
-	char sudoku_answer[kCaseNumber][kPuzzleSize] =
-	{
-		"693784512487512936125963874932651487568247391741398625319475268856129743274836159",
-		"\0",
-		"693784512487512936125963874932651487568247391741398625319475268856129743274836159",
-	};
+		"693784512487512936125963874932651487568247391741398625319475268856129743274836159", };
+	char sudoku_answer[kCaseNumber][kPuzzleSize] = {
+		"693784512487512936125963874932651487568247391741398625319475268856129743274836159", "\0",
+		"693784512487512936125963874932651487568247391741398625319475268856129743274836159", };
 	for(int index = 0; index < kCaseNumber; ++index)
 	{
 		Sudoku(sudoku_puzzle[index]);
@@ -195,7 +193,7 @@ void TestSudoku()
 	}
 	printf("All Case pass.\n");
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////
 void GetPermutation(int *data, int first, int last)
 {
 	for(int index = first; index < last; ++index)
@@ -257,7 +255,8 @@ void TestPermutationAndSubset()
 {
 	printf("----------TestPermutationAndSubset----------\n");
 	const int kCaseNumber = 4, kDataLength = 4;
-	int data[kCaseNumber][kDataLength] = {{1,2,3,4}, {1,1,2,3}, {1,1,1,2},{1,1,1,1}};
+	int data[kCaseNumber][kDataLength] = { { 1, 2, 3, 4 }, { 1, 1, 2, 3 }, { 1, 1, 1, 2 }, { 1, 1,
+		1, 1 } };
 	for(int index = 0; index < kCaseNumber; ++index)
 	{
 		g_permutation_number = 0;
@@ -271,10 +270,51 @@ void TestPermutationAndSubset()
 		printf("Case %d: total %d subset.\n", index, g_subset_number);
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////
+void PrintByPermutation(string &num, int digit_number, int now_digit_number, int &first_not_zero, int &value)
+{
+	if(now_digit_number == digit_number)
+	{
+		assert(atoi(&num[first_not_zero]) == value++);
+		int exp = digit_number - first_not_zero;
+		if(value - 1 == pow(10, exp) - 1) // 1eexp - 1)
+		{
+			--first_not_zero;
+		}
+		return;
+	}
+	for(char val = '0'; val <= '9'; ++val)
+	{
+		num[now_digit_number] = val;
+		//(val != '0' && first_not_zero > now_digit_number) ? first_not_zero = now_digit_number : 0;
+		PrintByPermutation(num, digit_number, now_digit_number + 1, first_not_zero, value);
+	}
+}
+void PrintOneToMaxNDigit(int digit_number)
+{
+	if(digit_number <= 0)
+	{
+		return;
+	}
+
+	string num(digit_number, 0);
+	int first_not_zero = digit_number - 1, value = 0;
+	PrintByPermutation(num, digit_number, 0, first_not_zero, value);
+}
+void TestPrintOneToMaxNDigit()
+{
+	printf("----------TestPrintOneToMaxNDigit----------\n");
+	for(int digit_number = -1; digit_number <= 7; ++digit_number)
+	{
+		PrintOneToMaxNDigit(digit_number);
+	}
+	printf("All case pass.\n");
+}
+////////////////////////////////////////////
 int main()
 {
-	TestNQueen();
-	TestSudoku();
-	TestPermutationAndSubset();
+	/*TestNQueen();
+	 TestSudoku();
+	 TestPermutationAndSubset();*/
+	TestPrintOneToMaxNDigit();
 }
