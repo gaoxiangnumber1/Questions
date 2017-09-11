@@ -16,7 +16,7 @@ public:
 	~LinkedList();
 
 	void Create();
-	void CreateFromArray(T *data, int length);
+	void CreateFromArray(const vector<T> &data);
 	void Insert(int index, const T &data);
 	void Delete(int index);
 	void Reverse();
@@ -24,6 +24,7 @@ public:
 	bool Empty() const;
 	int Size() const;
 	Node<T> *FirstNode() const;
+	Node<T> *&FirstNodeRef();
 	void SetFirstNode(Node<T> *new_first);
 	Node<T> *LastNode() const;
 
@@ -54,9 +55,9 @@ void LinkedList<T>::Create()
 	}
 }
 template<typename T>
-void LinkedList<T>::CreateFromArray(T *data, int length)
+void LinkedList<T>::CreateFromArray(const vector<T> &data)
 {
-	for(int index = 0; index < length; ++index)
+	for(int index = 0; index < static_cast<int>(data.size()); ++index)
 	{
 		Insert(Size(), data[index]);
 	}
@@ -150,6 +151,11 @@ Node<T> *LinkedList<T>::FirstNode() const
 	return first_;
 }
 template<typename T>
+Node<T> *&LinkedList<T>::FirstNodeRef()
+{
+	return first_;
+}
+template<typename T>
 void LinkedList<T>::SetFirstNode(Node<T> *new_first)
 {
 	first_ = new_first;
@@ -157,11 +163,13 @@ void LinkedList<T>::SetFirstNode(Node<T> *new_first)
 template<typename T>
 Node<T> *LinkedList<T>::LastNode() const
 {
-	Node<T> *last = first_;
-	for(int index = 1; index < length_; ++index)
+	if(first_ == nullptr)
 	{
-		last = last->next_;
+		return nullptr;
 	}
+	Node<T> *last = first_;
+	for(; last->next_ != nullptr; last = last->next_)
+		;
 	return last;
 }
 
@@ -173,11 +181,31 @@ void PrintLinkedList(Node<T> *first)
 	{
 		printf("%d ", node->data_);
 	}
-	printf("node_number=%d\n", size);
+	printf("node_num=%d\n", size);
+}
+template<typename T>
+void PrintVector(const vector<T> &data)
+{
+	for(int index = 0; index < static_cast<int>(data.size()); ++index)
+	{
+		printf("%d ", data[index]);
+	}
+	printf("\n");
+}
+template<typename T>
+void AssertLinkedListNodeData(Node<T> *first, const vector<T> &data)
+{
+	int length = 0;
+	typename vector<T>::const_iterator it = data.begin();
+	for(Node<T> *node = first; node != nullptr; node = node->next_, ++it, ++length)
+	{
+		assert(node->data_ == *it);
+	}
+	assert(length == static_cast<int>(data.size()));
 }
 
 template<typename T>
-void Partition(Node<T> *first, Node<T> *&right, Node<T> *&left, Node<T> *last)
+void PartitionClose(Node<T> *first, Node<T> *&right, Node<T> *&left, Node<T> *last)
 {
 	T pivot = last->data_;
 	Node<T> *divide = first;
@@ -201,7 +229,7 @@ void Partition(Node<T> *first, Node<T> *&right, Node<T> *&left, Node<T> *last)
 }
 template<typename T>
 // Sort nodes in [first, last], assume input is valid(at least 1 node).
-void QuickSort(Node<T> *first, Node<T> *last)
+void QuickSortClose(Node<T> *first, Node<T> *last)
 {
 	if(first == last) // Only 1 node.
 	{
@@ -209,23 +237,39 @@ void QuickSort(Node<T> *first, Node<T> *last)
 	}
 	// Partition [first, last] into { [first, right] <= [divide] < [left, last] }
 	Node<T> *right = first, *left = last;
-	Partition(first, right, left, last);
-	QuickSort(first, right);
-	QuickSort(left, last);
+	PartitionClose(first, right, left, last);
+	QuickSortClose(first, right);
+	QuickSortClose(left, last);
+}
+template<typename T>
+Node<T> *PartitionOpen(Node<T> *first, Node<T> *last)
+{
+	return nullptr;
+}
+template<typename T>
+void QuickSortOpen(Node<T> *first, Node<T> *last) // [first, last)
+{
+	if(first == nullptr || first->next_ == last) // 0 or 1 node
+	{
+		return;
+	}
+	Node<T> *divide = PartitionOpen(first, last);
+	QuickSortOpen(first, divide);
+	QuickSortOpen(divide->next_, last);
 }
 void TestQuickSort()
 {
-	const int data_length = 10;
-	int data[][data_length] = { { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, { 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 },
+	printf("-----TestQuickSort-----\n");
+	vector<vector<int>> data = { { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, { 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 },
 		{ 0, 2, 4, 6, 8, 9, 7, 5, 3, 1 } };
-	int data_number = static_cast<int>(sizeof(data) / sizeof(data[0]));
-	for(int index = 0; index < data_number; ++index)
+	for(int index = 0; index < static_cast<int>(data.size()); ++index)
 	{
-		LinkedList<int> object;
-		object.CreateFromArray(data[index], data_length);
-		QuickSort(object.FirstNode(), object.LastNode());
-		PrintLinkedList(object.FirstNode());
+		LinkedList<int> obj;
+		obj.CreateFromArray(data[index]);
+		QuickSortClose(obj.FirstNode(), obj.LastNode());
+		AssertLinkedListNodeData(obj.FirstNode(), { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
 	}
+	printf("All case pass.\n");
 }
 
 template<typename T>
@@ -296,22 +340,113 @@ Node<T> *MergeSort(Node<T> *first)
 }
 void TestMergeSort()
 {
+	printf("-----TestMergeSort-----\n");
 	vector<vector<int>> data = { { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, { 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 },
 		{ 0, 2, 4, 6, 8, 9, 7, 5, 3, 1 } };
 	for(int index = 0; index < static_cast<int>(data.size()); ++index)
 	{
-		LinkedList<int> object;
-		object.CreateFromArray(data[index].data(), static_cast<int>(data[index].size()));
-		object.SetFirstNode(MergeSort(object.FirstNode()));
-		PrintLinkedList(object.FirstNode());
+		LinkedList<int> obj;
+		obj.CreateFromArray(data[index]);
+		obj.SetFirstNode(MergeSort(obj.FirstNode()));
+		AssertLinkedListNodeData(obj.FirstNode(), { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
 	}
+	printf("All case pass.\n");
+}
+
+template<typename T>
+void DeleteNodeInOOne(Node<T> *&head, Node<T> *node)
+{
+	if(head == nullptr || node == nullptr) // Negative test
+	{
+		return;
+	}
+	if(head == node) // Edge test: delete first node.
+	{
+		head = head->next_;
+		delete node;
+	}
+	else if(node->next_ == nullptr) // Edge test: delete last node.
+	{
+		Node<T> *before = head;
+		for(; before->next_ != node; before = before->next_)
+			;
+		before->next_ = nullptr;
+		delete node;
+	}
+	else
+	{
+		Node<T> *after = node->next_;
+		node->data_ = after->data_;
+		node->next_ = after->next_;
+		delete after;
+	}
+}
+void TestDeleteNodeInOOne()
+{
+	printf("-----TestDeleteNodeInOOne-----\n");
+	LinkedList<int> obj;
+	// Negative test: nullptr.
+	DeleteNodeInOOne(obj.FirstNodeRef(), obj.FirstNode());
+	AssertLinkedListNodeData(obj.FirstNode(), {});
+	// Edge test: first node.
+	obj.CreateFromArray( { 0, 1, 2, 3, 4 });
+	DeleteNodeInOOne(obj.FirstNodeRef(), obj.FirstNode());
+	AssertLinkedListNodeData(obj.FirstNode(), { 1, 2, 3, 4 });
+	// Edge test: last node.
+	DeleteNodeInOOne(obj.FirstNodeRef(), obj.LastNode());
+	AssertLinkedListNodeData(obj.FirstNode(), { 1, 2, 3 });
+	// Function test: middle node.
+	DeleteNodeInOOne(obj.FirstNodeRef(), obj.FirstNode()->next_);
+	AssertLinkedListNodeData(obj.FirstNode(), { 1, 3 });
+	DeleteNodeInOOne(obj.FirstNodeRef(), obj.LastNode());
+	AssertLinkedListNodeData(obj.FirstNode(), { 1 });
+	DeleteNodeInOOne(obj.FirstNodeRef(), obj.LastNode());
+	AssertLinkedListNodeData(obj.FirstNode(), {});
+	printf("All case pass.\n");
+}
+
+template<typename T>
+Node<T> *FindKthToTailNode(Node<T> *first, int k)
+{
+	if(first == nullptr || k <= 0) // Negative test.
+	{
+		return nullptr;
+	}
+	Node<T> *slow = first, *fast = first;
+	for(int cnt = 1; cnt <= k - 1; ++cnt)
+	{
+		fast = fast->next_;
+		if(fast == nullptr) // Negative test.
+		{
+			return nullptr;
+		}
+	}
+	for(; fast->next_ != nullptr; fast = fast->next_, slow = slow->next_)
+		;
+	return slow;
+}
+void TestFindKthToTailNode()
+{
+	printf("-----TestFindKthToTailNode-----\n");
+	LinkedList<int> obj;
+	// Negative test: nullptr, k<=0, k > length
+	assert(FindKthToTailNode(obj.FirstNode(), 1) == nullptr);
+	obj.CreateFromArray( { 5, 4, 3, 2, 1 });
+	assert(FindKthToTailNode(obj.FirstNode(), 0) == nullptr);
+	assert(FindKthToTailNode(obj.FirstNode(), 6) == nullptr);
+	// Function test: 1<=k<=length
+	assert(FindKthToTailNode(obj.FirstNode(), 1)->data_ == 1);
+	assert(FindKthToTailNode(obj.FirstNode(), 3)->data_ == 3);
+	assert(FindKthToTailNode(obj.FirstNode(), 5)->data_ == 5);
+	printf("All case pass.\n");
 }
 
 int main()
 {
-	LinkedList<int> object; // Stack object's dtor is auto called when scope ends.
+	LinkedList<int> obj; // Stack obj's dtor is auto called when scope ends.
 	printf("0: Exit\n1: Create\n2: Insert\n3: Delete\n4: Reverse\n"
-		"5: QuickSort\n6: TestQuickSort\n7: MergeSort\n8: TestMergeSort\n");
+		"5: QuickSort\n6: TestQuickSort\n7: MergeSort\n8: TestMergeSort\n"
+		"9: TestDeleteNodeInOOne\n10: TestFindKthToTailNode\n");
 	int operation, data, index;
 	while(scanf("%d", &operation) == 1)
 	{
@@ -320,36 +455,42 @@ int main()
 		case 0:
 			return 0;
 		case 1:
-			object.Create();
-			PrintLinkedList(object.FirstNode());
+			obj.Create();
+			PrintLinkedList(obj.FirstNode());
 			break;
 		case 2:
 			scanf("%d %d", &index, &data);
-			object.Insert(index, data);
-			PrintLinkedList(object.FirstNode());
+			obj.Insert(index, data);
+			PrintLinkedList(obj.FirstNode());
 			break;
 		case 3:
 			scanf("%d", &index);
-			object.Delete(index);
-			PrintLinkedList(object.FirstNode());
+			obj.Delete(index);
+			PrintLinkedList(obj.FirstNode());
 			break;
 		case 4:
-			object.Reverse();
-			PrintLinkedList(object.FirstNode());
+			obj.Reverse();
+			PrintLinkedList(obj.FirstNode());
 			break;
 		case 5:
-			QuickSort(object.FirstNode(), object.LastNode());
-			PrintLinkedList(object.FirstNode());
+			//QuickSort(obj.FirstNode(), obj.LastNode());
+			//PrintLinkedList(obj.FirstNode());
 			break;
 		case 6:
 			TestQuickSort();
 			break;
 		case 7:
-			MergeSort(object.FirstNode());
-			PrintLinkedList(object.FirstNode());
+			MergeSort(obj.FirstNode());
+			PrintLinkedList(obj.FirstNode());
 			break;
 		case 8:
 			TestMergeSort();
+			break;
+		case 9:
+			TestDeleteNodeInOOne();
+			break;
+		case 10:
+			TestFindKthToTailNode();
 			break;
 		}
 	}
