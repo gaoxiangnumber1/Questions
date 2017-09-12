@@ -1,5 +1,6 @@
-#include <bits/stdc++.h>
-using namespace std;
+#include <pthread.h>
+#include <assert.h>
+#include <stdio.h>
 
 // Usage: `T &t = ThreadSafeSingleton<T>::Instance();`
 template<typename T>

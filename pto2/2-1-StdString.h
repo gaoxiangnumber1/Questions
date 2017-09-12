@@ -1,1 +1,2 @@
-../ds/string.cc class String
+../ds/std_string.cc
+class String

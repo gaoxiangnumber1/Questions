@@ -39,7 +39,7 @@ void TestEuclidGreatestCommonDivisor()
 	printf("All case pass\n");
 }
 ///////////////////////////////////
-int FibonacciN(int n)
+int FibonacciON(int n)
 {
 	if(n <= 1) // Negative and Edge test.
 	{
@@ -91,7 +91,7 @@ Matrix MatrixQuickPower(const Matrix &base, int exp)
 	}
 	return result;
 }
-int FibonacciLogN(int n)
+int FibonacciOLogN(int n)
 {
 	if(n <= 1)
 	{
@@ -102,7 +102,7 @@ int FibonacciLogN(int n)
 	return MatrixQuickPower(state, n - 1)[0][0];
 }
 // https://www.zhihu.com/question/29215494 Not memorize until need.
-int FibonacciLogN2(int n)
+int FibonacciOLogN2(int n)
 {
 	if(n <= 1)
 	{
@@ -124,7 +124,7 @@ int FibonacciLogN2(int n)
 	}
 	return a;
 }
-int Fibonacci1(int n)
+int FibonacciO1(int n)
 {
 	if(n <= 1)
 	{
@@ -140,8 +140,8 @@ void TestFibonacci()
 	for(int n = -1; n < 40; ++n)
 	{
 		assert(
-			FibonacciN(n) == Fibonacci1(n) && FibonacciLogN(n) == Fibonacci1(n)
-				&& FibonacciLogN2(n) == Fibonacci1(n));
+			FibonacciON(n) == FibonacciO1(n) && FibonacciOLogN(n) == FibonacciO1(n)
+				&& FibonacciOLogN2(n) == FibonacciO1(n));
 	}
 	printf("All case pass.\n");
 }

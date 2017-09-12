@@ -1,1 +1,2 @@
-// ../alg/algebra.cc
+../alg/algebra.cc
+double QuickPower

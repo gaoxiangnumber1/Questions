@@ -1,7 +1,12 @@
 #include <stdio.h>
 #include <string.h>
+#include <assert.h>
 #include <utility>
-using namespace std;
+#include <vector>
+#include <algorithm>
+using std::swap;
+using std::vector;
+using std::sort;
 
 // Assume all inputs are valid.
 // Assume n is the number of elements to be sorted.
@@ -89,27 +94,38 @@ void ShellSort(int *data, int first, int last)
 	}
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+int Partition2(int *data, int first, int last) // O(n)
+{
+	int pivot = data[first];
+	int divide = last - 1;
+	for(int index = last - 1; index > first; --index)
+	{
+		if(data[index] > pivot)
+		{
+			data[index] != data[divide] ? swap(data[index], data[divide]) : void(0);
+			--divide;
+		}
+	}
+	data[divide] != data[first] ? swap(data[divide], data[first]) : void(0);
+	return divide;
+}
 int Partition(int *data, int first, int last) // O(n)
 {
-	int pivot = data[last - 1];
-	int divide = first;
-	for(int index = first; index < last - 1; ++index)
+	int pivot = data[first];
+	int divide = first + 1;
+	for(int index = first + 1; index < last; ++index)
 	{
 		if(data[index] <= pivot)
 		{
-			if(data[index] != data[divide])
-			{
-				swap(data[index], data[divide]);
-			}
+			data[index] != data[divide] ? swap(data[index], data[divide]) : void(0);
 			++divide;
 		}
 	}
-	if(data[divide] != data[last - 1])
-	{
-		swap(data[divide], data[last - 1]);
-	}
+	--divide;
+	data[divide] != data[first] ? swap(data[divide], data[first]) : void(0);
 	return divide;
 }
+
 // TC: Best = O(nlogn), Average = O(nlogn), Worst = O(n^2)
 // SC: Best = O(logn), Worst = O(n)
 void QuickSort(int *data, int first, int last) // [first, last)
@@ -320,16 +336,24 @@ void PrintData(int *data, int first, int last)
 using SortFunction = void(*)(int*, int, int);
 void Test(const char *name, SortFunction Sort)
 {
-	printf("----------%s----------\n", name);
-	const int data_length = 10;
-	int data[][data_length] = { { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, { 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 },
-		{ 0, 2, 4, 6, 8, 9, 7, 5, 3, 1 } };
-	int data_number = static_cast<int>(sizeof(data) / sizeof(data[0]));
-	for(int data_index = 0; data_index < data_number; ++data_index)
+	printf("-----Test%s-----\n", name);
+	int number_count = 10;
+	for(int first = 0; first <= number_count; ++first)
 	{
-		Sort(data[data_index], 0, data_length);
-		PrintData(data[data_index], 0, data_length);
+		vector<vector<int>> test1 = { { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, { 9, 8, 7, 6, 5, 4, 3, 2, 1,
+			0 }, { 0, 2, 4, 6, 8, 9, 7, 5, 3, 1 } };
+		vector<vector<int>> test2 = test1;
+		for(int index = 0; index < static_cast<int>(test1.size()); ++index)
+		{
+			Sort(test1[index].data(), first, number_count);
+			sort(test2[index].data() + first, test2[index].data() + number_count);
+			for(int i = 0; i < number_count; ++i)
+			{
+				assert(test1[index][i] == test2[index][i]);
+			}
+		}
 	}
+	printf("All case pass.\n");
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 int main()

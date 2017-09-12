@@ -1,4 +1,5 @@
 ../ds/linked_list.cc
+Node<T> *FindKthToTailNode
 
 struct ListNode
 {
