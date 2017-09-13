@@ -1,22 +1,19 @@
-#include <vector>
-#include <assert.h>
-#include <stdio.h>
-using std::vector;
+#include "../common_system_header.h"
 
 //////////////////////////////////////////////////////////////////////
-int NumberOfOneInBinary(int n)
+int NumberOfOneInBinary(int number)
 {
-	int number = 0;
-	while(n != 0)
+	int count = 0;
+	while(number != 0)
 	{
-		n = n & (n - 1);
-		++number;
+		number = number & (number - 1);
+		++count;
 	}
-	return number;
+	return count;
 }
-int MinChangeBit(int m, int n)
+int MinChangeBit(int m, int number)
 {
-	return NumberOfOneInBinary(m ^ n);
+	return NumberOfOneInBinary(m ^ number);
 }
 void TestNumberOfOneInBinary()
 {

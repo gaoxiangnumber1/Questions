@@ -1,5 +1,5 @@
-#ifndef CPPLIB_DS_PRIORITY_QUEUE_H_
-#define CPPLIB_DS_PRIORITY_QUEUE_H_
+#ifndef DS_PRIORITY_QUEUE_H_
+#define DS_PRIORITY_QUEUE_H_
 
 #include "pair.h"
 #include "vector.h"
@@ -168,4 +168,4 @@ void PriorityQueue<Key, Value>::ShowContent() const
 	}
 	printf("\n");
 }
-#endif // CPPLIB_DS_PRIORITY_QUEUE_H_
+#endif // DS_PRIORITY_QUEUE_H_

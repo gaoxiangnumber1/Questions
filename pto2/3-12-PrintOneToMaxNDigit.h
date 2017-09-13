@@ -1,5 +1,5 @@
 ../ds/big_integer.cc
-void PrintOneToMaxNDigit
+void PrintOneToMaxNDigit(int digit_number)
 
 ../alg/backtrack.cc
-void PrintOneToMaxNDigit
+void PrintOneToMaxNDigit(int digit_number)

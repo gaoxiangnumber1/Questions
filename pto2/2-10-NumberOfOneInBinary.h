@@ -1,2 +1,2 @@
 ../alg/bit.cc
-int NumberOfOneInBinary
+int NumberOfOneInBinary(int number)

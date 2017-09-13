@@ -1,7 +1,4 @@
-#include <assert.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdint.h>
+#include "../common_system_header.h"
 
 bool g_invalid_input = false;
 void ShowContent(const void *data, size_t length)

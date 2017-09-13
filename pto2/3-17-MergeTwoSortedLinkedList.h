@@ -1,5 +1,5 @@
 ../ds/linked_list.cc
-Node<T> *MergeTwoSortedLinkedList
+Node<T> *MergeTwoSortedLinkedList(Node<T> *first, Node<T> *second)
 
 struct ListNode
 {

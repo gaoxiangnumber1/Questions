@@ -1,8 +1,4 @@
-#include <vector>
-#include <stdio.h>
-#include <assert.h>
-using std::vector;
-using std::swap;
+#include "../common_system_header.h"
 
 //////////////////////////////////////////////////////////////////////
 bool FindInTwoDimensionArray(const vector<vector<int>> &data, int target)

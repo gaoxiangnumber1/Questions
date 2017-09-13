@@ -1,5 +1,5 @@
-#ifndef CPPLIB_DS_VERTEX_H_
-#define CPPLIB_DS_VERTEX_H_
+#ifndef DS_VERTEX_H_
+#define DS_VERTEX_H_
 
 #include "queue.h"
 
@@ -62,4 +62,4 @@ void DFS(int src, Vertex *graph)
 		}
 	}
 }
-#endif // CPPLIB_DS_VERTEX_H_
+#endif // DS_VERTEX_H_

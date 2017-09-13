@@ -1,8 +1,7 @@
-#ifndef CPPLIB_DS_PAIR_H_
-#define CPPLIB_DS_PAIR_H_
+#ifndef DS_PAIR_H_
+#define DS_PAIR_H_
 
-#include <stdio.h>
-#include <utility>
+#include "../common_system_header.h"
 
 template<typename Key, typename Value>
 struct Pair
@@ -53,4 +52,4 @@ void swap(Pair<Key, Value> &lhs, Pair<Key, Value> &rhs)
 	lhs.Swap(rhs);
 }
 }
-#endif // CPPLIB_DS_PAIR_H_
+#endif // DS_PAIR_H_

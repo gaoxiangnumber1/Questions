@@ -1,12 +1,4 @@
-#include <stdio.h>
-#include <string.h>
-#include <utility>
-#include <math.h>
-#include <stdlib.h>
-#include <assert.h>
-#include <vector>
-using std::swap;
-using std::vector;
+#include "../common_system_header.h"
 
 ///////////////////////////////////
 int EuclidGreatestCommonDivisor(int big, int small)
@@ -45,7 +37,6 @@ int FibonacciON(int n)
 	{
 		return (n <= 0 ? 0 : 1);
 	}
-
 	int fn1 = 1, fn2 = 0;
 	for(int index = 2; index <= n; ++index)
 	{
@@ -55,6 +46,7 @@ int FibonacciON(int n)
 	}
 	return fn1;
 }
+using Row = vector<int>;
 using Matrix = vector<vector<int>>;
 Matrix MultiMatrix(const Matrix &lhs, const Matrix &rhs)
 {
@@ -62,7 +54,7 @@ Matrix MultiMatrix(const Matrix &lhs, const Matrix &rhs)
 	int total_row = static_cast<int>(lhs.size());
 	int total_cnt = static_cast<int>(rhs.size());
 	int total_col = static_cast<int>(rhs[0].size());
-	Matrix result(total_row, vector<int>(total_col, 0));
+	Matrix result(total_row, Row(total_col, 0));
 	for(int row = 0; row < total_row; ++row)
 	{
 		for(int col = 0; col < total_col; ++col)
@@ -78,7 +70,7 @@ Matrix MultiMatrix(const Matrix &lhs, const Matrix &rhs)
 Matrix MatrixQuickPower(const Matrix &base, int exp)
 {
 	assert(exp >= 0);
-	Matrix result(base.size(), vector<int>(base[0].size(), 0));
+	Matrix result(base.size(), Row(base[0].size(), 0));
 	for(int index = 0; index < static_cast<int>(result.size()); ++index)
 	{
 		result[index][index] = 1;
@@ -86,7 +78,7 @@ Matrix MatrixQuickPower(const Matrix &base, int exp)
 	Matrix tmp = base;
 	for(; exp != 0; exp >>= 1)
 	{
-		exp & 1 ? result = MultiMatrix(result, tmp) : result;
+		exp & 1 ? result = MultiMatrix(result, tmp) : Matrix();
 		tmp = MultiMatrix(tmp, tmp);
 	}
 	return result;
@@ -95,11 +87,9 @@ int FibonacciOLogN(int n)
 {
 	if(n <= 1)
 	{
-		return (n <= 0 ? 0 : 1);
+		return n <= 0 ? 0 : 1;
 	}
-
-	Matrix state = { { 1, 1 }, { 1, 0 } };
-	return MatrixQuickPower(state, n - 1)[0][0];
+	return MatrixQuickPower( { { 1, 1 }, { 1, 0 } }, n - 1)[0][0];
 }
 // https://www.zhihu.com/question/29215494 Not memorize until need.
 int FibonacciOLogN2(int n)
@@ -130,7 +120,6 @@ int FibonacciO1(int n)
 	{
 		return (n <= 0 ? 0 : 1);
 	}
-
 	const double sqrt5 = sqrt(5);
 	return static_cast<int>((pow((1 + sqrt5) / 2, n) - pow((1 - sqrt5) / 2, n)) / sqrt5);
 }
@@ -187,7 +176,6 @@ void TestPrime()
 	printf("All case Pass.\n");
 }
 ///////////////////////////////////
-bool g_invalid_input = false;
 inline bool Equal(double a, double b)
 {
 	return fabs(a - b) < 1e-6;
@@ -196,17 +184,16 @@ double QuickPower(double base, int exp)
 {
 	if(Equal(base, 0) == true && exp < 0) // Negative test.
 	{
-		g_invalid_input = true;
 		return 0;
 	}
 
 	double result = 1;
 	for(int abs_exp = abs(exp); abs_exp != 0; abs_exp >>= 1)
 	{
-		abs_exp & 1 ? result *= base : result;
+		abs_exp & 1 ? result *= base : double();
 		base *= base;
 	}
-	return (exp < 0 ? 1 / result : result);
+	return exp < 0 ? 1 / result : result;
 }
 void TestQuickPower()
 {

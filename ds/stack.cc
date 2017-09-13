@@ -1,7 +1,4 @@
-#include "stack.h"
-#include <stack>
-#include <assert.h>
-using std::stack;
+#include "../common_system_header.h"
 
 class ImplementQueueByTwoStack
 {

@@ -1,9 +1,4 @@
-#include <stack>
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <ctype.h>
-using namespace std;
+#include "../common_system_header.h"
 
 int StringToInt(const char *str, int length)
 {

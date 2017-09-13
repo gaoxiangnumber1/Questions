@@ -1,8 +1,6 @@
-#ifndef CPPLIB_DS_BINARY_NODE_H_
-#define CPPLIB_DS_BINARY_NODE_H_
-
-#include "stack.h"
-#include "queue.h"
+#ifndef DS_BINARY_NODE_H_
+#define DS_BINARY_NODE_H_
+#include "../common_system_header.h"
 
 template<typename T>
 struct BinaryNode
@@ -74,17 +72,17 @@ void PreOrderRecursive(BinaryNode<T> *root)
 template<typename T>
 void PreOrderLoop(BinaryNode<T> *root)
 {
-	Stack<BinaryNode<T>*> stack;
-	while(root != nullptr || stack.Empty() == false)
+	stack<BinaryNode<T>*> my_stack;
+	while(root != nullptr || my_stack.empty() == false)
 	{
 		while(root != nullptr)
 		{
 			Visit(root);
-			stack.Push(root);
+			my_stack.push(root);
 			root = root->left_;
 		}
-		root = stack.Top()->right_;
-		stack.Pop();
+		root = my_stack.top()->right_;
+		my_stack.pop();
 	}
 }
 template<typename T>
@@ -100,16 +98,16 @@ void InOrderRecursive(BinaryNode<T> *root)
 template<typename T>
 void InOrderLoop(BinaryNode<T> *root)
 {
-	Stack<BinaryNode<T>*> stack;
-	while(root != nullptr || stack.Empty() == false)
+	stack<BinaryNode<T>*> my_stack;
+	while(root != nullptr || my_stack.empty() == false)
 	{
 		while(root != nullptr)
 		{
-			stack.Push(root);
+			my_stack.push(root);
 			root = root->left_;
 		}
-		root = stack.Top();
-		stack.Pop();
+		root = my_stack.top();
+		my_stack.pop();
 		Visit(root);
 		root = root->right_;
 	}
@@ -127,29 +125,29 @@ void PostOrderRecursive(BinaryNode<T> *root)
 template<typename T>
 void PostOrderLoop(BinaryNode<T> *root)
 {
-	Stack<BinaryNode<T>*> stack;
-	while(root != nullptr || stack.Empty() == false)
+	stack<BinaryNode<T>*> my_stack;
+	while(root != nullptr || my_stack.empty() == false)
 	{
 		while(root != nullptr)
 		{
-			stack.Push(root);
+			my_stack.push(root);
 			root = root->left_;
 		}
-		if(stack.Top()->right_ == nullptr) // Leaf
+		if(my_stack.top()->right_ == nullptr) // Leaf
 		{
-			root = stack.Top();
-			stack.Pop();
+			root = my_stack.top();
+			my_stack.pop();
 			Visit(root);
-			while(stack.Empty() == false
-				&& (stack.Top()->right_ == nullptr || stack.Top()->right_ == root))
+			while(my_stack.empty() == false
+				&& (my_stack.top()->right_ == nullptr || my_stack.top()->right_ == root))
 			{
-				root = stack.Top();
-				stack.Pop();
+				root = my_stack.top();
+				my_stack.pop();
 				Visit(root);
 			}
-			if(stack.Empty() == false)
+			if(my_stack.empty() == false)
 			{
-				root = stack.Top()->right_;
+				root = my_stack.top()->right_;
 			}
 			else
 			{
@@ -158,28 +156,36 @@ void PostOrderLoop(BinaryNode<T> *root)
 		}
 		else
 		{
-			root = stack.Top()->right_;
+			root = my_stack.top()->right_;
 		}
 	}
 }
 template<typename T>
-void LevelOrder(BinaryNode<T> *root)
+vector<T> LevelOrder(BinaryNode<T> *root)
 {
-	Queue<BinaryNode<T>*> queue;
-	queue.Enqueue(root);
-	while(queue.Empty() == false)
+	if(root == nullptr)
 	{
-		BinaryNode<T> *node = queue.Dequeue();
-		Visit(node);
+		return vector<T>();
+	}
+	queue<BinaryNode<T>*> my_queue;
+	vector<T> vec;
+	my_queue.push(root);
+	while(my_queue.empty() == false)
+	{
+		BinaryNode<T> *node = my_queue.front();
+		my_queue.pop();
+		//Visit(node);
+		vec.push_back(node->data_);
 		if(node->left_ != nullptr)
 		{
-			queue.Enqueue(node->left_);
+			my_queue.push(node->left_);
 		}
 		if(node->right_ != nullptr)
 		{
-			queue.Enqueue(node->right_);
+			my_queue.push(node->right_);
 		}
 	}
+	return vec;
 }
 template<typename T>
 void Visit(BinaryNode<T> *node)
@@ -206,4 +212,4 @@ int NodeCount(BinaryNode<T> *root)
 	}
 	return NodeCount(root->left_) + NodeCount(root->right_) + 1;
 }
-#endif // CPPLIB_DS_BINARY_NODE_H_
+#endif // DS_BINARY_NODE_H_

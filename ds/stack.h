@@ -1,5 +1,5 @@
-#ifndef CPPLIB_DS_STACK_H_
-#define CPPLIB_DS_STACK_H_
+#ifndef DS_STACK_H_
+#define DS_STACK_H_
 
 #include "node.h"
 
@@ -96,4 +96,4 @@ void Stack<T>::ShowContent() const
 	}
 	printf("\n");
 }
-#endif // CPPLIB_DS_STACK_H_
+#endif // DS_STACK_H_

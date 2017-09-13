@@ -1,5 +1,4 @@
 #include "binary_node.h"
-
 template<typename T>
 class BinaryTree
 {
@@ -10,7 +9,7 @@ public:
 	}
 	~BinaryTree();
 
-	void CreateCompleteBinaryTreeByLevel();
+	void CreateCompleteBinaryTreeByLevel(const vector<T> &data);
 	void ConstructBinaryTreeFromPreAndInOrder();
 	void ConstructBinaryTreeFromPostAndInOrder();
 	// No `CreateTreeByPreAndPost` because we must need In to know scope [first, last),
@@ -21,43 +20,40 @@ public:
 	void InOrderLoop() const;
 	void PostOrderRecursive() const;
 	void PostOrderLoop() const;
-	void LevelOrder() const;
+	vector<T> LevelOrder() const;
 	void Height() const;
 	void NodeCount() const;
+	BinaryNode<T> *root() const;
 
 private:
 	BinaryNode<T> *root_;
 };
-
 template<typename T>
 BinaryTree<T>::~BinaryTree()
 {
 	::Delete(root_);
 }
 template<typename T>
-void BinaryTree<T>::CreateCompleteBinaryTreeByLevel()
+void BinaryTree<T>::CreateCompleteBinaryTreeByLevel(const vector<T> &data)
 {
-	int data_number;
-	scanf("%d", &data_number);
-	T data_array[data_number];
-	for(int index = 0; index < data_number; ++index)
+	if(data.size() <= 0)
 	{
-		scanf("%d", &data_array[index]);
+		return;
 	}
-
-	int data_index = 0;
-	root_ = new BinaryNode<T>(data_array[data_index++]);
-	Queue<BinaryNode<T>*> queue;
-	queue.Enqueue(root_);
-	while(data_index < data_number)
+	root_ = new BinaryNode<T>(data[0]);
+	queue<BinaryNode<T>*> my_queue;
+	my_queue.push(root_);
+	int length = static_cast<int>(data.size());
+	for(int index = 1; index < length;)
 	{
-		BinaryNode<T> *node = queue.Dequeue();
-		node->left_ = new BinaryNode<T>(data_array[data_index++]);
-		queue.Enqueue(node->left_);
-		if(data_index < data_number)
+		BinaryNode<T> *node = my_queue.front();
+		my_queue.pop();
+		node->left_ = new BinaryNode<T>(data[index++]);
+		my_queue.push(node->left_);
+		if(index < length)
 		{
-			node->right_ = new BinaryNode<T>(data_array[data_index++]);
-			queue.Enqueue(node->right_);
+			node->right_ = new BinaryNode<T>(data[index++]);
+			my_queue.push(node->right_);
 		}
 	}
 }
@@ -138,11 +134,11 @@ void BinaryTree<T>::PostOrderLoop() const
 	printf("\n");
 }
 template<typename T>
-void BinaryTree<T>::LevelOrder() const
+vector<T> BinaryTree<T>::LevelOrder() const
 {
-	printf("LevelOrder: ");
-	::LevelOrder(root_);
-	printf("\n");
+//	printf("LevelOrder: ");
+	return ::LevelOrder(root_);
+//	printf("\n");
 }
 template<typename T>
 void BinaryTree<T>::Height() const
@@ -154,9 +150,90 @@ void BinaryTree<T>::NodeCount() const
 {
 	printf("NodeCount:  %d\n", ::NodeCount(root_));
 }
-
+template<typename T>
+BinaryNode<T> *BinaryTree<T>::root() const
+{
+	return root_;
+}
+////////////////////////////////////////////////////////////////////////////////
+template<typename T>
+bool IsSubTree(BinaryNode<T> *large, BinaryNode<T> *small)
+{
+	if(large == nullptr || small == nullptr) // Negative test
+	{
+		return small == nullptr ? true : false;
+	}
+	bool is_sub_tree = false;
+	large->data_ == small->data_ ? (is_sub_tree = IsSubTree(large->left_, small->left_)
+		&& IsSubTree(large->right_, small->right_)) : bool();
+	is_sub_tree == false ? is_sub_tree = IsSubTree(large->left_, small) : bool();
+	is_sub_tree == false ? is_sub_tree = IsSubTree(large->right_, small) : bool();
+	return is_sub_tree;
+}
+void TestIsSubTree()
+{
+	printf("-----TestIsSubTree-----\n");
+	BinaryTree<int> large_null, large_zero, large_one_to_seven;
+	BinaryTree<int> small_null, small_zero, small_one, small_two_four_five, small_three_four_five;
+	large_zero.CreateCompleteBinaryTreeByLevel( { 0 });
+	large_one_to_seven.CreateCompleteBinaryTreeByLevel( { 1, 2, 3, 4, 5, 6, 7 });
+	small_zero.CreateCompleteBinaryTreeByLevel( { 0 });
+	small_one.CreateCompleteBinaryTreeByLevel( { 1 });
+	small_two_four_five.CreateCompleteBinaryTreeByLevel( { 2, 4, 5 });
+	small_three_four_five.CreateCompleteBinaryTreeByLevel( { 3, 4, 5 });
+	// Negative test: nullptr
+	assert(IsSubTree(large_null.root(), small_null.root()) == true); // nullptr, nullptr
+	assert(IsSubTree(large_null.root(), small_zero.root()) == false); // nullptr, non-null
+	assert(IsSubTree(large_zero.root(), small_null.root()) == true); // non-null, nullptr
+	// Function test.
+	assert(IsSubTree(large_zero.root(), small_zero.root()) == true); // 1 node, true
+	assert(IsSubTree(large_zero.root(), small_one.root()) == false); // 1 node, false
+	assert(IsSubTree(large_one_to_seven.root(), small_two_four_five.root()) == true); // 3 node, true
+	assert(IsSubTree(large_one_to_seven.root(), small_three_four_five.root()) == false); // 3 node, false
+	printf("All case pass.\n");
+}
+////////////////////////////////////////////////////////////////////////////////
+template<typename T>
+void ModifyBinaryTreeToItsMirror(BinaryNode<T> *root)
+{
+	if(root == nullptr) // Negative test.
+	{
+		return;
+	}
+	swap(root->left_, root->right_);
+	ModifyBinaryTreeToItsMirror(root->left_);
+	ModifyBinaryTreeToItsMirror(root->right_);
+}
+void TestModifyBinaryTreeToItsMirror()
+{
+	printf("-----TestModifyBinaryTreeToItsMirror-----\n");
+	const int kCaseNumber = 5;
+	vector<BinaryTree<int>> tree(kCaseNumber);
+	vector<vector<int>> before_modify = { {}, { 1 }, { 1, 2, 3 }, { 1, 2, 3, 4, 5, 6, 7 }, { 1, 2,
+		3, 4, 5, 6, 7, 8 } };
+	vector<vector<int>> after_modify = { {}, { 1 }, { 1, 3, 2 }, { 1, 3, 2, 7, 6, 5, 4 }, { 1, 3, 2,
+		7, 6, 5, 4, 8 } };
+	vector<vector<int>> my_modify(kCaseNumber);
+	for(int index = 0; index < kCaseNumber; ++index)
+	{
+		tree[index].CreateCompleteBinaryTreeByLevel(before_modify[index]);
+		ModifyBinaryTreeToItsMirror(tree[index].root());
+		my_modify[index] = tree[index].LevelOrder();
+		assert(after_modify[index].size() == my_modify[index].size());
+		for(int i = 0; i < static_cast<int>(after_modify[index].size()); ++i)
+		{
+			assert(after_modify[index][i] == my_modify[index][i]);
+		}
+	}
+	printf("All case pass.\n");
+}
+////////////////////////////////////////////////////////////////////////////////
 int main()
 {
+	TestIsSubTree();
+	TestModifyBinaryTreeToItsMirror();
+
+#ifdef TEST_BINARY_TREE
 	printf("0: Exit\n"
 		"1: CreateCompleteBinaryTreeByLevel\n"
 		"2: ConstructBinaryTreeFromPreAndInOrder\n"
@@ -167,18 +244,18 @@ int main()
 		BinaryTree<int> tree;
 		switch(operation)
 		{
-		case 0:
+			case 0:
 			return 0;
-		case 1:
+			case 1:
 			tree.CreateCompleteBinaryTreeByLevel();
 			break;
-		case 2:
+			case 2:
 			tree.ConstructBinaryTreeFromPreAndInOrder();
 			break;
-		case 3:
+			case 3:
 			tree.ConstructBinaryTreeFromPostAndInOrder();
 			break;
-		default:
+			default:
 			return 0;
 		}
 		tree.PreOrderRecursive();
@@ -191,6 +268,7 @@ int main()
 		tree.Height();
 		tree.NodeCount();
 	}
+#endif
 }
 /*
  1 11 1 2 3 4 5 6 7 8 9 10 11

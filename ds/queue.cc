@@ -1,7 +1,5 @@
 #include "queue.h"
-#include <assert.h>
-#include <queue>
-using std::queue;
+#include "../common_system_header.h"
 
 class ImplementStackByTwoQueue
 {

@@ -1,8 +1,7 @@
-#ifndef CPPLIB_DS_VECTOR_H_
-#define CPPLIB_DS_VECTOR_H_
+#ifndef DS_VECTOR_H_
+#define DS_VECTOR_H_
 
-#include <stdio.h>
-#include <utility>
+#include "../common_system_header.h"
 
 // TODO: Separate "allocate memory" with "construct object"
 // 1.Use std::allocator, see <C++ Primer> Section 13.5
@@ -104,4 +103,4 @@ void Vector<T>::Swap(Vector &rhs)
 	std::swap(data_, rhs.data_);
 }
 
-#endif // CPPLIB_DS_VECTOR_H_
+#endif // DS_VECTOR_H_

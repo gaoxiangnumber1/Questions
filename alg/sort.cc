@@ -1,12 +1,4 @@
-#include <stdio.h>
-#include <string.h>
-#include <assert.h>
-#include <utility>
-#include <vector>
-#include <algorithm>
-using std::swap;
-using std::vector;
-using std::sort;
+#include "../common_system_header.h"
 
 // Assume all inputs are valid.
 // Assume n is the number of elements to be sorted.

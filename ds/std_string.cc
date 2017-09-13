@@ -1,11 +1,4 @@
-#include <stdio.h>
-#include <string.h>
-#include <utility>
-#include <vector>
-#include <assert.h>
-using std::swap;
-using std::vector;
-using std::move;
+#include "../common_system_header.h"
 
 bool can_print = false;
 class String

@@ -1,6 +1,4 @@
-#include <stdio.h>
-#include <assert.h>
-#include <string.h>
+#include "../common_system_header.h"
 
 /////////////////////////////////////////////////////////////////
 void ReplaceStringSpace(char *str, int max_length)

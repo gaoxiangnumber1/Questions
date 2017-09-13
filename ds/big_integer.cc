@@ -1,11 +1,4 @@
-#include <string.h>
-#include <stdio.h>
-#include <utility>
-#include <stdint.h>
-#include <stdlib.h>
-#include <assert.h>
-#include <string>
-using std::string;
+#include "../common_system_header.h"
 
 struct BigInteger
 {
@@ -367,34 +360,29 @@ void TestBigInteger()
 	 */
 }
 
-bool Increment(string &num, int digit_number, int &now_digit_number)
+bool Increment(string &num, int digit_number, int &significant_digit_number)
 {
-	bool advance = true;
-	for(int index = 1; index <= now_digit_number && advance == true; ++index)
+	bool need_carry = true;
+	for(int index = 1; index <= significant_digit_number; ++index)
 	{
-		if('0' <= num[digit_number - index] && num[digit_number - index] <= '8')
+		if(num[digit_number - index] != '9')
 		{
 			++num[digit_number - index];
-			advance = false;
+			need_carry = false;
+			break;
 		}
-		else
-		{
-			num[digit_number - index] = '0';
-		}
+		num[digit_number - index] = '0';
 	}
-	if(advance == true)
+	if(need_carry == true)
 	{
-		if(now_digit_number < digit_number)
+		if(significant_digit_number == digit_number) // Overflow
 		{
-			++now_digit_number;
-			num[digit_number - now_digit_number] = '1';
+			return false;
 		}
-		else // Overflow
-		{
-			now_digit_number = -1;
-		}
+		++significant_digit_number;
+		num[digit_number - significant_digit_number] = '1';
 	}
-	return now_digit_number == -1 ? false : true;
+	return true;
 }
 void PrintOneToMaxNDigit(int digit_number)
 {
@@ -402,19 +390,18 @@ void PrintOneToMaxNDigit(int digit_number)
 	{
 		return;
 	}
-
-	// char num[digit_number + 1]; memset(num, '0', sizeof num); num[digit_number] = 0;
 	string num(digit_number, '0');
-	int now_digit_number = 1, value = 0;
-	while(Increment(num, digit_number, now_digit_number) == true)
+	int significant_digit_number = 1, value = 0;
+	while(Increment(num, digit_number, significant_digit_number) == true)
 	{
-		assert(atoi(&num[digit_number - now_digit_number]) == ++value);
-		//printf("%s\n", num + digit_number - now_digit_number);
+		assert(atoi(&num[digit_number - significant_digit_number]) == ++value);
+		//printf("%s\n", num + digit_number - significant_digit_number);
 	}
 }
 void TestPrintOneToMaxNDigit()
 {
-	for(int digit_number = -1; digit_number <= 7; ++digit_number)
+	printf("-----TestPrintOneToMaxNDigit-----\n");
+	for(int digit_number = -1; digit_number <= 6; ++digit_number)
 	{
 		PrintOneToMaxNDigit(digit_number);
 	}

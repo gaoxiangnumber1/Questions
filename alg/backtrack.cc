@@ -1,11 +1,4 @@
-#include <stdio.h>
-#include <string.h>
-#include <math.h>
-#include <utility>
-#include <string>
-#include <assert.h>
-using std::string;
-using std::swap;
+#include "../common_system_header.h"
 
 ////////////////////////////////////////////
 const int kQueenKindNumber = 3;
@@ -271,23 +264,23 @@ void TestPermutationAndSubset()
 	}
 }
 ////////////////////////////////////////////
-void PrintByPermutation(string &num, int digit_number, int now_digit_number, int &first_not_zero, int &value)
+void PrintByPermutation(string &num, int digit_number, int now_digit_number,
+	int &significant_digit_number, int &value)
 {
 	if(now_digit_number == digit_number)
 	{
-		assert(atoi(&num[first_not_zero]) == value++);
-		int exp = digit_number - first_not_zero;
-		if(value - 1 == pow(10, exp) - 1) // 1eexp - 1)
+		assert(atoi(&num[digit_number - significant_digit_number]) == value++);
+		if(value - 1 == pow(10, significant_digit_number) - 1)
 		{
-			--first_not_zero;
+			++significant_digit_number;
 		}
 		return;
 	}
-	for(char val = '0'; val <= '9'; ++val)
+	for(char ch = '0'; ch <= '9'; ++ch)
 	{
-		num[now_digit_number] = val;
-		//(val != '0' && first_not_zero > now_digit_number) ? first_not_zero = now_digit_number : 0;
-		PrintByPermutation(num, digit_number, now_digit_number + 1, first_not_zero, value);
+		num[now_digit_number] = ch;
+		PrintByPermutation(num, digit_number, now_digit_number + 1, significant_digit_number,
+			value);
 	}
 }
 void PrintOneToMaxNDigit(int digit_number)
@@ -296,15 +289,14 @@ void PrintOneToMaxNDigit(int digit_number)
 	{
 		return;
 	}
-
 	string num(digit_number, 0);
-	int first_not_zero = digit_number - 1, value = 0;
-	PrintByPermutation(num, digit_number, 0, first_not_zero, value);
+	int significant_digit_number = 1, value = 0;
+	PrintByPermutation(num, digit_number, 0, significant_digit_number, value);
 }
 void TestPrintOneToMaxNDigit()
 {
 	printf("----------TestPrintOneToMaxNDigit----------\n");
-	for(int digit_number = -1; digit_number <= 7; ++digit_number)
+	for(int digit_number = -1; digit_number <= 6; ++digit_number)
 	{
 		PrintOneToMaxNDigit(digit_number);
 	}

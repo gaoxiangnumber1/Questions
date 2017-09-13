@@ -1,8 +1,4 @@
-#include <stdio.h>
-#include <string.h>
-#include <assert.h>
-#include <vector>
-using std::vector;
+#include "../common_system_header.h"
 
 ///////////////////////////////////////////
 void PrintVector(const vector<int> &vec)

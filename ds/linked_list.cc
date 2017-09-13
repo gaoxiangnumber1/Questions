@@ -1,12 +1,5 @@
 #include "node.h"
-#include <assert.h>
-#include <utility>
-#include <vector>
-#include <stack>
-#include <string.h>
-using std::swap;
-using std::vector;
-using std::stack;
+#include "../common_system_header.h"
 
 template<typename T>
 class LinkedList
@@ -289,7 +282,7 @@ Node<T> *MergeTwoSortedLinkedList(Node<T> *first, Node<T> *second)
 {
 	if(first == nullptr || second == nullptr) // Negative test.
 	{
-		return (first == nullptr ? second : first);
+		return first == nullptr ? second : first;
 	}
 
 	Node<T> *head = nullptr;

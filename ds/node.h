@@ -1,6 +1,6 @@
-#ifndef CPPLIB_DS_NODE_H_
-#define CPPLIB_DS_NODE_H_
-#include <stdio.h>
+#ifndef DS_NODE_H_
+#define DS_NODE_H_
+#include "../common_system_header.h"
 
 template<typename T>
 struct Node
@@ -13,4 +13,4 @@ struct Node
 	T data_;
 	Node<T> *next_;
 };
-#endif // CPPLIB_DS_NODE_H_
+#endif // DS_NODE_H_
