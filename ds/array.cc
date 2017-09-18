@@ -91,8 +91,60 @@ void TestReOrderArray()
 	printf("All case pass.\n");
 }
 //////////////////////////////////////////////////////////////////////
+using Row = vector<int>;
+using Matrix = vector<vector<int>>;
+Row ClockwisePrintMatrix(const Matrix &matrix)
+{
+	if(matrix.size() <= 0) // Negative test
+	{
+		return Row();
+	}
+	int total_row = static_cast<int>(matrix.size()), total_col = static_cast<int>(matrix[0].size());
+	int total_circle = (min(total_row, total_col) + 1) / 2;
+	Row seq;
+	for(int index = 1; index <= total_circle; ++index)
+	{
+		int row = index - 1, col = index - 1;
+		for(; col <= total_col - index; seq.push_back(matrix[row][col]), ++col)
+			;
+		for(--col, ++row; row <= total_row - index; seq.push_back(matrix[row][col]), ++row)
+			;
+		for(--row, --col; index - 1 != total_row - index && col >= index - 1;
+			seq.push_back(matrix[row][col]), --col)
+			;
+		for(++col, --row; index - 1 != total_col - index && row > index - 1;
+			seq.push_back(matrix[row][col]), --row)
+			;
+	}
+	return seq;
+}
+void TestClockwisePrintMatrix()
+{
+	printf("-----TestClockwisePrintMatrix-----\n");
+	vector<Matrix> test { { {} },/* Negative test */
+	{ { 1 } },/*only_one_element*/
+	{ { 1, 2, 3, 4 } },/*only_one_row*/
+	{ { 1 }, { 2 }, { 3 }, { 4 } },/*only_one_col*//* Edge test */
+	{ { 1, 2 }, { 3, 4 } }, /*square_4*/
+	{ { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } }, /*square_9*/
+	{ { 1, 2, 3, 4 }, { 5, 6, 7, 8 }, { 9, 10, 11, 12 }, { 13, 14, 15, 16 } }, /*square_16*/
+	{ { 1, 2, 3, 4 }, { 5, 6, 7, 8 }, { 9, 10, 11, 12 } },/*rectangle_3_multi_4*/
+	{ { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 }, { 10, 11, 12 } }/*rectangle_4_multi_3*//*Function test*/
+	};
+	vector<Row> answer = { {}, { 1 }, { 1, 2, 3, 4 }, { 1, 2, 3, 4 }, { 1, 2, 4, 3 }, { 1, 2, 3, 6,
+		9, 8, 7, 4, 5 }, { 1, 2, 3, 4, 8, 12, 16, 15, 14, 13, 9, 5, 6, 7, 11, 10 }, { 1, 2, 3, 4, 8,
+		12, 11, 10, 9, 5, 6, 7 }, { 1, 2, 3, 6, 9, 12, 11, 10, 7, 4, 5, 8 } };
+	for(int i = 0; i < static_cast<int>(answer.size()); ++i)
+	{
+		Row seq = ClockwisePrintMatrix(test[i]);
+		AssertVectorData(seq, answer[i]);
+	}
+	printf("All case pass.\n");
+}
+//////////////////////////////////////////////////////////////////////
 int main()
 {
 	TestFindInTwoDimensionArray();
 	TestReOrderArray();
+	TestClockwisePrintMatrix();
 }

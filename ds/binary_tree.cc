@@ -219,11 +219,7 @@ void TestModifyBinaryTreeToItsMirror()
 		tree[index].CreateCompleteBinaryTreeByLevel(before_modify[index]);
 		ModifyBinaryTreeToItsMirror(tree[index].root());
 		my_modify[index] = tree[index].LevelOrder();
-		assert(after_modify[index].size() == my_modify[index].size());
-		for(int i = 0; i < static_cast<int>(after_modify[index].size()); ++i)
-		{
-			assert(after_modify[index][i] == my_modify[index][i]);
-		}
+		AssertVectorData(after_modify[index], my_modify[index]);
 	}
 	printf("All case pass.\n");
 }

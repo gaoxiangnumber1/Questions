@@ -23,8 +23,8 @@ public:
 		bool is_sub_tree = false;
 		large->val == small->val ? (is_sub_tree = HasSubtree(large->left, small->left)
 			&& HasSubtree(large->right, small->right)) : bool();
-		is_sub_tree == false ? is_sub_tree = IsSubTree(large->left, small) : bool();
-		is_sub_tree == false ? is_sub_tree = IsSubTree(large->right, small) : bool();
+		is_sub_tree == false ? is_sub_tree = HasSubtree(large->left, small) : bool();
+		is_sub_tree == false ? is_sub_tree = HasSubtree(large->right, small) : bool();
 		return is_sub_tree;
 	}
 };

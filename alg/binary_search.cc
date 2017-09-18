@@ -1,15 +1,6 @@
 #include "../common_system_header.h"
 
 ///////////////////////////////////////////
-void PrintVector(const vector<int> &vec)
-{
-	for(int index = 0; index < static_cast<int>(vec.size()); ++index)
-	{
-		printf("%d ", vec[index]);
-	}
-	printf("\n");
-}
-///////////////////////////////////////////
 // Assume: data points to a valid array, first and last are valid indexes.
 // Return: nonnegative if found, otherwise -1.
 int BinarySearchIterate(int *data, int first, int last, int target) // Search target in [first, last)

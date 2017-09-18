@@ -19,8 +19,8 @@ public:
 		ListNode *before = nullptr, *node = first, *after = nullptr;
 		while(node != nullptr) // Including Negative and Edge test.
 		{
-			after = node->next_;
-			node->next_ = before;
+			after = node->next;
+			node->next = before;
 			before = node;
 			node = after;
 		}

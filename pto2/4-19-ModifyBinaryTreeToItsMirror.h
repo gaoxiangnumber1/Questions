@@ -20,8 +20,8 @@ public:
 		{
 			return;
 		}
-		swap(root->left_, root->right_);
-		Mirror(root->left_);
-		Mirror(root->right_);
+		swap(root->left, root->right);
+		Mirror(root->left);
+		Mirror(root->right);
 	}
 };

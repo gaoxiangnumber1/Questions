@@ -161,15 +161,6 @@ void PrintLinkedList(Node<T> *first)
 	printf("node_num=%d\n", size);
 }
 template<typename T>
-void PrintVector(const vector<T> &data)
-{
-	for(int index = 0; index < static_cast<int>(data.size()); ++index)
-	{
-		printf("%d ", data[index]);
-	}
-	printf("\n");
-}
-template<typename T>
 void AssertLinkedListNodeData(Node<T> *first, const vector<T> &data)
 {
 	int length = 0;
