@@ -163,7 +163,7 @@ void PostOrderLoop(BinaryNode<T> *root)
 template<typename T>
 vector<T> LevelOrder(BinaryNode<T> *root)
 {
-	if(root == nullptr)
+	if(root == nullptr) // Negative test
 	{
 		return vector<T>();
 	}
@@ -176,14 +176,8 @@ vector<T> LevelOrder(BinaryNode<T> *root)
 		my_queue.pop();
 		//Visit(node);
 		vec.push_back(node->data_);
-		if(node->left_ != nullptr)
-		{
-			my_queue.push(node->left_);
-		}
-		if(node->right_ != nullptr)
-		{
-			my_queue.push(node->right_);
-		}
+		node->left_ != nullptr ? my_queue.push(node->left_) : void();
+		node->right_ != nullptr ? my_queue.push(node->right_) : void();
 	}
 	return vec;
 }

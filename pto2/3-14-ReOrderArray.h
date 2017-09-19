@@ -1,2 +1,2 @@
 ../ds/array.cc
-void ReOrderArray
+void ReOrderArray(vector<int> &vec)

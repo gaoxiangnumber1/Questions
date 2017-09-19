@@ -1,2 +1,2 @@
 ../alg/algebra.cc
-double QuickPower
+double QuickPower(double base, int exp)

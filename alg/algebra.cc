@@ -190,7 +190,7 @@ double QuickPower(double base, int exp)
 	double result = 1;
 	for(int abs_exp = abs(exp); abs_exp != 0; abs_exp >>= 1)
 	{
-		abs_exp & 1 ? result *= base : double();
+		abs_exp & 1 ? result *= base : result;
 		base *= base;
 	}
 	return exp < 0 ? 1 / result : result;

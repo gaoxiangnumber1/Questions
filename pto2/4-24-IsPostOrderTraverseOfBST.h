@@ -1,18 +1,5 @@
-/*
-------------------------------Function Test Data------------------------------
-normal
-
---------------------------------Edge Test Data--------------------------------
-none
-
-------------------------------Negative Test Data------------------------------
-empty sequence
-
-*/
-
-#include<vector>
-#include<iostream>
-using namespace std;
+../ds/binary_search_tree.cc
+bool IsPostOrderTraverseOfBST(const vector<int> &seq)
 
 bool Solution(vector<int> sequence, int first, int last)  // verify scope: sequence[first, last]
 {
@@ -48,22 +35,4 @@ bool Solution(vector<int> sequence, int first, int last)  // verify scope: seque
 		right = Solution(sequence, left_index, last - 1);  // sequence[left_index, last - 1] is the right subtree
 	}
 	return left && right;
-}
-
-bool VerifySequenceOfBST(vector<int> sequence)
-{
-	int length = sequence.size();
-
-	if(length <= 0)
-	{
-		return false;
-	}
-
-	return Solution(sequence, 0, length - 1);
-}
-
-int main()
-{
-
-	return 0;
 }

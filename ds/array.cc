@@ -57,19 +57,18 @@ inline bool IsEven(int num)
 }
 void ReOrderArray(vector<int> &vec)
 {
-	int length = static_cast<int>(vec.size());
-	if(length <= 1) // Negative and Edge test.
+	if(vec.size() <= 0) // Negative test.
 	{
 		return;
 	}
-	int left = 0, right = length - 1;
-	while(left < right)
+	int length = static_cast<int>(vec.size());
+	for(int left = 0, right = length - 1; left < right;)
 	{
 		for(; left < length && IsEven(vec[left]) == false; ++left)
 			;
 		for(; right >= 0 && IsEven(vec[right]) == true; --right)
 			;
-		left < right ? swap(vec[left], vec[right]) : void(0);
+		left < right ? swap(vec[left], vec[right]) : void();
 	}
 }
 void TestReOrderArray()

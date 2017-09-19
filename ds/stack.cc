@@ -1,5 +1,5 @@
 #include "../common_system_header.h"
-
+///////////////////////////////////////////////////////////////////////////
 class ImplementQueueByTwoStack
 {
 public:
@@ -49,10 +49,96 @@ void TestImplementQueueByTwoStack()
 	assert(q.Pop() == 0);
 	printf("All case pass.\n");
 }
+///////////////////////////////////////////////////////////////////////////
+class GetMinStack
+{
+public:
+	void Push(int val)
+	{
+		data_.push(val);
+		min_.push((min_.empty() || min_.top() > val) ? val : min_.top());
+	}
+	void Pop()
+	{
+		data_.empty() ? void(0) : (data_.pop(), min_.pop());
+	}
+	int Top()
+	{
+		return data_.empty() ? int() : data_.top();
+	}
+	int GetMin()
+	{
+		return min_.empty() ? int() : min_.top();
+	}
 
+private:
+	stack<int> data_;
+	stack<int> min_;
+};
+void TestGetMinStack()
+{
+	printf("-----TestGetMinStack-----\n");
+	GetMinStack obj;
+	assert(obj.GetMin() == 0 && obj.Top() == 0);
+	for(int i = 0; i < 10; ++i)
+	{
+		obj.Push(i);
+	}
+	for(int i = 0; i < 20; ++i)
+	{
+		assert(obj.GetMin() == 0 && obj.Top() == (i < 10 ? 9 - i : 0));
+		obj.Pop();
+	}
+	printf("All case pass.\n");
+}
+///////////////////////////////////////////////////////////////////////////
+bool IsStackPopOrder(const vector<int> &push_seq, const vector<int> &pop_seq)
+{
+	if(push_seq.size() <= 0 || push_seq.size() != pop_seq.size()) // Negative test
+	{
+		return false;
+	}
+	int length = static_cast<int>(push_seq.size()), push_index = 0, pop_index = 0;
+	stack<int> data;
+	while(push_index < length || pop_index < length)
+	{
+		for(; data.empty() || data.top() != pop_seq[pop_index]; data.push(push_seq[push_index++]))
+		{
+			if(push_index >= length)
+			{
+				return false;
+			}
+		}
+		data.pop();
+		++pop_index;
+	}
+	return true;
+}
+void TestIsStackPopOrder()
+{
+	printf("-----TestIsStackPopOrder-----\n");
+	vector<vector<int>> push_seq { {},/*empty*/
+	{ 1, 2, 3 },/*non empty, but size is not same*//*Negative test*/
+	{ 1 },/*size=1, true*/
+	{ 1 },/*size=1,false*/
+	{ 1, 2, 3, 4, 5 },/*size>1,true*/
+	{ 1, 2, 3, 4, 5 },/*size>1,false*/
+	{ 1, 2, 3, 4, 5 }, /*size>1,true*//*Function test*/};
+	vector<vector<int>> pop_seq { { 1 }, { 1 }, { 1 }, { 2 }, { 4, 5, 3, 2, 1 }, { 4, 3, 5, 1, 2 },
+		{ 1, 2, 3, 4, 5 } };
+	vector<bool> answer { false, false, true, false, true, false, true };
+	for(int i = 0; i < static_cast<int>(push_seq.size()); ++i)
+	{
+		assert(IsStackPopOrder(push_seq[i], pop_seq[i]) == answer[i]);
+	}
+	printf("All case pass.\n");
+}
+///////////////////////////////////////////////////////////////////////////
 int main()
 {
 	TestImplementQueueByTwoStack();
+	TestGetMinStack();
+	TestIsStackPopOrder();
 
 #ifdef TEST_STACK
 	Stack<int> object;

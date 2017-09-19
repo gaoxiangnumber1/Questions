@@ -1,10 +1,12 @@
 #include "binary_node.h"
-
 template<typename T>
 class BinarySearchTree
 {
 public:
-	BinarySearchTree(): root_(nullptr) {}
+	BinarySearchTree() :
+		root_(nullptr)
+	{
+	}
 	~BinarySearchTree();
 
 	void Create();
@@ -22,7 +24,6 @@ public:
 private:
 	BinaryNode<T> *root_;
 };
-
 template<typename T>
 BinarySearchTree<T>::~BinarySearchTree()
 {
@@ -111,8 +112,7 @@ BinaryNode<T>* BinarySearchTree<T>::Delete(const T &data)
 		parent_node = left_max_parent;
 		delete_node = left_max;
 	}
-	BinaryNode<T> *child_node =
-	    (delete_node->left_ ? delete_node->left_ : delete_node->right_);
+	BinaryNode<T> *child_node = (delete_node->left_ ? delete_node->left_ : delete_node->right_);
 	if(parent_node == nullptr)
 	{
 		root_ = child_node;
@@ -148,9 +148,59 @@ void BinarySearchTree<T>::NodeCount() const
 {
 	printf("NodeCount:  %d\n", ::NodeCount(root_));
 }
-
+////////////////////////////////////////////////////////////////////////////////
+bool IsPostOrderTraverseOfBSTMain(const vector<int> &seq, int first, int last) // []
+{
+	if(first == last || first == last - 1) // Edge test: 1 or 2 elements End recursive.
+	{
+		return true;
+	}
+	if((seq[first] - seq[last]) * (seq[last - 1] - seq[last]) > 0) // Only has left or right subtree.
+	{
+		int index = first + 1;
+		for(; index < last - 1 && (seq[first] - seq[last]) * (seq[index] - seq[last]) > 0; ++index)
+			;
+		return index < last - 1 ? false : IsPostOrderTraverseOfBSTMain(seq, first, last - 1);
+	}
+	// Now has both subtrees or seq is direct wrong.
+	int divide = first, divide_cnt = 0;
+	for(int index = first; index < last - 1; ++index)
+	{
+		if(seq[index] < seq[last] && seq[index + 1] > seq[last])
+		{
+			++divide_cnt;
+			divide = index;
+		}
+	}
+	return
+		divide_cnt != 1 ? false : (IsPostOrderTraverseOfBSTMain(seq, first, divide)
+								&& IsPostOrderTraverseOfBSTMain(seq, divide + 1, last - 1));
+}
+// Assume all elements are not equal.
+bool IsPostOrderTraverseOfBST(const vector<int> &seq)
+{
+	return
+		seq.size() <= 0 ? false/*Negative test*/: IsPostOrderTraverseOfBSTMain(seq, 0,
+								static_cast<int>(seq.size()) - 1);
+}
+void TestIsPostOrderTraverseOfBST()
+{
+	printf("-----TestIsPostOrderTraverseOfBST-----\n");
+	vector<vector<int>> test { {}, { 1 }, { 1, 2, 3 }, { 3, 2, 1 }, { 1, 3, 2 }, { 5, 7, 6, 9, 11,
+		10, 8 }, { 5, 70, 6, 9, 11, 10, 8 } };
+	vector<bool> answer { false, true, true, true, true, true, false };
+	for(int i = 0; i < static_cast<int>(test.size()); ++i)
+	{
+		assert(IsPostOrderTraverseOfBST(test[i]) == answer[i]);
+	}
+	printf("All case pass.\n");
+}
+////////////////////////////////////////////////////////////////////////////////
 int main()
 {
+	TestIsPostOrderTraverseOfBST();
+
+#ifdef TEST_BINARY_SEARCH_TREE
 	BinarySearchTree<int> tree;
 	printf("0: Exit\n1: Create\n2: Insert\n3: Search\n4: Delete\n");
 	int operation, data;
@@ -159,16 +209,16 @@ int main()
 	{
 		switch(operation)
 		{
-		case 0:
+			case 0:
 			return 0;
-		case 1:
+			case 1:
 			tree.Create();
 			break;
-		case 2:
+			case 2:
 			scanf("%d", &data);
 			tree.Insert(data);
 			break;
-		case 3:
+			case 3:
 			scanf("%d", &data);
 			if(tree.Search(data, temp) != nullptr)
 			{
@@ -179,7 +229,7 @@ int main()
 				printf("Not Found\n");
 			}
 			break;
-		case 4:
+			case 4:
 			scanf("%d", &data);
 			if(tree.Delete(data) != nullptr)
 			{
@@ -195,74 +245,76 @@ int main()
 		tree.Height();
 		tree.NodeCount();
 	}
+#endif
 }
-/*
-1 11 6 10 9 0 1 5 7 2 8 3 4
-2 6
-2 2
-2 100
-3 -1
-3 0
-3 100
-3 101
-4 -1
-4 101
-4 4
-4 2
-4 10
-4 6
-0
 
-LevelOrder: 6 0 10 1 9 5 7 2 8 3 4
-Height:     7
-NodeCount:  11
-LevelOrder: 6 0 10 1 9 5 7 2 8 3 4
-Height:     7
-NodeCount:  11
-LevelOrder: 6 0 10 1 9 5 7 2 8 3 4
-Height:     7
-NodeCount:  11
-LevelOrder: 6 0 10 1 9 100 5 7 2 8 3 4
-Height:     7
-NodeCount:  12
-Not Found
-LevelOrder: 6 0 10 1 9 100 5 7 2 8 3 4
-Height:     7
-NodeCount:  12
-Found
-LevelOrder: 6 0 10 1 9 100 5 7 2 8 3 4
-Height:     7
-NodeCount:  12
-Found
-LevelOrder: 6 0 10 1 9 100 5 7 2 8 3 4
-Height:     7
-NodeCount:  12
-Not Found
-LevelOrder: 6 0 10 1 9 100 5 7 2 8 3 4
-Height:     7
-NodeCount:  12
-Not Deleted
-LevelOrder: 6 0 10 1 9 100 5 7 2 8 3 4
-Height:     7
-NodeCount:  12
-Not Deleted
-LevelOrder: 6 0 10 1 9 100 5 7 2 8 3 4
-Height:     7
-NodeCount:  12
-Not Deleted
-LevelOrder: 6 0 10 1 9 100 5 7 2 8 3
-Height:     6
-NodeCount:  11
-Deleted
-LevelOrder: 6 0 10 1 9 100 5 7 3 8
-Height:     5
-NodeCount:  10
-Deleted
-LevelOrder: 6 0 9 1 7 100 5 8 3
-Height:     5
-NodeCount:  9
-Deleted
-LevelOrder: 5 0 9 1 7 100 3 8
-Height:     4
-NodeCount:  8
-*/
+/*
+ 1 11 6 10 9 0 1 5 7 2 8 3 4
+ 2 6
+ 2 2
+ 2 100
+ 3 -1
+ 3 0
+ 3 100
+ 3 101
+ 4 -1
+ 4 101
+ 4 4
+ 4 2
+ 4 10
+ 4 6
+ 0
+
+ LevelOrder: 6 0 10 1 9 5 7 2 8 3 4
+ Height:     7
+ NodeCount:  11
+ LevelOrder: 6 0 10 1 9 5 7 2 8 3 4
+ Height:     7
+ NodeCount:  11
+ LevelOrder: 6 0 10 1 9 5 7 2 8 3 4
+ Height:     7
+ NodeCount:  11
+ LevelOrder: 6 0 10 1 9 100 5 7 2 8 3 4
+ Height:     7
+ NodeCount:  12
+ Not Found
+ LevelOrder: 6 0 10 1 9 100 5 7 2 8 3 4
+ Height:     7
+ NodeCount:  12
+ Found
+ LevelOrder: 6 0 10 1 9 100 5 7 2 8 3 4
+ Height:     7
+ NodeCount:  12
+ Found
+ LevelOrder: 6 0 10 1 9 100 5 7 2 8 3 4
+ Height:     7
+ NodeCount:  12
+ Not Found
+ LevelOrder: 6 0 10 1 9 100 5 7 2 8 3 4
+ Height:     7
+ NodeCount:  12
+ Not Deleted
+ LevelOrder: 6 0 10 1 9 100 5 7 2 8 3 4
+ Height:     7
+ NodeCount:  12
+ Not Deleted
+ LevelOrder: 6 0 10 1 9 100 5 7 2 8 3 4
+ Height:     7
+ NodeCount:  12
+ Not Deleted
+ LevelOrder: 6 0 10 1 9 100 5 7 2 8 3
+ Height:     6
+ NodeCount:  11
+ Deleted
+ LevelOrder: 6 0 10 1 9 100 5 7 3 8
+ Height:     5
+ NodeCount:  10
+ Deleted
+ LevelOrder: 6 0 9 1 7 100 5 8 3
+ Height:     5
+ NodeCount:  9
+ Deleted
+ LevelOrder: 5 0 9 1 7 100 3 8
+ Height:     4
+ NodeCount:  8
+ */
