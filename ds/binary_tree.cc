@@ -224,10 +224,58 @@ void TestModifyBinaryTreeToItsMirror()
 	printf("All case pass.\n");
 }
 ////////////////////////////////////////////////////////////////////////////////
+template<typename T>
+void FindPathSumInBinaryTreeDFS(BinaryNode<T> *node, vector<int> &path, int &sum,
+	const int &expect_sum, Matrix &result)
+{
+	path.push_back(node->data_);
+	sum += node->data_;
+	if(node->left_ == nullptr && node->right_ == nullptr && sum == expect_sum)
+	{
+		result.push_back(path);
+	}
+	node->left_ != nullptr ? FindPathSumInBinaryTreeDFS(node->left_, path, sum, expect_sum,
+									result) : void();
+	node->right_ != nullptr ? FindPathSumInBinaryTreeDFS(node->right_, path, sum, expect_sum,
+									result) : void();
+	path.pop_back();
+	sum -= node->data_;
+}
+template<typename T>
+Matrix FindPathSumInBinaryTree(BinaryNode<T> *root, int expect_sum)
+{
+	if(root == nullptr) // Negative test
+	{
+		return Matrix();
+	}
+	vector<int> path;
+	int sum = 0;
+	Matrix result;
+	FindPathSumInBinaryTreeDFS(root, path, sum, expect_sum, result);
+	return result;
+}
+void TestFindPathSumInBinaryTree()
+{
+	printf("-----TestFindPathSumInBinaryTree-----\n");
+	BinaryTree<int> tree;
+	tree.CreateCompleteBinaryTreeByLevel( { 5, 5, 10, -5, 5, 5, -5, 15, 5, 5, 5 });
+	vector<int> expect_sum { 5,/*0 path*/10,/*2 path*/20 /*4 path*/};
+	vector<Matrix> answer { {},/*0 path*/
+	{ { 5, 5, -5, 5 }, { 5, 10, -5 } },/*2 path*/
+	{ { 5, 5, -5, 15 }, { 5, 5, 5, 5 }, { 5, 5, 5, 5 }, { 5, 10, 5 } }/*4 path*/};
+	for(int i = 0; i < static_cast<int>(expect_sum.size()); ++i)
+	{
+		Matrix result = FindPathSumInBinaryTree(tree.root(), expect_sum[i]);
+		AssertTwoDimensionVectorData(answer[i], result);
+	}
+	printf("All case pass.\n");
+}
+//////////////////////////////////////////////////////////////////////
 int main()
 {
 	TestIsSubTree();
 	TestModifyBinaryTreeToItsMirror();
+	TestFindPathSumInBinaryTree();
 
 #ifdef TEST_BINARY_TREE
 	printf("0: Exit\n"

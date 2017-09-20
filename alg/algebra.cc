@@ -46,8 +46,6 @@ int FibonacciON(int n)
 	}
 	return fn1;
 }
-using Row = vector<int>;
-using Matrix = vector<vector<int>>;
 Matrix MultiMatrix(const Matrix &lhs, const Matrix &rhs)
 {
 	assert(lhs[0].size() == rhs.size());

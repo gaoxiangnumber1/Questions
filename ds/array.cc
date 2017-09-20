@@ -90,8 +90,6 @@ void TestReOrderArray()
 	printf("All case pass.\n");
 }
 //////////////////////////////////////////////////////////////////////
-using Row = vector<int>;
-using Matrix = vector<vector<int>>;
 Row ClockwisePrintMatrix(const Matrix &matrix)
 {
 	if(matrix.size() <= 0) // Negative test

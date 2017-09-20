@@ -26,7 +26,7 @@ void SelectionSort(int *data, int first, int last)
 		// [first, first_unsorted + 1) is sorted, [first_unsorted + 1, last) is unsorted.
 	}
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////
 // TC: Best = O(n), Average = O(n^2), Worst = O(n^2)
 // SC: O(1)
 void BubbleSort(int *data, int first, int last) // [first, last)
@@ -48,7 +48,7 @@ void BubbleSort(int *data, int first, int last) // [first, last)
 		first_sorted = last_swap_latter_index;
 	}
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////
 // TC: Best = O(n), Average = O(n^2), Worst = O(n^2)
 // SC: O(1)
 void InsertionSort(int *data, int first, int last)
@@ -85,7 +85,7 @@ void ShellSort(int *data, int first, int last)
 		}
 	}
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////
 int Partition2(int *data, int first, int last) // O(n)
 {
 	int pivot = data[first];
@@ -117,7 +117,6 @@ int Partition(int *data, int first, int last) // O(n)
 	data[divide] != data[first] ? swap(data[divide], data[first]) : void(0);
 	return divide;
 }
-
 // TC: Best = O(nlogn), Average = O(nlogn), Worst = O(n^2)
 // SC: Best = O(logn), Worst = O(n)
 void QuickSort(int *data, int first, int last) // [first, last)
@@ -137,7 +136,7 @@ void QuickSortLinkedList()
 {
 	// ../ds/linked_list.cc
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////
 void Merge(int *data, int first, int middle, int last, int *helper) // O(n)
 {
 	int left = first; // index in left-subrange [first, middle).
@@ -193,13 +192,13 @@ void MergeSortLinkedList()
 {
 	// ../ds/linked_list.cc
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////
 void FixDown(int *data, int parent_index, int length)
 {
 	int max_child_index = parent_index * 2 + 1;
 	while(max_child_index < length)
 	{
-		if(max_child_index < length - 1 && data[max_child_index] < data[max_child_index + 1])
+		if(max_child_index + 1 < length && data[max_child_index] < data[max_child_index + 1])
 		{
 			++max_child_index;
 		}
@@ -219,21 +218,22 @@ void HeapSort(int *data, int first, int last)
 	// 1. Convert to max heap. O(nlogn). (Tight is O(n), see ITA $6.3).
 	int length = last - first;
 	data += first; // [first, last) -> [0, length)
-	for(int parent_index = (length - 2) / 2; parent_index >= 0; --parent_index)
+	for(int parent_index = length / 2 - 1; parent_index >= 0; --parent_index)
 	{
 		FixDown(data, parent_index, length);
 	}
 	// 2. Extract maximum. O(nlogn)
 	for(int now_length = length - 1; now_length > 0; --now_length)
 	{
-		if(data[0] != data[now_length]) // Guarantee stable.
+		if(data[0] != data[now_length])
 		{
 			swap(data[0], data[now_length]);
 			FixDown(data, 0, now_length);
 		}
 	}
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////
+// Assume all numbers are in [0, max]
 // n is the number of inputs, m is the max value.
 // TC: Best = Average = Worst = O(n + m)
 // SC: O(n + m)
@@ -242,16 +242,12 @@ void CountingSort(int *data, int first, int last) // [first, last)
 	int length = last - first;
 	data += first;
 	// Get the maximum value.
-	int max = data[0];
-	for(int index = 1; index < length; ++index)
+	int max = 0;
+	for(int index = 0; index < length; ++index)
 	{
-		if(max < data[index])
-		{
-			max = data[index];
-		}
+		max < data[index] ? max = data[index] : max;
 	}
-	int count[max + 1]; // count[value] is the count of elements that are <= value.
-	memset(count, 0, sizeof count);
+	vector<int> count(max + 1, 0); // count[value] is the count of elements that are <= value.
 	// Count the frequency of every value in data.
 	for(int index = 0; index < length; ++index)
 	{
@@ -275,7 +271,7 @@ void CountingSort(int *data, int first, int last) // [first, last)
 		data[index] = temp[index];
 	}
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////
 // n is the number of inputs, d is the number of digits, m is the max value in each digit.
 // TC: Best = Average = Worst = O(d(n + m))
 // SC: O(n + m)
@@ -289,8 +285,8 @@ void RadixSort(int *data, int first, int last)
 	int divisor = 1;
 	for(int digit = 1; digit <= kMaxDigitNumber; ++digit)
 	{
-		int digit_number[length], count[kDigitValueNumber];
-		memset(count, 0, sizeof count);
+		int digit_number[length];
+		vector<int> count(kDigitValueNumber, 0);
 		// Get each digit number from least to most significant digit.
 		for(int index = 0; index < length; ++index)
 		{
@@ -315,7 +311,7 @@ void RadixSort(int *data, int first, int last)
 		divisor *= kDigitValueNumber;
 	}
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////
 void PrintData(int *data, int first, int last)
 {
 	printf("%d", data[first]);
@@ -347,7 +343,7 @@ void Test(const char *name, SortFunction Sort)
 	}
 	printf("All case pass.\n");
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////
 int main()
 {
 	Test("SelectionSort", SelectionSort);

@@ -424,8 +424,12 @@ void TestFindKthToTailNode()
 template<typename T>
 Node<T> *ReverseLinkedList(Node<T> *first)
 {
+	if(first == nullptr) // Negative test
+	{
+		return nullptr;
+	}
 	Node<T> *before = nullptr, *node = first, *after = nullptr;
-	while(node != nullptr) // Including Negative and Edge test.
+	while(node != nullptr)
 	{
 		after = node->next_;
 		node->next_ = before;
@@ -526,6 +530,83 @@ void TestReversePrintLinkedList()
 	printf("All case pass.\n");
 }
 ///////////////////////////////////////////////////////////////////////////
+template<typename T>
+RandomNode<T> *CopyRandomLinkedList(RandomNode<T> *first)
+{
+	if(first == nullptr) // Negative test
+	{
+		return nullptr;
+	}
+	for(RandomNode<T> *node = first; node != nullptr;)
+	{
+		RandomNode<T> *copy_node = new RandomNode<T>(node->data_, node->next_, node->random_);
+		node->next_ = copy_node;
+		node = copy_node->next_;
+	}
+	for(RandomNode<T> *copy_node = first->next_; copy_node != nullptr;)
+	{
+		copy_node->random_ = (copy_node->random_ != nullptr ? copy_node->random_->next_ : nullptr);
+		copy_node = (copy_node->next_ != nullptr ? copy_node->next_->next_ : nullptr);
+	}
+	RandomNode<T> *copy_first = first->next_;
+	for(RandomNode<T> *node = first, *copy_node = first->next_; node != nullptr;)
+	{
+		node->next_ = copy_node->next_;
+		node = node->next_;
+		copy_node->next_ = (node != nullptr ? node->next_ : nullptr);
+		copy_node = copy_node->next_;
+	}
+	return copy_first;
+}
+void TestCopyRandomLinkedList()
+{
+	printf("-----TestCopyRandomLinkedList-----\n");
+	// Negative test
+	assert(CopyRandomLinkedList(static_cast<RandomNode<int>*>(nullptr)) == nullptr);
+	// Edge test: random are all nullptr. 1->2->3->4->5.
+	RandomNode<int> node5(5);
+	RandomNode<int> node4(4, &node5);
+	RandomNode<int> node3(3, &node4);
+	RandomNode<int> node2(2, &node3);
+	RandomNode<int> node1(1, &node2);
+	RandomNode<int> *test1 = CopyRandomLinkedList(&node1);
+	int num = 1;
+	for(RandomNode<int> *node = &node1; node != nullptr; node = node->next_)
+	{
+		assert(test1->data_ == node->data_ && test1->data_ == num);
+		assert(test1->random_ == nullptr && node->random_ == nullptr);
+		test1 = test1->next_;
+		++num;
+	}
+	assert(test1 == nullptr);
+	// Function test
+	node1.random_ = &node1;
+	node2.random_ = &node3;
+	node3.random_ = &node2;
+	node5.random_ = &node1;
+	RandomNode<int> *test2 = CopyRandomLinkedList(&node1);
+	num = 1;
+	int random_num[] = { -1, 1, 3, 2, -1, 1 };
+	for(RandomNode<int> *node = &node1; node != nullptr; node = node->next_)
+	{
+		assert(test2->data_ == node->data_ && test2->data_ == num);
+		if(num == 4)
+		{
+			assert(test2->random_ == nullptr && node->random_ == nullptr);
+		}
+		else
+		{
+			assert(
+				test2->random_->data_ == node->random_->data_
+					&& test2->random_->data_ == random_num[num]);
+		}
+		test2 = test2->next_;
+		++num;
+	}
+	assert(test2 == nullptr);
+	printf("All case pass.\n");
+}
+//////////////////////////////////////////////////////////////////////
 int main()
 {
 	TestQuickSort();
@@ -534,6 +615,7 @@ int main()
 	TestFindKthToTailNode();
 	TestReverseLinkedList();
 	TestReversePrintLinkedList();
+	TestCopyRandomLinkedList();
 
 #ifdef TEST_LINKED_LIST
 	LinkedList<int> obj; // Stack obj's dtor is auto called when scope ends.

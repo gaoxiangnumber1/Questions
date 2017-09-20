@@ -1,5 +1,5 @@
 ../ds/linked_list.cc
-Node<T> *ReverseLinkedList
+Node<T> *ReverseLinkedList(Node<T> *first)
 
 struct ListNode
 {

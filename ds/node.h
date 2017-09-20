@@ -9,8 +9,19 @@ struct Node
 		data_(data), next_(next)
 	{
 	}
-
 	T data_;
 	Node<T> *next_;
 };
+template<typename T>
+struct RandomNode
+{
+	RandomNode(const T &data, RandomNode<T> *next = nullptr, RandomNode<T> *random = nullptr) :
+		data_(data), next_(next), random_(random)
+	{
+	}
+	T data_;
+	RandomNode<T> *next_;
+	RandomNode<T> *random_;
+};
+
 #endif // DS_NODE_H_

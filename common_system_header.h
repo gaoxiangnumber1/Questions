@@ -4,6 +4,9 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+//////////////////////////////////////////////////////////////////////
+using Row = vector<int>;
+using Matrix = vector<vector<int>>;
 void PrintVector(const vector<int> &vec)
 {
 	for(int index = 0; index < static_cast<int>(vec.size()); ++index)
@@ -32,4 +35,23 @@ void AssertVectorData(const vector<int> &v1, const vector<int> &v2)
 		}
 	}
 }
+void AssertTwoDimensionVectorData(const Matrix &m1, const Matrix &m2)
+{
+	if(m1.size() != m2.size())
+	{
+		printf("FATAL: m1.size=%lu,m2.size=%lu\n", m1.size(), m2.size());
+		assert(0);
+	}
+	for(int i = 0; i < static_cast<int>(m1.size()); ++i)
+	{
+		AssertVectorData(m1[i], m2[i]);
+	}
+}
+//////////////////////////////////////////////////////////////////////
+void Test()
+{
+	printf("-----Test-----\n");
+	printf("All case pass.\n");
+}
+//////////////////////////////////////////////////////////////////////
 #endif

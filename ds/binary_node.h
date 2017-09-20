@@ -167,17 +167,17 @@ vector<T> LevelOrder(BinaryNode<T> *root)
 	{
 		return vector<T>();
 	}
-	queue<BinaryNode<T>*> my_queue;
+	queue<BinaryNode<T>*> node_queue;
 	vector<T> vec;
-	my_queue.push(root);
-	while(my_queue.empty() == false)
+	node_queue.push(root);
+	while(node_queue.empty() == false)
 	{
-		BinaryNode<T> *node = my_queue.front();
-		my_queue.pop();
+		BinaryNode<T> *node = node_queue.front();
+		node_queue.pop();
 		//Visit(node);
 		vec.push_back(node->data_);
-		node->left_ != nullptr ? my_queue.push(node->left_) : void();
-		node->right_ != nullptr ? my_queue.push(node->right_) : void();
+		node->left_ != nullptr ? node_queue.push(node->left_) : void();
+		node->right_ != nullptr ? node_queue.push(node->right_) : void();
 	}
 	return vec;
 }
