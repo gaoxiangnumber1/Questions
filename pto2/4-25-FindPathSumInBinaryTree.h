@@ -1,4 +1,4 @@
-../ds/binary_tree.cc
+eclipse ../ds/binary_tree.cc
 Matrix FindPathSumInBinaryTree(BinaryNode<T> *root, int expect_sum)
 
 struct TreeNode
@@ -18,16 +18,16 @@ public:
 	void FindPathDFS(TreeNode *node, vector<int> &path, int &sum, const int &expect_sum,
 		Matrix &result)
 	{
-		path.push_back(node->data_);
-		sum += node->data_;
-		if(node->left_ == nullptr && node->right_ == nullptr && sum == expect_sum)
+		path.push_back(node->val);
+		sum += node->val;
+		if(node->left == nullptr && node->right == nullptr && sum == expect_sum)
 		{
 			result.push_back(path);
 		}
-		node->left_ != nullptr ? FindPathDFS(node->left_, path, sum, expect_sum, result) : void();
-		node->right_ != nullptr ? FindPathDFS(node->right_, path, sum, expect_sum, result) : void();
+		node->left != nullptr ? FindPathDFS(node->left, path, sum, expect_sum, result) : void();
+		node->right != nullptr ? FindPathDFS(node->right, path, sum, expect_sum, result) : void();
 		path.pop_back();
-		sum -= node->data_;
+		sum -= node->val;
 	}
 	Matrix FindPath(TreeNode *root, int expect_sum)
 	{

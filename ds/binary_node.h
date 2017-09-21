@@ -29,6 +29,30 @@ void Delete(BinaryNode<T> *&root)
 	}
 }
 template<typename T>
+void ConstructCompleteBinaryTreeByLevel(BinaryNode<T> *&root, const vector<T> &data)
+{
+	if(data.size() <= 0)
+	{
+		return;
+	}
+	root = new BinaryNode<T>(data[0]);
+	queue<BinaryNode<T>*> node_queue;
+	node_queue.push(root);
+	int length = static_cast<int>(data.size());
+	for(int index = 1; index < length;)
+	{
+		BinaryNode<T> *node = node_queue.front();
+		node_queue.pop();
+		node->left_ = new BinaryNode<T>(data[index++]);
+		node_queue.push(node->left_);
+		if(index < length)
+		{
+			node->right_ = new BinaryNode<T>(data[index++]);
+			node_queue.push(node->right_);
+		}
+	}
+}
+template<typename T>
 void ConstructBinaryTreeFromPreAndInOrder(BinaryNode<T> *&root, T *pre, int &pre_index, T *in,
 	int in_first, int in_last) // [in_last, in_last)
 {

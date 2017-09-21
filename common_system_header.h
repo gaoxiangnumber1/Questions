@@ -7,15 +7,17 @@ using namespace std;
 //////////////////////////////////////////////////////////////////////
 using Row = vector<int>;
 using Matrix = vector<vector<int>>;
-void PrintVector(const vector<int> &vec)
+template<typename T>
+void PrintVector(const vector<T> &vec)
 {
 	for(int index = 0; index < static_cast<int>(vec.size()); ++index)
 	{
-		printf("%d ", vec[index]);
+		cout << vec[index] << " ";
 	}
 	printf("\n");
 }
-void AssertVectorData(const vector<int> &v1, const vector<int> &v2)
+template<typename T>
+void AssertVectorData(const vector<T> &v1, const vector<T> &v2)
 {
 	if(v1.size() != v2.size())
 	{

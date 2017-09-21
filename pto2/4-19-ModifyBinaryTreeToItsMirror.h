@@ -1,4 +1,4 @@
-../ds/binary_tree.cc
+eclipse ../ds/binary_tree.cc
 void ModifyBinaryTreeToItsMirror(BinaryNode<T> *root)
 
 struct TreeNode

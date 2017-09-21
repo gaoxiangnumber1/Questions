@@ -3,15 +3,15 @@
 ///////////////////////////////////////////
 // Assume: data points to a valid array, first and last are valid indexes.
 // Return: nonnegative if found, otherwise -1.
-int BinarySearchIterate(int *data, int first, int last, int target) // Search target in [first, last)
+int BinarySearch(int *data, int first, int last, int target) // [first, last)
 {
-	while(first < last)
+	while(first < last) // []: first <= last
 	{
-		int middle = first + ((last - first) >> 1);
+		int middle = first + (last - first) / 2;
 		// [first, middle), [middle, middle + 1), [middle + 1, last)
 		if(data[middle] > target) // Search left half: [first, middle)
 		{
-			last = middle;
+			last = middle; // []: last = middle - 1
 		}
 		else if(data[middle] == target) // Return result.
 		{
@@ -24,28 +24,59 @@ int BinarySearchIterate(int *data, int first, int last, int target) // Search ta
 	}
 	return -1;
 }
-int BinarySearchRecursive(int *data, int first, int last, int target)
+void TestBinarySearch()
 {
-	if(first >= last)
+	printf("-----TestBinarySearch-----\n");
+	vector<int> data { 0, 1, 3, 4, 5, 6, 7, 8, 9 };
+	vector<int> target { -1, 0, 2, 3, 6, 9, 10 };
+	vector<int> answer { -1, 0, -1, 2, 5, 8, -1 };
+	for(int i = 0; i < static_cast<int>(target.size()); ++i)
 	{
-		return -1;
+		assert(BinarySearch(data.data(), 0, static_cast<int>(data.size()), target[i]) == answer[i]);
 	}
-	int middle = first + ((last - first) >> 1);
-	// [first, middle), [middle, middle + 1), [middle + 1, last)
-	if(data[middle] > target)
-	{
-		return BinarySearchRecursive(data, first, middle, target);
-	}
-	else if(data[middle] == target)
-	{
-		return middle;
-	}
-	else
-	{
-		return BinarySearchRecursive(data, middle + 1, last, target);
-	}
+	printf("All case pass.\n");
 }
-///////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+// 1. Exist: return target's first position.
+// 2. Not exist: return position of first element that is greater than target.
+//     If target is greater than all elements, return last.
+int LowerBound(int *data, int first, int last, int target)
+{
+	while(first < last)
+	{
+		int middle = first + (last - first) / 2;
+		data[middle] < target ? first = middle + 1 : last = middle;
+	}
+	return first;
+}
+// Return position of first element that is greater than target.
+// If target is greater than all elements, return last.
+int UpperBound(int *data, int first, int last, int target)
+{
+	while(first < last)
+	{
+		int middle = first + (last - first) / 2;
+		data[middle] <= target ? first = middle + 1 : last = middle;
+	}
+	return last;
+}
+void TestLowerBoundAndUpperBound()
+{
+	printf("-----TestLowerBoundAndUpperBound-----\n");
+	vector<int> data { 0, 1, 1, 1, 3, 5, 5, 7, 8, 9, 9, 9, 20 };
+	vector<int> target { -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 30, 40 };
+	vector<int> lower { 0, 0, 0, 1, 4, 4, 5, 5, 7, 7, 8, 9, 12, 12, 12, 13, 13 };
+	vector<int> upper { 0, 0, 1, 4, 4, 5, 5, 7, 7, 8, 9, 12, 12, 12, 13, 13, 13 };
+	for(int i = 0; i < static_cast<int>(target.size()); ++i)
+	{
+		assert(
+			LowerBound(data.data(), 0, static_cast<int>(data.size()), target[i]) == lower[i]
+				&& UpperBound(data.data(), 0, static_cast<int>(data.size()), target[i])
+					== upper[i]);
+	}
+	printf("All case pass.\n");
+}
+//////////////////////////////////////////////////////////////////////
 int TraverseRotateArray(const vector<int> &vec, int first, int last)
 {
 	int min = vec[first];
@@ -109,8 +140,9 @@ void TestFindMinNumberInRotateArray()
 	printf("All case pass.\n");
 }
 ///////////////////////////////////////////
-
 int main()
 {
+	TestBinarySearch();
+	TestLowerBoundAndUpperBound();
 	TestFindMinNumberInRotateArray();
 }

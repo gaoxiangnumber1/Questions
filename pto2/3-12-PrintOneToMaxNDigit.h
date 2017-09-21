@@ -1,5 +1,5 @@
-../ds/big_integer.cc
+eclipse ../ds/big_integer.cc
 void PrintOneToMaxNDigit(int digit_number)
 
-../alg/backtrack.cc
+eclipse ../alg/backtrack.cc
 void PrintOneToMaxNDigit(int digit_number)

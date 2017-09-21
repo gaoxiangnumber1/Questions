@@ -20,6 +20,9 @@ public:
 	void LevelOrder() const;
 	void Height() const;
 	void NodeCount() const;
+	BinaryNode<T> *root() const;
+	BinaryNode<T> *&root_ref();
+	void set_root(BinaryNode<T> *new_root);
 
 private:
 	BinaryNode<T> *root_;
@@ -148,6 +151,21 @@ void BinarySearchTree<T>::NodeCount() const
 {
 	printf("NodeCount:  %d\n", ::NodeCount(root_));
 }
+template<typename T>
+BinaryNode<T> *BinarySearchTree<T>::root() const
+{
+	return root_;
+}
+template<typename T>
+BinaryNode<T> *&BinarySearchTree<T>::root_ref()
+{
+	return root_;
+}
+template<typename T>
+void BinarySearchTree<T>::set_root(BinaryNode<T> *new_root)
+{
+	root_ = new_root;
+}
 ////////////////////////////////////////////////////////////////////////////////
 bool IsPostOrderTraverseOfBSTMain(const vector<int> &seq, int first, int last) // []
 {
@@ -196,9 +214,68 @@ void TestIsPostOrderTraverseOfBST()
 	printf("All case pass.\n");
 }
 ////////////////////////////////////////////////////////////////////////////////
+template<typename T>
+void InOrderConvertBSTToSortedDoubleLinkedList(BinaryNode<T> *node, BinaryNode<T> *&last)
+{
+	node->left_ != nullptr ? InOrderConvertBSTToSortedDoubleLinkedList(node->left_, last) : void();
+	last != nullptr ? last->right_ = node : last;
+	node->left_ = last;
+	last = node;
+	node->right_ != nullptr ? InOrderConvertBSTToSortedDoubleLinkedList(node->right_, last) : void();
+}
+template<typename T>
+BinaryNode<T> *ConvertBSTToSortedDoubleLinkedList(BinaryNode<T> *root)
+{
+	if(root == nullptr) // Negative test
+	{
+		return nullptr;
+	}
+	BinaryNode<T> *last = nullptr;
+	InOrderConvertBSTToSortedDoubleLinkedList(root, last);
+	for(; last->left_ != nullptr; last = last->left_)
+		;
+	return last;
+}
+void TestConvertBSTToSortedDoubleLinkedList()
+{
+	printf("-----TestConvertBSTToSortedDoubleLinkedList-----\n");
+	BinarySearchTree<int> tree;
+	// Nagative test: nullptr
+	assert(ConvertBSTToSortedDoubleLinkedList(tree.root()) == nullptr);
+	// Edge test
+	ConstructCompleteBinaryTreeByLevel(tree.root_ref(), { 10 });
+	BinaryNode<int> *root = ConvertBSTToSortedDoubleLinkedList(tree.root());
+	assert(
+		root != nullptr && root->left_ == nullptr && root->right_ == nullptr && root->data_ == 10);
+	// Function test
+	vector<int> insert { 6, 14, 4, 8, 12 };
+	for(int i = 0; i < static_cast<int>(insert.size()); ++i)
+	{
+		tree.Insert(insert[i]);
+	}
+	root = ConvertBSTToSortedDoubleLinkedList(tree.root());
+	assert(root->left_ == nullptr);
+	vector<int> data { 4, 6, 8, 10, 12, 14 };
+	for(int i = 0; i < static_cast<int>(data.size()); ++i)
+	{
+		assert(root->data_ == data[i]);
+		root->right_ != nullptr ? root = root->right_ : root;
+	}
+	assert(root->right_ == nullptr);
+	for(int i = static_cast<int>(data.size()) - 1; i >= 0; --i)
+	{
+		assert(root->data_ == data[i]);
+		root = root->left_;
+	}
+	assert(root == nullptr);
+	printf("All case pass.\n");
+	tree.set_root(root);
+}
+//////////////////////////////////////////////////////////////////////
 int main()
 {
 	TestIsPostOrderTraverseOfBST();
+	TestConvertBSTToSortedDoubleLinkedList();
 
 #ifdef TEST_BINARY_SEARCH_TREE
 	BinarySearchTree<int> tree;

@@ -9,7 +9,6 @@ public:
 	}
 	~BinaryTree();
 
-	void CreateCompleteBinaryTreeByLevel(const vector<T> &data);
 	void ConstructBinaryTreeFromPreAndInOrder();
 	void ConstructBinaryTreeFromPostAndInOrder();
 	// No `CreateTreeByPreAndPost` because we must need In to know scope [first, last),
@@ -24,6 +23,7 @@ public:
 	void Height() const;
 	void NodeCount() const;
 	BinaryNode<T> *root() const;
+	BinaryNode<T> *&root_ref();
 
 private:
 	BinaryNode<T> *root_;
@@ -32,30 +32,6 @@ template<typename T>
 BinaryTree<T>::~BinaryTree()
 {
 	::Delete(root_);
-}
-template<typename T>
-void BinaryTree<T>::CreateCompleteBinaryTreeByLevel(const vector<T> &data)
-{
-	if(data.size() <= 0)
-	{
-		return;
-	}
-	root_ = new BinaryNode<T>(data[0]);
-	queue<BinaryNode<T>*> my_queue;
-	my_queue.push(root_);
-	int length = static_cast<int>(data.size());
-	for(int index = 1; index < length;)
-	{
-		BinaryNode<T> *node = my_queue.front();
-		my_queue.pop();
-		node->left_ = new BinaryNode<T>(data[index++]);
-		my_queue.push(node->left_);
-		if(index < length)
-		{
-			node->right_ = new BinaryNode<T>(data[index++]);
-			my_queue.push(node->right_);
-		}
-	}
 }
 template<typename T>
 void BinaryTree<T>::ConstructBinaryTreeFromPreAndInOrder()
@@ -155,6 +131,11 @@ BinaryNode<T> *BinaryTree<T>::root() const
 {
 	return root_;
 }
+template<typename T>
+BinaryNode<T> *&BinaryTree<T>::root_ref()
+{
+	return root_;
+}
 ////////////////////////////////////////////////////////////////////////////////
 template<typename T>
 bool IsSubTree(BinaryNode<T> *large, BinaryNode<T> *small)
@@ -163,24 +144,21 @@ bool IsSubTree(BinaryNode<T> *large, BinaryNode<T> *small)
 	{
 		return small == nullptr ? true : false;
 	}
-	bool is_sub_tree = false;
-	large->data_ == small->data_ ? (is_sub_tree = IsSubTree(large->left_, small->left_)
-		&& IsSubTree(large->right_, small->right_)) : bool();
-	is_sub_tree == false ? is_sub_tree = IsSubTree(large->left_, small) : bool();
-	is_sub_tree == false ? is_sub_tree = IsSubTree(large->right_, small) : bool();
-	return is_sub_tree;
+	return (large->data_ == small->data_ && IsSubTree(large->left_, small->left_)
+		&& IsSubTree(large->right_, small->right_)) || IsSubTree(large->left_, small)
+		|| IsSubTree(large->right_, small); // && or || is short-circuit
 }
 void TestIsSubTree()
 {
 	printf("-----TestIsSubTree-----\n");
 	BinaryTree<int> large_null, large_zero, large_one_to_seven;
 	BinaryTree<int> small_null, small_zero, small_one, small_two_four_five, small_three_four_five;
-	large_zero.CreateCompleteBinaryTreeByLevel( { 0 });
-	large_one_to_seven.CreateCompleteBinaryTreeByLevel( { 1, 2, 3, 4, 5, 6, 7 });
-	small_zero.CreateCompleteBinaryTreeByLevel( { 0 });
-	small_one.CreateCompleteBinaryTreeByLevel( { 1 });
-	small_two_four_five.CreateCompleteBinaryTreeByLevel( { 2, 4, 5 });
-	small_three_four_five.CreateCompleteBinaryTreeByLevel( { 3, 4, 5 });
+	ConstructCompleteBinaryTreeByLevel(large_zero.root_ref(), { 0 });
+	ConstructCompleteBinaryTreeByLevel(large_one_to_seven.root_ref(), { 1, 2, 3, 4, 5, 6, 7 });
+	ConstructCompleteBinaryTreeByLevel(small_zero.root_ref(), { 0 });
+	ConstructCompleteBinaryTreeByLevel(small_one.root_ref(), { 1 });
+	ConstructCompleteBinaryTreeByLevel(small_two_four_five.root_ref(), { 2, 4, 5 });
+	ConstructCompleteBinaryTreeByLevel(small_three_four_five.root_ref(), { 3, 4, 5 });
 	// Negative test: nullptr
 	assert(IsSubTree(large_null.root(), small_null.root()) == true); // nullptr, nullptr
 	assert(IsSubTree(large_null.root(), small_zero.root()) == false); // nullptr, non-null
@@ -216,7 +194,7 @@ void TestModifyBinaryTreeToItsMirror()
 	vector<vector<int>> my_modify(kCaseNumber);
 	for(int index = 0; index < kCaseNumber; ++index)
 	{
-		tree[index].CreateCompleteBinaryTreeByLevel(before_modify[index]);
+		ConstructCompleteBinaryTreeByLevel(tree[index].root_ref(), before_modify[index]);
 		ModifyBinaryTreeToItsMirror(tree[index].root());
 		my_modify[index] = tree[index].LevelOrder();
 		AssertVectorData(after_modify[index], my_modify[index]);
@@ -225,8 +203,8 @@ void TestModifyBinaryTreeToItsMirror()
 }
 ////////////////////////////////////////////////////////////////////////////////
 template<typename T>
-void FindPathSumInBinaryTreeDFS(BinaryNode<T> *node, vector<int> &path, int &sum,
-	const int &expect_sum, Matrix &result)
+void FindPathSumInBinaryTreeDFS(BinaryNode<T> *node, vector<int> &path, int sum, int expect_sum,
+	Matrix &result)
 {
 	path.push_back(node->data_);
 	sum += node->data_;
@@ -239,26 +217,24 @@ void FindPathSumInBinaryTreeDFS(BinaryNode<T> *node, vector<int> &path, int &sum
 	node->right_ != nullptr ? FindPathSumInBinaryTreeDFS(node->right_, path, sum, expect_sum,
 									result) : void();
 	path.pop_back();
-	sum -= node->data_;
 }
 template<typename T>
 Matrix FindPathSumInBinaryTree(BinaryNode<T> *root, int expect_sum)
 {
-	if(root == nullptr) // Negative test
+	if(root == nullptr) // Negative test.
 	{
 		return Matrix();
 	}
 	vector<int> path;
-	int sum = 0;
 	Matrix result;
-	FindPathSumInBinaryTreeDFS(root, path, sum, expect_sum, result);
+	FindPathSumInBinaryTreeDFS(root, path, 0, expect_sum, result);
 	return result;
 }
 void TestFindPathSumInBinaryTree()
 {
 	printf("-----TestFindPathSumInBinaryTree-----\n");
 	BinaryTree<int> tree;
-	tree.CreateCompleteBinaryTreeByLevel( { 5, 5, 10, -5, 5, 5, -5, 15, 5, 5, 5 });
+	ConstructCompleteBinaryTreeByLevel(tree.root_ref(), { 5, 5, 10, -5, 5, 5, -5, 15, 5, 5, 5 });
 	vector<int> expect_sum { 5,/*0 path*/10,/*2 path*/20 /*4 path*/};
 	vector<Matrix> answer { {},/*0 path*/
 	{ { 5, 5, -5, 5 }, { 5, 10, -5 } },/*2 path*/
@@ -279,7 +255,7 @@ int main()
 
 #ifdef TEST_BINARY_TREE
 	printf("0: Exit\n"
-		"1: CreateCompleteBinaryTreeByLevel\n"
+		"1: ConstructCompleteBinaryTreeByLevel\n"
 		"2: ConstructBinaryTreeFromPreAndInOrder\n"
 		"3: ConstructBinaryTreeFromPostAndInOrder\n");
 	int operation;
@@ -291,7 +267,7 @@ int main()
 			case 0:
 			return 0;
 			case 1:
-			tree.CreateCompleteBinaryTreeByLevel();
+			tree.ConstructCompleteBinaryTreeByLevel();
 			break;
 			case 2:
 			tree.ConstructBinaryTreeFromPreAndInOrder();

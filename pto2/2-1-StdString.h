@@ -1,2 +1,2 @@
-../ds/std_string.cc
+eclipse ../ds/std_string.cc
 class String

@@ -187,83 +187,6 @@ void TestSudoku()
 	printf("All Case pass.\n");
 }
 ////////////////////////////////////////////
-void GetPermutation(int *data, int first, int last)
-{
-	for(int index = first; index < last; ++index)
-	{
-		printf("%d ", data[index]);
-	}
-	printf("\n");
-}
-int g_permutation_number = 0;
-void Permutation(int *data, int first, int last)  // [first, last)
-{
-	if(last - first == 1) // Length = 1, recursive ends, get one n-data permutation.
-	{
-		++g_permutation_number;
-		GetPermutation(data, 0, last);
-		return;
-	}
-	for(int index = first; index < last; ++index)
-	{
-		if(index != first && data[first] == data[index]) // Repeated data, No need swap.
-		{
-			continue;
-		}
-		swap(data[first], data[index]); // Get permutation of the first position.
-		Permutation(data, first + 1, last); // Get permutation of length n-1 data.
-		swap(data[first], data[index]); // Backtrack.
-	}
-}
-int g_subset_number = 0;
-bool g_exist[128];
-void GetSubset(int *data, bool *exist, int last)
-{
-	for(int index = 0; index < last; ++index)
-	{
-		if(exist[index] == true)
-		{
-			printf("%d ", data[index]);
-		}
-	}
-	printf("\n");
-}
-void Subset(int *data, bool *exist, int first, int last) // [first, last). Can't handle same subset.
-{
-	if(last - first == 1)
-	{
-		exist[first] = true;
-		GetSubset(data, exist, last);
-		exist[first] = false;
-		GetSubset(data, exist, last);
-		g_subset_number += 2;
-		return;
-	}
-	exist[first] = true; // in subset
-	Subset(data, exist, first + 1, last); // get subset of [first + 1, last)
-	exist[first] = false;
-	Subset(data, exist, first + 1, last);
-}
-void TestPermutationAndSubset()
-{
-	printf("----------TestPermutationAndSubset----------\n");
-	const int kCaseNumber = 4, kDataLength = 4;
-	int data[kCaseNumber][kDataLength] = { { 1, 2, 3, 4 }, { 1, 1, 2, 3 }, { 1, 1, 1, 2 }, { 1, 1,
-		1, 1 } };
-	for(int index = 0; index < kCaseNumber; ++index)
-	{
-		g_permutation_number = 0;
-		Permutation(data[index], 0, kDataLength);
-		printf("Case %d: total %d permutation.\n", index, g_permutation_number);
-	}
-	for(int index = 0; index < kCaseNumber; ++index)
-	{
-		g_subset_number = 0;
-		Subset(data[index], g_exist, 0, kDataLength);
-		printf("Case %d: total %d subset.\n", index, g_subset_number);
-	}
-}
-////////////////////////////////////////////
 void PrintByPermutation(string &num, int digit_number, int now_digit_number,
 	int &significant_digit_number, int &value)
 {
@@ -303,10 +226,97 @@ void TestPrintOneToMaxNDigit()
 	printf("All case pass.\n");
 }
 ////////////////////////////////////////////
+void StringPermutationMain(string &str, int first, int last, vector<string> &result) // [)
+{
+	if(first == last) // End recursive
+	{
+		result.push_back(str);
+		return;
+	}
+	for(int index = first; index < last; ++index)
+	{
+		if(index != first && str[first] == str[index]) // Not swap repeated data.
+		{
+			// continue; If require.
+		}
+		swap(str[first], str[index]);
+		StringPermutationMain(str, first + 1, last, result);
+		swap(str[first], str[index]); // Pass by reference! Need recover.
+	}
+}
+vector<string> StringPermutation(string str)
+{
+	if(str.size() <= 0) // Negative test.
+	{
+		return vector<string>();
+	}
+	vector<string> result;
+	StringPermutationMain(str, 0, static_cast<int>(str.size()), result);
+	return result;
+}
+void TestStringPermutation()
+{
+	printf("-----TestStringPermutation-----\n");
+	vector<string> str { "", "a", "ab", "abc" };
+	vector<vector<string>> answer { {}, { "a" }, { "ab", "ba" }, { "abc", "acb", "bac", "bca",
+		"cba", "cab" } };
+	for(int i = 0; i < static_cast<int>(str.size()); ++i)
+	{
+		AssertVectorData(answer[i], StringPermutation(str[i]));
+	}
+	printf("All case pass.\n");
+}
+//////////////////////////////////////////////////////////////////////
+void StringSubsetMain(const string &str, int first, int last, bool *exist, vector<string> &result)
+{
+	if(first == last)
+	{
+		string tmp;
+		for(int index = 0; index < last; ++index)
+		{
+			exist[index] == true ? tmp += str[index] : tmp;
+		}
+		result.push_back(tmp);
+		return;
+	}
+	exist[first] = true;
+	StringSubsetMain(str, first + 1, last, exist, result);
+	exist[first] = false;
+	StringSubsetMain(str, first + 1, last, exist, result);
+}
+vector<string> StringSubset(const string &str)
+{
+	if(str.size() <= 0) // Negative test
+	{
+		return vector<string> { "" };
+	}
+	bool exist[str.size()];
+	vector<string> result;
+	StringSubsetMain(str, 0, static_cast<int>(str.size()), exist, result);
+	return result;
+}
+void TestStringSubset()
+{
+	printf("-----TestStringSubset-----\n");
+	vector<string> str { "", "a", "ab", "abc" };
+	vector<set<string>> answer { { "" }, { "", "a" }, { "", "a", "b", "ab" }, { "", "a", "b", "c",
+		"ab", "ac", "bc", "abc" } };
+	for(int i = 0; i < static_cast<int>(str.size()); ++i)
+	{
+		vector<string> vec = StringSubset(str[i]);
+		assert(vec.size() == answer[i].size());
+		for(int j = 0; j < static_cast<int>(vec.size()); ++j)
+		{
+			set<string>::iterator it = answer[i].find(vec[j]);
+			assert(it != answer[i].end() && *it == vec[j]);
+		}
+	}
+	printf("All case pass.\n");
+}
+//////////////////////////////////////////////////////////////////////
 int main()
 {
-	/*TestNQueen();
-	 TestSudoku();
-	 TestPermutationAndSubset();*/
 	TestPrintOneToMaxNDigit();
+	TestStringPermutation();
+	TestStringSubset();
 }

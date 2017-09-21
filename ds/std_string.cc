@@ -172,7 +172,7 @@ void DetailTest()
 
 	printf("All case pass\n");
 }
-void Test()
+void TestStdString()
 {
 	String s1; // Default ctor
 	assert(memcmp(s1.data(), "", 1) == 0);
@@ -197,5 +197,5 @@ void Test()
 
 int main()
 {
-	Test();
+	TestStdString();
 }
