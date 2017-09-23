@@ -1,5 +1,4 @@
 #include "../common_system_header.h"
-
 /////////////////////////////////////////////////////////////////
 void ReplaceStringSpace(char *str, int max_length)
 {
@@ -7,27 +6,19 @@ void ReplaceStringSpace(char *str, int max_length)
 	{
 		return;
 	}
-
 	int length = 0, space = 0;
-	for(; str[length] != 0; str[length] == ' ' ? ++space : 0, ++length)
-		;
+	for(; str[length] != 0; ++length)
+	{
+		str[length] == ' ' ? ++space : space;
+	}
 	if(length + space * 2 > max_length) // Negative test
 	{
 		return;
 	}
-
-	for(int before = length, after = length + space * 2; before != after; --before)
+	for(int left = length, right = length + space * 2; left != right; --left)
 	{
-		if(str[before] != ' ')
-		{
-			str[after--] = str[before];
-		}
-		else
-		{
-			str[after--] = '0';
-			str[after--] = '2';
-			str[after--] = '%';
-		}
+		str[left] != ' ' ? str[right--] = str[left] : (str[right--] = '0', str[right--] = '2', str[right--] =
+			'%');
 	}
 }
 void TestReplaceStringSpace()
@@ -184,7 +175,6 @@ void TestStringSearch()
 	}
 }
 /////////////////////////////////////////////////////////////////
-
 int main()
 {
 	TestReplaceStringSpace();

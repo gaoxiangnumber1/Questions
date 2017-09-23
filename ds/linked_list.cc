@@ -1,6 +1,6 @@
 #include "node.h"
 #include "../common_system_header.h"
-
+///////////////////////////////////////////////////////////////////////////
 template<typename T>
 class LinkedList
 {
@@ -27,7 +27,6 @@ private:
 	Node<T> *first_;
 	int length_;
 };
-
 template<typename T>
 LinkedList<T>::~LinkedList()
 {
@@ -273,36 +272,17 @@ Node<T> *MergeTwoSortedLinkedList(Node<T> *first, Node<T> *second)
 {
 	if(first == nullptr || second == nullptr) // Negative test.
 	{
-		return first == nullptr ? second : first;
+		return first != nullptr ? first : second;
 	}
-
-	Node<T> *head = nullptr;
-	if(first->data_ <= second->data_)
-	{
-		head = first;
-		first = first->next_;
-	}
-	else
-	{
-		head = second;
-		second = second->next_;
-	}
+	Node<T> *head = (first->data_ <= second->data_ ? first : second);
+	first->data_ <= second->data_ ? first = first->next_ : second = second->next_;
 	Node<T> *node = head;
-	while(first != nullptr && second != nullptr)
+	for(; first != nullptr && second != nullptr; node = node->next_)
 	{
-		if(first->data_ <= second->data_)
-		{
-			node->next_ = first;
-			first = first->next_;
-		}
-		else
-		{
-			node->next_ = second;
-			second = second->next_;
-		}
-		node = node->next_;
+		node->next_ = (first->data_ <= second->data_ ? first : second);
+		first->data_ <= second->data_ ? first = first->next_ : second = second->next_;
 	}
-	node->next_ = (first == nullptr ? second : first);
+	node->next_ = (first != nullptr ? first : second);
 	return head;
 }
 template<typename T>
@@ -476,19 +456,12 @@ vector<int> ReversePrintLinkedListStack(Node<T> *first)
 	{
 		return vector<int>();
 	}
-
 	stack<int> s;
-	while(first != nullptr)
-	{
-		s.push(first->data_);
-		first = first->next_;
-	}
+	for(; first != nullptr; s.push(first->data_), first = first->next_)
+		;
 	vector<int> vec;
-	while(s.empty() == false)
-	{
-		vec.push_back(s.top());
-		s.pop();
-	}
+	for(; s.empty() == false; vec.push_back(s.top()), s.pop())
+		;
 	return vec;
 }
 // T(n) = O(n) S(n) = O(n)

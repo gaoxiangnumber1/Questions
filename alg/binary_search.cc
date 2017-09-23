@@ -8,19 +8,11 @@ int BinarySearch(int *data, int first, int last, int target) // [first, last)
 	while(first < last) // []: first <= last
 	{
 		int middle = first + (last - first) / 2;
-		// [first, middle), [middle, middle + 1), [middle + 1, last)
-		if(data[middle] > target) // Search left half: [first, middle)
-		{
-			last = middle; // []: last = middle - 1
-		}
-		else if(data[middle] == target) // Return result.
+		if(data[middle] == target)
 		{
 			return middle;
 		}
-		else // Search right half: [middle + 1, last)
-		{
-			first = middle + 1;
-		}
+		data[middle] < target ? first = middle + 1 : last = middle;
 	}
 	return -1;
 }
@@ -37,10 +29,10 @@ void TestBinarySearch()
 	printf("All case pass.\n");
 }
 //////////////////////////////////////////////////////////////////////
+int LowerBound(int *data, int first, int last, int target)
 // 1. Exist: return target's first position.
 // 2. Not exist: return position of first element that is greater than target.
 //     If target is greater than all elements, return last.
-int LowerBound(int *data, int first, int last, int target)
 {
 	while(first < last)
 	{

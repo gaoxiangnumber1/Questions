@@ -1,2 +1,2 @@
-../oop/singleton.cc
+eclipse ../oop/singleton.cc
 class ThreadSafeSingleton

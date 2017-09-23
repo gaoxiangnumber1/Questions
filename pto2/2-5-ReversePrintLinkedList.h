@@ -1,6 +1,6 @@
-../ds/linked_list.cc
-vector<int> ReversePrintLinkedListStack
-vector<int> ReversePrintLinkedListRecursive
+eclipse ../ds/linked_list.cc
+vector<int> ReversePrintLinkedListStack(Node<T> *first)
+vector<int> ReversePrintLinkedListRecursive(Node<T> *first)
 
 struct ListNode
 {

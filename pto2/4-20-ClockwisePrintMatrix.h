@@ -1,2 +1,2 @@
-../ds/array.cc
+eclipse ../ds/array.cc
 Row ClockwisePrintMatrix(const Matrix &matrix)

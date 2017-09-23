@@ -1,5 +1,4 @@
 #include "../common_system_header.h"
-
 //////////////////////////////////////////////////////////////////////
 bool FindInTwoDimensionArray(const vector<vector<int>> &data, int target)
 {
@@ -7,22 +6,14 @@ bool FindInTwoDimensionArray(const vector<vector<int>> &data, int target)
 	{
 		return false;
 	}
-
 	int total_row = static_cast<int>(data.size()), total_col = static_cast<int>(data[0].size());
 	for(int row = 0, col = total_col - 1; row < total_row && col >= 0;)
 	{
-		if(data[row][col] < target)
-		{
-			++row;
-		}
-		else if(data[row][col] == target)
+		if(data[row][col] == target)
 		{
 			return true;
 		}
-		else
-		{
-			--col;
-		}
+		data[row][col] < target ? ++row : --col;
 	}
 	return false;
 }
@@ -99,17 +90,17 @@ Row ClockwisePrintMatrix(const Matrix &matrix)
 	int total_row = static_cast<int>(matrix.size()), total_col = static_cast<int>(matrix[0].size());
 	int total_circle = (min(total_row, total_col) + 1) / 2;
 	Row seq;
-	for(int index = 1; index <= total_circle; ++index)
+	for(int circle = 1; circle <= total_circle; ++circle)
 	{
-		int row = index - 1, col = index - 1;
-		for(; col <= total_col - index; seq.push_back(matrix[row][col]), ++col)
+		int row = circle - 1, col = circle - 1;
+		for(; col <= total_col - circle; seq.push_back(matrix[row][col]), ++col)
 			;
-		for(--col, ++row; row <= total_row - index; seq.push_back(matrix[row][col]), ++row)
+		for(--col, ++row; row <= total_row - circle; seq.push_back(matrix[row][col]), ++row)
 			;
-		for(--row, --col; index - 1 != total_row - index && col >= index - 1;
+		for(--row, --col; circle - 1 != total_row - circle && col >= circle - 1;
 			seq.push_back(matrix[row][col]), --col)
 			;
-		for(++col, --row; index - 1 != total_col - index && row > index - 1;
+		for(++col, --row; circle - 1 != total_col - circle && row > circle - 1;
 			seq.push_back(matrix[row][col]), --row)
 			;
 	}

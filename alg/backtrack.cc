@@ -237,7 +237,7 @@ void StringPermutationMain(string &str, int first, int last, vector<string> &res
 	{
 		if(index != first && str[first] == str[index]) // Not swap repeated data.
 		{
-			// continue; If require.
+			continue;
 		}
 		swap(str[first], str[index]);
 		StringPermutationMain(str, first + 1, last, result);

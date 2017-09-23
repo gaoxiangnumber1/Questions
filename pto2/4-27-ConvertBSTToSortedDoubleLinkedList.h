@@ -16,11 +16,11 @@ class Solution
 public:
 	void InOrderConvertBSTToSortedDoubleLinkedList(TreeNode *node, TreeNode *&last)
 	{
-		node->left_ != nullptr ? InOrderConvertBSTToSortedDoubleLinkedList(node->left_, last) : void();
-		last != nullptr ? last->right_ = node : last;
-		node->left_ = last;
+		node->left != nullptr ? InOrderConvertBSTToSortedDoubleLinkedList(node->left, last) : void();
+		last != nullptr ? last->right = node : last;
+		node->left = last;
 		last = node;
-		node->right_ != nullptr ? InOrderConvertBSTToSortedDoubleLinkedList(node->right_, last) : void();
+		node->right != nullptr ? InOrderConvertBSTToSortedDoubleLinkedList(node->right, last) : void();
 	}
 	TreeNode *Convert(TreeNode *root)
 	{
@@ -30,7 +30,7 @@ public:
 		}
 		TreeNode *last = nullptr;
 		InOrderConvertBSTToSortedDoubleLinkedList(root, last);
-		for(; last->left_ != nullptr; last = last->left_)
+		for(; last->left != nullptr; last = last->left)
 			;
 		return last;
 	}

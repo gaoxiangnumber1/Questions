@@ -1,6 +1,4 @@
-#include <pthread.h>
-#include <assert.h>
-#include <stdio.h>
+#include "../common_system_header.h"
 
 // Usage: `T &t = ThreadSafeSingleton<T>::Instance();`
 template<typename T>
@@ -36,7 +34,7 @@ pthread_once_t ThreadSafeSingleton<T>::once_ = PTHREAD_ONCE_INIT;
 template<typename T>
 T *ThreadSafeSingleton<T>::value_ = nullptr;
 
-void Test()
+void TestThreadSafeSingleton()
 {
 	int &i = ThreadSafeSingleton<int>::Instance();
 	assert(i == 0);
@@ -45,5 +43,5 @@ void Test()
 
 int main()
 {
-	Test();
+	TestThreadSafeSingleton();
 }

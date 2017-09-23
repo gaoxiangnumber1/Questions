@@ -14,6 +14,10 @@ public:
 		}
 		for(int index = first; index < last; ++index)
 		{
+			if(index != first && str[first] == str[index]) // Not swap repeated data.
+			{
+				continue;
+			}
 			swap(str[first], str[index]);
 			StringPermutationMain(str, first + 1, last, result);
 			swap(str[first], str[index]); // Pass by reference! Need recover.

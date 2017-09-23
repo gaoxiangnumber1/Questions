@@ -1,5 +1,5 @@
 #include "../common_system_header.h"
-
+//////////////////////////////////////////////////////////////////////
 struct BigInteger
 {
 	BigInteger() :
@@ -41,9 +41,9 @@ struct BigInteger
 	}
 	void Swap(BigInteger &rhs)
 	{
-		std::swap(neg_, rhs.neg_);
-		std::swap(size_, rhs.size_);
-		std::swap(num_, rhs.num_);
+		swap(neg_, rhs.neg_);
+		swap(size_, rhs.size_);
+		swap(num_, rhs.num_);
 	}
 	~BigInteger()
 	{
@@ -219,7 +219,7 @@ struct BigInteger
 			;
 		return result;
 	}
-	std::pair<BigInteger, BigInteger> DivideAndMod(const BigInteger &rhs) const
+	pair<BigInteger, BigInteger> DivideAndMod(const BigInteger &rhs) const
 	{
 		BigInteger division, mod;
 		if(rhs.size_ > 1 || rhs.num_[0] > 0)
@@ -269,7 +269,7 @@ struct BigInteger
 			division.neg_ = true;
 		}
 		mod.neg_ = neg_;
-		return std::pair<BigInteger, BigInteger>(division, mod);
+		return pair<BigInteger, BigInteger>(division, mod);
 	}
 
 	bool neg_;
@@ -288,7 +288,7 @@ void TestBigInteger()
 		(bi1.Add(bi2)).ShowContent();
 		(bi1.Subtract(bi2)).ShowContent();
 		(bi1.Multiple(bi2)).ShowContent();
-		std::pair<BigInteger, BigInteger> bi_pair = bi1.DivideAndMod(bi2);
+		pair<BigInteger, BigInteger> bi_pair = bi1.DivideAndMod(bi2);
 		bi_pair.first.ShowContent();
 		bi_pair.second.ShowContent();
 		printf("\n");
@@ -359,7 +359,7 @@ void TestBigInteger()
 	 -38
 	 */
 }
-
+//////////////////////////////////////////////////////////////////////
 bool Increment(string &num, int digit_number, int &significant_digit_number)
 {
 	bool need_carry = true;
@@ -407,7 +407,7 @@ void TestPrintOneToMaxNDigit()
 	}
 	printf("All case pass.\n");
 }
-
+//////////////////////////////////////////////////////////////////////
 int main()
 {
 	TestPrintOneToMaxNDigit();
