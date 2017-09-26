@@ -50,21 +50,7 @@ void TestReplaceStringSpace()
 /////////////////////////////////////////////////////////////////
 const int kNumberOfChar = 128;
 // const int kMod = TODO;
-int QuickPower(int base, int exponent)
-{
-	int power = 1;
-	while(exponent > 0)
-	{
-		if((exponent & 0x1) == 1)
-		{
-			power *= base; // %
-		}
-		exponent >>= 1;
-		base *= base;
-	}
-	return power;
-}
-int HashValue(const char *data, const int length) // O(length)
+int HashValue(const char *data, int length) // O(n)
 {
 	int hash_value = 0;
 	for(int index = 0; index < length; ++index)
@@ -73,38 +59,35 @@ int HashValue(const char *data, const int length) // O(length)
 	}
 	return hash_value;
 }
-void RKStringSearch(const char *haystack, const char *needle)
+vector<int> RKStringMatching(const string &text, const string &pattern)
 {
-	printf("----------RKStringSearch----------\n");
-	int long_length = static_cast<int>(strlen(haystack));
-	int short_length = static_cast<int>(strlen(needle));
-	// Pre-process
-	int target_hash_value = HashValue(needle, short_length);
-	int substring_number = long_length - short_length + 1;
-	int hash_value[substring_number];
-	hash_value[0] = HashValue(haystack, short_length);
-	int max_power = QuickPower(kNumberOfChar, short_length - 1);
-	bool good_match = false;
-	for(int index = 0; index < substring_number; ++index)
+	if(text.size() <= 0 || pattern.size() <= 0 || text.size() < pattern.size()) // Negative test
 	{
-		if(hash_value[index] == target_hash_value
-			&& strncmp(haystack + index, needle, short_length) == 0)
+		return vector<int>();
+	}
+	int text_length = static_cast<int>(text.size());
+	int pattern_length = static_cast<int>(pattern.size());
+	vector<int> text_hash_value(text_length - pattern_length + 1);
+	text_hash_value[0] = HashValue(text.data(), pattern_length);
+	int pattern_hash_value = HashValue(pattern.data(), pattern_length);
+	vector<int> shift;
+	int max_power = static_cast<int>(pow(kNumberOfChar, pattern_length - 1));
+	for(int index = 0; index < static_cast<int>(text_hash_value.size()); ++index)
+	{
+		if(text_hash_value[index] == pattern_hash_value
+			&& memcmp(&text[index], pattern.data(), pattern_length) == 0)
 		{
-			printf("%d ", index);
-			good_match = true;
+			shift.push_back(index);
 		}
-		if(index < substring_number - 1)
+		if(index + 1 < static_cast<int>(text_hash_value.size()))
 		{
-			int to_subtract = static_cast<int>(haystack[index]) * max_power; // %
-			int to_add = static_cast<int>(haystack[index + short_length]);
-			hash_value[index + 1] = (hash_value[index] - to_subtract) * kNumberOfChar + to_add; // %
+			int to_subtract = static_cast<int>(text[index]) * max_power; // %
+			int to_add = static_cast<int>(text[index + pattern_length]);
+			text_hash_value[index + 1] = (text_hash_value[index] - to_subtract) * kNumberOfChar
+				+ to_add; // %
 		}
 	}
-	if(good_match == false)
-	{
-		printf("null");
-	}
-	printf("\n");
+	return shift;
 }
 /////////////////////////////////////////////////////////////////
 void ComputePrefix(const char *string, int *max_prefix_length, int length)
@@ -131,26 +114,26 @@ void ComputePrefix(const char *string, int *max_prefix_length, int length)
 		max_prefix_length[index] = matched;
 	}
 }
-void KMPStringSearch(const char *haystack, const char *needle)
+void KMPStringSearch(const char *text, const char *pattern)
 {
 	printf("----------KMPStringSearch----------\n");
-	int long_length = static_cast<int>(strlen(haystack));
-	int short_length = static_cast<int>(strlen(needle));
-	int max_prefix_length[short_length];
-	ComputePrefix(needle, max_prefix_length, short_length);
+	int text_length = static_cast<int>(strlen(text));
+	int pattern_length = static_cast<int>(strlen(pattern));
+	int max_prefix_length[pattern_length];
+	ComputePrefix(pattern, max_prefix_length, pattern_length);
 	int matched = 0;
 	bool good_match = false;
-	for(int index = 0; index < long_length; ++index)
+	for(int index = 0; index < text_length; ++index)
 	{
-		while(matched > 0 && needle[matched] != haystack[index])
+		while(matched > 0 && pattern[matched] != text[index])
 		{
 			matched = max_prefix_length[matched - 1];
 		}
-		if(needle[matched] == haystack[index])
+		if(pattern[matched] == text[index])
 		{
 			++matched;
 		}
-		if(matched == short_length)
+		if(matched == pattern_length)
 		{
 			good_match = true;
 			printf("%d ", index - matched + 1);
@@ -163,19 +146,26 @@ void KMPStringSearch(const char *haystack, const char *needle)
 	}
 	printf("\n");
 }
-void TestStringSearch()
+void TestStringMatching()
 {
-	const int kLongStringSize = 1024;
-	const int kShortStringSize = 64;
-	char haystack[kLongStringSize], needle[kShortStringSize];
-	while(scanf("%s %s", haystack, needle) == 2)
+	printf("-----TestStringMatching-----\n");
+	vector<string> text { "", "a",/*Negative test*/
+	"aaa", "aaa", "aaa",/*Edge test*/
+	"abcdabcaba", "abcdabcaba", "abcdabcaba", "abcdabcaba", "abcdabcaba", "abcdabcaba", "abcdabcaba", /*Function test*/};
+	vector<string> pattern { "", "aa",/*Negative test*/
+	"a", "aa", "aaa",/*Edge test*/
+	"a", "bc", "abc", "bcab", "e", "ac", "dac" /*Function test*/};
+	vector<vector<int>> answer { {}, {}, { 0, 1, 2 }, { 0, 1 }, { 0 }, { 0, 4, 7, 9 }, { 1, 5 }, {
+		0, 4 }, { 5 }, {}, {}, {} };
+	for(int index = 0; index < static_cast<int>(text.size()); ++index)
 	{
-		RKStringSearch(haystack, needle);
-		KMPStringSearch(haystack, needle);
+		AssertVectorData(RKStringMatching(text[index], pattern[index]), answer[index]);
 	}
+	printf("All case pass.\n");
 }
 /////////////////////////////////////////////////////////////////
 int main()
 {
 	TestReplaceStringSpace();
+	TestStringMatching();
 }

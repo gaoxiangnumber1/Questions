@@ -1,6 +1,7 @@
 eclipse ../alg/backtrack.cc
 vector<string> StringPermutation(string str)
 vector<string> StringSubset(const string &str)
+int NQueen(int queen_number)
 
 class Solution
 {

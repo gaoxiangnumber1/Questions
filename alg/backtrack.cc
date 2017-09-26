@@ -1,93 +1,19 @@
 #include "../common_system_header.h"
-
-////////////////////////////////////////////
-const int kQueenKindNumber = 3;
-const int kMaxQueenNumber = 50;
-// [0][column]: false if no queen in this column; otherwise true.
-// [1][row + column] and [2][row - column + queen_number] are for 2 kinds of
-// diagonals(/ and \): false if no queen in this diagonal; otherwise true.
-// (row + column) & (row - column + queen_number) can be calculated by
-// formula: y = k*x + b, which y(row), k(1 or -1), x(column) and b is a constant.
-// Since row - column can be negative, so we add queen_number to
-// guarantee that the index is nonnegative.
-bool have_queen[kQueenKindNumber][kMaxQueenNumber * 2 + 10];
-// position[row] = column: place queen in [row][column]. Used to print solution.
-int position[kMaxQueenNumber];
-int solution_number;
-void PrintQueen(const int queen_number)
-{
-	for(int row = 0; row < queen_number; ++row)
-	{
-		for(int column = 0; column < queen_number; ++column)
-		{
-			printf("%c ", position[row] == column ? '1' : '0');
-		}
-		printf("\n");
-	}
-	printf("\n");
-}
-void NQueenBacktrack(int row, const int queen_number)
-{
-	if(row == queen_number)
-	{
-		//PrintQueen(queen_number);
-		++solution_number;
-	}
-	else
-	{
-		for(int column = 0; column < queen_number; ++column)
-		{
-			if(have_queen[0][column] == true || have_queen[1][row + column] == true
-				|| have_queen[2][row - column + queen_number] == true)
-			{
-				continue;
-			}
-			position[row] = column;
-			have_queen[0][column] = have_queen[1][row + column] = have_queen[2][row - column
-				+ queen_number] = true;
-			NQueenBacktrack(row + 1, queen_number);
-			have_queen[0][column] = have_queen[1][row + column] = have_queen[2][row - column
-				+ queen_number] = false;
-		}
-	}
-}
-void NQueen(int queen_number)
-{
-	memset(have_queen, false, sizeof have_queen);
-	solution_number = 0;
-	NQueenBacktrack(0, queen_number);
-}
-void TestNQueen()
-{
-	printf("----------TestNQueen----------\n");
-	const int kCaseNumber = 10;
-	int queen_number[kCaseNumber] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-	int answer[kCaseNumber] = { 1, 0, 0, 2, 10, 4, 40, 92, 352, 724 };
-	for(int index = 0; index < kCaseNumber; ++index)
-	{
-		NQueen(queen_number[index]);
-		if(solution_number != answer[index])
-		{
-			printf("Case %d Not pass.\n", index);
-		}
-	}
-	printf("All Case pass.\n");
-}
 ////////////////////////////////////////////
 const int kBoardSize = 9;
 const int kPuzzleSize = kBoardSize * kBoardSize + 1;
 bool row_flag[kBoardSize][kBoardSize];
 bool column_flag[kBoardSize][kBoardSize];
 bool area_flag[kBoardSize][kBoardSize];
-void SetFlag(int row, int column, int area, int number, bool value)
+void SetFlag(int row, int col, int area, int number, bool value)
 {
 	row_flag[row][number] = value;
-	column_flag[column][number] = value;
+	column_flag[col][number] = value;
 	area_flag[area][number] = value;
 }
-bool IsPlaced(int row, int column, int area, int number)
+bool IsPlaced(int row, int col, int area, int number)
 {
-	return row_flag[row][number] || column_flag[column][number] || area_flag[area][number];
+	return row_flag[row][number] || column_flag[col][number] || area_flag[area][number];
 }
 void InitializeFlag(char (&board)[kBoardSize][kBoardSize])
 {
@@ -96,48 +22,48 @@ void InitializeFlag(char (&board)[kBoardSize][kBoardSize])
 	memset(area_flag, false, sizeof area_flag);
 	for(int row = 0; row < kBoardSize; ++row)
 	{
-		for(int column = 0; column < kBoardSize; ++column)
+		for(int col = 0; col < kBoardSize; ++col)
 		{
-			if(board[row][column] == '0')
+			if(board[row][col] == '0')
 			{
 				continue;
 			}
-			int area = row / 3 * 3 + column / 3;
-			int number = board[row][column] - '0' - 1;
-			SetFlag(row, column, area, number, true);
+			int area = row / 3 * 3 + col / 3;
+			int number = board[row][col] - '0' - 1;
+			SetFlag(row, col, area, number, true);
 		}
 	}
 }
-bool SudokuBacktrack(char (&board)[kBoardSize][kBoardSize], int row, int column)
+bool SudokuBacktrack(char (&board)[kBoardSize][kBoardSize], int row, int col)
 {
 	if(row >= kBoardSize)
 	{
 		return true;
 	}
-	if(column >= kBoardSize)
+	if(col >= kBoardSize)
 	{
 		return SudokuBacktrack(board, row + 1, 0);
 	}
-	if(board[row][column] != '0')
+	if(board[row][col] != '0')
 	{
-		return SudokuBacktrack(board, row, column + 1);
+		return SudokuBacktrack(board, row, col + 1);
 	}
 
-	int area = row / 3 * 3 + column / 3;
+	int area = row / 3 * 3 + col / 3;
 	for(int number = 0; number < kBoardSize; ++number)
 	{
-		if(IsPlaced(row, column, area, number) == true)
+		if(IsPlaced(row, col, area, number) == true)
 		{
 			continue;
 		}
-		board[row][column] = static_cast<char>('0' + number + 1);
-		SetFlag(row, column, area, number, true);
-		if(SudokuBacktrack(board, row, column + 1) == true)
+		board[row][col] = static_cast<char>('0' + number + 1);
+		SetFlag(row, col, area, number, true);
+		if(SudokuBacktrack(board, row, col + 1) == true)
 		{
 			return true;
 		}
-		board[row][column] = '0';
-		SetFlag(row, column, area, number, false);
+		board[row][col] = '0';
+		SetFlag(row, col, area, number, false);
 	}
 	return false;
 }
@@ -146,9 +72,9 @@ void Sudoku(char *puzzle)
 	char board[kBoardSize][kBoardSize];
 	for(int row = 0; row < kBoardSize; ++row)
 	{
-		for(int column = 0; column < kBoardSize; ++column)
+		for(int col = 0; col < kBoardSize; ++col)
 		{
-			board[row][column] = puzzle[row * kBoardSize + column];
+			board[row][col] = puzzle[row * kBoardSize + col];
 		}
 	}
 	InitializeFlag(board);
@@ -156,9 +82,9 @@ void Sudoku(char *puzzle)
 	{
 		for(int row = 0; row < kBoardSize; ++row)
 		{
-			for(int column = 0; column < kBoardSize; ++column)
+			for(int col = 0; col < kBoardSize; ++col)
 			{
-				puzzle[row * kBoardSize + column] = board[row][column];
+				puzzle[row * kBoardSize + col] = board[row][col];
 			}
 		}
 		return;
@@ -314,9 +240,59 @@ void TestStringSubset()
 	printf("All case pass.\n");
 }
 //////////////////////////////////////////////////////////////////////
+void NQueenMain(int row, int queen_number, vector<int> &row_col, vector<bool> &col_exist,
+	vector<bool> &pos_diag_exist, vector<bool> &neg_diag_exist, int &solution_cnt)
+{
+	if(row == queen_number)
+	{
+		++solution_cnt;
+		return;
+	}
+	for(int col = 0; col < queen_number; ++col)
+	{
+		if(col_exist[col] == false && pos_diag_exist[row - col + queen_number] == false
+			&& neg_diag_exist[row + col] == false)
+		{
+			row_col[row] = col;
+			col_exist[col] = pos_diag_exist[row - col + queen_number] = neg_diag_exist[row + col] =
+				true;
+			NQueenMain(row + 1, queen_number, row_col, col_exist, pos_diag_exist, neg_diag_exist,
+				solution_cnt);
+			col_exist[col] = pos_diag_exist[row - col + queen_number] = neg_diag_exist[row + col] =
+				false;
+		}
+	}
+}
+int NQueen(int queen_number)
+{
+	if(queen_number <= 0)
+	{
+		return 0;
+	}
+	vector<int> row_col(queen_number);
+	vector<bool> col_exist(queen_number, false);
+	vector<bool> pos_diag_exist(queen_number * 2, false);
+	vector<bool> neg_diag_exist(queen_number * 2, false);
+	int solution_cnt = 0;
+	NQueenMain(0, queen_number, row_col, col_exist, pos_diag_exist, neg_diag_exist, solution_cnt);
+	return solution_cnt;
+}
+void TestNQueen()
+{
+	printf("-----TestNQueen-----\n");
+	vector<int> queen_number { -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+	vector<int> answer { 0, 0, 1, 0, 0, 2, 10, 4, 40, 92, 352, 724 };
+	for(int index = 0; index < static_cast<int>(queen_number.size()); ++index)
+	{
+		assert(NQueen(queen_number[index]) == answer[index]);
+	}
+	printf("All Case pass.\n");
+}
+////////////////////////////////////////////
 int main()
 {
 	TestPrintOneToMaxNDigit();
 	TestStringPermutation();
 	TestStringSubset();
+	TestNQueen();
 }
