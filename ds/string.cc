@@ -17,8 +17,8 @@ void ReplaceStringSpace(char *str, int max_length)
 	}
 	for(int left = length, right = length + space * 2; left != right; --left)
 	{
-		str[left] != ' ' ? str[right--] = str[left] : (str[right--] = '0', str[right--] = '2', str[right--] =
-			'%');
+		str[left] != ' ' ? str[right--] = str[left] : (str[right--] = '0', str[right--] =
+			'2', str[right--] = '%');
 	}
 }
 void TestReplaceStringSpace()
@@ -38,7 +38,8 @@ void TestReplaceStringSpace()
 		ReplaceStringSpace(input[index], kLength);
 		if(memcmp(input[index], output[index], strlen(output[index]) + 1) != 0)
 		{
-			printf("Case not pass: wrong=`%s`, right=`%s`\n", input[index], output[index]);
+			printf("Case not pass: wrong=`%s`, right=`%s`\n", input[index],
+				output[index]);
 			assert(0);
 		}
 	}
@@ -83,8 +84,8 @@ vector<int> RKStringMatching(const string &text, const string &pattern)
 		{
 			int to_subtract = static_cast<int>(text[index]) * max_power; // %
 			int to_add = static_cast<int>(text[index + pattern_length]);
-			text_hash_value[index + 1] = (text_hash_value[index] - to_subtract) * kNumberOfChar
-				+ to_add; // %
+			text_hash_value[index + 1] = (text_hash_value[index] - to_subtract)
+				* kNumberOfChar + to_add; // %
 		}
 	}
 	return shift;
@@ -151,12 +152,13 @@ void TestStringMatching()
 	printf("-----TestStringMatching-----\n");
 	vector<string> text { "", "a",/*Negative test*/
 	"aaa", "aaa", "aaa",/*Edge test*/
-	"abcdabcaba", "abcdabcaba", "abcdabcaba", "abcdabcaba", "abcdabcaba", "abcdabcaba", "abcdabcaba", /*Function test*/};
+	"abcdabcaba", "abcdabcaba", "abcdabcaba", "abcdabcaba", "abcdabcaba", "abcdabcaba",
+		"abcdabcaba", /*Function test*/};
 	vector<string> pattern { "", "aa",/*Negative test*/
 	"a", "aa", "aaa",/*Edge test*/
 	"a", "bc", "abc", "bcab", "e", "ac", "dac" /*Function test*/};
-	vector<vector<int>> answer { {}, {}, { 0, 1, 2 }, { 0, 1 }, { 0 }, { 0, 4, 7, 9 }, { 1, 5 }, {
-		0, 4 }, { 5 }, {}, {}, {} };
+	vector<vector<int>> answer { {}, {}, { 0, 1, 2 }, { 0, 1 }, { 0 }, { 0, 4, 7, 9 }, {
+		1, 5 }, { 0, 4 }, { 5 }, {}, {}, {} };
 	for(int index = 0; index < static_cast<int>(text.size()); ++index)
 	{
 		AssertVectorData(RKStringMatching(text[index], pattern[index]), answer[index]);
