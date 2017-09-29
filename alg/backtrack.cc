@@ -95,13 +95,16 @@ void TestSudoku()
 {
 	printf("----------TestSudoku----------\n");
 	const int kCaseNumber = 3;
-	char sudoku_puzzle[kCaseNumber][kPuzzleSize] = {
-		"000000010400000000020000000000050407008000300001090000300400200050100000000806000",
-		"000000010400000000020000000000050407008000300001090000300400200050100000000806005",
-		"693784512487512936125963874932651487568247391741398625319475268856129743274836159", };
-	char sudoku_answer[kCaseNumber][kPuzzleSize] = {
-		"693784512487512936125963874932651487568247391741398625319475268856129743274836159", "\0",
-		"693784512487512936125963874932651487568247391741398625319475268856129743274836159", };
+	char sudoku_puzzle[kCaseNumber][kPuzzleSize] =
+		{
+			"000000010400000000020000000000050407008000300001090000300400200050100000000806000",
+			"000000010400000000020000000000050407008000300001090000300400200050100000000806005",
+			"693784512487512936125963874932651487568247391741398625319475268856129743274836159", };
+	char sudoku_answer[kCaseNumber][kPuzzleSize] =
+		{
+			"693784512487512936125963874932651487568247391741398625319475268856129743274836159",
+			"\0",
+			"693784512487512936125963874932651487568247391741398625319475268856129743274836159", };
 	for(int index = 0; index < kCaseNumber; ++index)
 	{
 		Sudoku(sudoku_puzzle[index]);
@@ -128,8 +131,8 @@ void PrintByPermutation(string &num, int digit_number, int now_digit_number,
 	for(char ch = '0'; ch <= '9'; ++ch)
 	{
 		num[now_digit_number] = ch;
-		PrintByPermutation(num, digit_number, now_digit_number + 1, significant_digit_number,
-			value);
+		PrintByPermutation(num, digit_number, now_digit_number + 1,
+			significant_digit_number, value);
 	}
 }
 void PrintOneToMaxNDigit(int digit_number)
@@ -152,7 +155,7 @@ void TestPrintOneToMaxNDigit()
 	printf("All case pass.\n");
 }
 ////////////////////////////////////////////
-void StringPermutationMain(string &str, int first, int last, vector<string> &result) // [)
+void StringPermutationMain(string str, int first, int last, vector<string> &result) // [)
 {
 	if(first == last) // End recursive
 	{
@@ -167,10 +170,9 @@ void StringPermutationMain(string &str, int first, int last, vector<string> &res
 		}
 		swap(str[first], str[index]);
 		StringPermutationMain(str, first + 1, last, result);
-		swap(str[first], str[index]); // Pass by reference! Need recover.
 	}
 }
-vector<string> StringPermutation(string str)
+vector<string> StringPermutation(const string &str)
 {
 	if(str.size() <= 0) // Negative test.
 	{
@@ -184,8 +186,8 @@ void TestStringPermutation()
 {
 	printf("-----TestStringPermutation-----\n");
 	vector<string> str { "", "a", "ab", "abc" };
-	vector<vector<string>> answer { {}, { "a" }, { "ab", "ba" }, { "abc", "acb", "bac", "bca",
-		"cba", "cab" } };
+	vector<vector<string>> answer { {}, { "a" }, { "ab", "ba" }, { "abc", "acb", "bac",
+		"bca", "cab", "cba" } };
 	for(int i = 0; i < static_cast<int>(str.size()); ++i)
 	{
 		AssertVectorData(answer[i], StringPermutation(str[i]));
@@ -193,7 +195,8 @@ void TestStringPermutation()
 	printf("All case pass.\n");
 }
 //////////////////////////////////////////////////////////////////////
-void StringSubsetMain(const string &str, int first, int last, bool *exist, vector<string> &result)
+void StringSubsetMain(const string &str, int first, int last, bool *exist,
+	vector<string> &result)
 {
 	if(first == last)
 	{
@@ -225,8 +228,8 @@ void TestStringSubset()
 {
 	printf("-----TestStringSubset-----\n");
 	vector<string> str { "", "a", "ab", "abc" };
-	vector<set<string>> answer { { "" }, { "", "a" }, { "", "a", "b", "ab" }, { "", "a", "b", "c",
-		"ab", "ac", "bc", "abc" } };
+	vector<set<string>> answer { { "" }, { "", "a" }, { "", "a", "b", "ab" }, { "", "a",
+		"b", "c", "ab", "ac", "bc", "abc" } };
 	for(int i = 0; i < static_cast<int>(str.size()); ++i)
 	{
 		vector<string> vec = StringSubset(str[i]);
@@ -254,12 +257,12 @@ void NQueenMain(int row, int queen_number, vector<int> &row_col, vector<bool> &c
 			&& neg_diag_exist[row + col] == false)
 		{
 			row_col[row] = col;
-			col_exist[col] = pos_diag_exist[row - col + queen_number] = neg_diag_exist[row + col] =
-				true;
-			NQueenMain(row + 1, queen_number, row_col, col_exist, pos_diag_exist, neg_diag_exist,
-				solution_cnt);
-			col_exist[col] = pos_diag_exist[row - col + queen_number] = neg_diag_exist[row + col] =
-				false;
+			col_exist[col] = pos_diag_exist[row - col + queen_number] = neg_diag_exist[row
+				+ col] = true;
+			NQueenMain(row + 1, queen_number, row_col, col_exist, pos_diag_exist,
+				neg_diag_exist, solution_cnt);
+			col_exist[col] = pos_diag_exist[row - col + queen_number] = neg_diag_exist[row
+				+ col] = false;
 		}
 	}
 }
@@ -274,7 +277,8 @@ int NQueen(int queen_number)
 	vector<bool> pos_diag_exist(queen_number * 2, false);
 	vector<bool> neg_diag_exist(queen_number * 2, false);
 	int solution_cnt = 0;
-	NQueenMain(0, queen_number, row_col, col_exist, pos_diag_exist, neg_diag_exist, solution_cnt);
+	NQueenMain(0, queen_number, row_col, col_exist, pos_diag_exist, neg_diag_exist,
+		solution_cnt);
 	return solution_cnt;
 }
 void TestNQueen()

@@ -72,11 +72,12 @@ void ShellSort(int *data, int first, int last)
 	{
 		for(int first_sorted = first; first_sorted < first + gap; ++first_sorted)
 		{
-			for(int first_unsorted = first_sorted + gap; first_unsorted < last; first_unsorted +=
-				gap)
+			for(int first_unsorted = first_sorted + gap; first_unsorted < last;
+				first_unsorted += gap)
 			{
 				for(int compare_index = first_unsorted;
-					compare_index - gap >= first && data[compare_index - gap] > data[compare_index];
+					compare_index - gap >= first
+						&& data[compare_index - gap] > data[compare_index];
 					compare_index -= gap)
 				{
 					swap(data[compare_index - gap], data[compare_index]);
@@ -109,12 +110,12 @@ int Partition(int *data, int first, int last) // O(n)
 	{
 		if(data[index] <= pivot)
 		{
-			data[index] != data[divide] ? swap(data[index], data[divide]) : void(0);
+			data[index] != data[divide] ? swap(data[index], data[divide]) : void();
 			++divide;
 		}
 	}
 	--divide;
-	data[divide] != data[first] ? swap(data[divide], data[first]) : void(0);
+	data[divide] != data[first] ? swap(data[divide], data[first]) : void();
 	return divide;
 }
 // TC: Best = O(nlogn), Average = O(nlogn), Worst = O(n^2)
@@ -198,7 +199,8 @@ void FixDown(int *data, int parent_index, int length)
 	int max_child_index = parent_index * 2 + 1;
 	while(max_child_index < length)
 	{
-		if(max_child_index + 1 < length && data[max_child_index] < data[max_child_index + 1])
+		if(max_child_index + 1 < length
+			&& data[max_child_index] < data[max_child_index + 1])
 		{
 			++max_child_index;
 		}
@@ -328,8 +330,8 @@ void Test(const char *name, SortFunction Sort)
 	int number_count = 10;
 	for(int first = 0; first <= number_count; ++first)
 	{
-		vector<vector<int>> test1 = { { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, { 9, 8, 7, 6, 5, 4, 3, 2, 1,
-			0 }, { 0, 2, 4, 6, 8, 9, 7, 5, 3, 1 } };
+		vector<vector<int>> test1 = { { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, { 9, 8, 7, 6, 5,
+			4, 3, 2, 1, 0 }, { 0, 2, 4, 6, 8, 9, 7, 5, 3, 1 } };
 		vector<vector<int>> test2 = test1;
 		for(int index = 0; index < static_cast<int>(test1.size()); ++index)
 		{
