@@ -104,8 +104,7 @@ int Partition2(int *data, int first, int last) // O(n)
 }
 int Partition(int *data, int first, int last) // O(n)
 {
-	int pivot = data[first];
-	int divide = first + 1;
+	int pivot = data[first], divide = first + 1;
 	for(int index = first + 1; index < last; ++index)
 	{
 		if(data[index] <= pivot)
@@ -114,8 +113,7 @@ int Partition(int *data, int first, int last) // O(n)
 			++divide;
 		}
 	}
-	--divide;
-	data[divide] != data[first] ? swap(data[divide], data[first]) : void();
+	data[--divide] != data[first] ? swap(data[divide], data[first]) : void();
 	return divide;
 }
 // TC: Best = O(nlogn), Average = O(nlogn), Worst = O(n^2)

@@ -145,8 +145,7 @@ int Partition(vector<int> &arr, int first, int last)
 			++divide;
 		}
 	}
-	--divide;
-	arr[divide] != arr[first] ? swap(arr[divide], arr[first]) : void();
+	arr[--divide] != arr[first] ? swap(arr[divide], arr[first]) : void();
 	return divide;
 }
 int FindKthBigNumberInArray(vector<int> arr, int k)
@@ -156,28 +155,134 @@ int FindKthBigNumberInArray(vector<int> arr, int k)
 	{
 		return 0;
 	}
-	int first = 0, last = length, target_divide = length - k, divide = -1;
-	while((divide = Partition(arr, first, last)) != target_divide)
-	{
-		divide < target_divide ? first = divide + 1 : last = divide;
-	}
+	int target_divide = length - k;
+	for(int first = 0, last = length, divide = -1;
+		(divide = Partition(arr, first, last)) != target_divide;
+		divide < target_divide ? first = divide + 1 : last = divide)
+		;
 	return arr[target_divide];
+}
+int CheckMoreThanHalfNumber(int num, const vector<int> &arr)
+{
+	int cnt = 0, length = static_cast<int>(arr.size());
+	for(int index = 0; index < length; ++index)
+	{
+		arr[index] == num ? ++cnt : cnt;
+	}
+	return cnt <= length / 2 ? 0 : num;
 }
 int FindMoreThanHalfNumberInArrayON2(const vector<int> &arr)
 {
-	return FindKthBigNumberInArray(arr, static_cast<int>(arr.size()) / 2 + 1); // Since more than half
+	return CheckMoreThanHalfNumber(
+		FindKthBigNumberInArray(arr, static_cast<int>(arr.size()) / 2 + 1), arr);
+}
+int FindMoreThanHalfNumberInArrayON(const vector<int> &arr)
+{
+	if(arr.size() <= 0) // Negative test
+	{
+		return 0;
+	}
+	int length = static_cast<int>(arr.size()), num = 0, cnt = 0;
+	for(int index = 0; index < length; ++index)
+	{
+		cnt == 0 ? num = arr[index] : num;
+		num == arr[index] ? ++cnt : --cnt;
+	}
+	return CheckMoreThanHalfNumber(num, arr);
 }
 void TestFindMoreThanHalfNumberInArray()
 {
 	printf("-----TestFindMoreThanHalfNumberInArray-----\n");
-	vector<vector<int>> arr { {},/*Negative test*/{ 2 }, { 2, 2 }, { 1, 2, 3, 2, 4, 2, 2,
-		2 }, { 2, 2, 2, 2, 2, 2, 2, 2 }/*Function test*/};
-	vector<int> answer { 0, 2, 2, 2, 2 }, my_answer;
+	vector<vector<int>> arr { {}, { 1, 2 }, { 1, 2, 3 }, { 2, 1, 2, 3 }, { 2, 2, 2, 1, 3,
+		4, 5 }, /*Negative test*/{ 2 }, { 2, 2 }, { 1, 2, 3, 2, 4, 2, 2, 2 }, { 2, 2, 2,
+		2, 2, 2, 2, 2 }/*Function test*/};
+	vector<int> answer { 0, 0, 0, 0, 0, 2, 2, 2, 2 }, my_answer1, my_answer2;
 	for(int index = 0; index < static_cast<int>(arr.size()); ++index)
 	{
-		my_answer.push_back(FindMoreThanHalfNumberInArrayON2(arr[index]));
+		my_answer1.push_back(FindMoreThanHalfNumberInArrayON2(arr[index]));
+		my_answer2.push_back(FindMoreThanHalfNumberInArrayON(arr[index]));
 	}
-	AssertVectorData(answer, my_answer);
+	AssertVectorData(answer, my_answer1);
+	AssertVectorData(answer, my_answer2);
+	printf("All case pass.\n");
+}
+//////////////////////////////////////////////////////////////////////
+int FindKthBigNumberInArrayRef(vector<int> &arr, int k)
+{
+	int length = static_cast<int>(arr.size());
+	if(length <= 0 || k < 1 || k > length) // Negative test.
+	{
+		return 0;
+	}
+	int target_divide = length - k;
+	for(int first = 0, last = length, divide = -1;
+		(divide = Partition(arr, first, last)) != target_divide;
+		divide < target_divide ? first = divide + 1 : last = divide)
+		;
+	return arr[target_divide];
+}
+vector<int> MinKON2(const vector<int> &arr, int k)
+{
+	int length = static_cast<int>(arr.size());
+	if(length <= 0 || k < 1 || k > length) // Negative test
+	{
+		return vector<int>();
+	}
+	vector<int> arr_copy(arr);
+	FindKthBigNumberInArrayRef(arr_copy, length - k + 1);
+	return vector<int>(arr_copy.begin(), arr_copy.begin() + k);
+}
+vector<int> MinKONLogN(const vector<int> &arr, int k)
+{
+	int length = static_cast<int>(arr.size());
+	if(length <= 0 || k < 1 || k > length) // Negative test
+	{
+		return vector<int>();
+	}
+	priority_queue<int> pq(arr.begin(), arr.begin() + k);
+	for(int index = k + 1; index < length; ++index)
+	{
+		pq.top() > arr[index] ? pq.pop(), pq.push(arr[index]) : void();
+	}
+	vector<int> result;
+	for(; pq.empty() == false; pq.pop())
+	{
+		result.push_back(pq.top());
+	}
+	return result;
+}
+void TestMinK()
+{
+	printf("-----TestMinK-----\n");
+	vector<int> arr { 0, 2, 4, 6, 8, 9, 7, 5, 3, 1 };
+	vector<int> arr_dup { 0, 2, 2, 6, 8, 9, 7, 5, 3, 2 };
+	vector<int> k { 0, 11, 1, 3, 5, 10 };
+	vector<set<int>> answer { {}, {}, { 0 }, { 0, 1, 2 }, { 0, 1, 2, 3, 4 }, { 0, 2, 4, 6,
+		8, 9, 7, 5, 3, 1 } };
+	vector<multiset<int>> answer_dup { {}, {}, { 0 }, { 0, 2, 2 }, { 0, 2, 2, 2, 3 }, { 0,
+		2, 2, 6, 8, 9, 7, 5, 3, 2 } };
+	for(int i = 0; i < static_cast<int>(k.size()); ++i)
+	{
+		vector<int> my_answer1 = MinKON2(arr, k[i]);
+		vector<int> my_answer2 = MinKONLogN(arr, k[i]);
+		vector<int> my_answer_dup1 = MinKON2(arr_dup, k[i]);
+		vector<int> my_answer_dup2 = MinKONLogN(arr_dup, k[i]);
+		assert(answer[i].size() == my_answer1.size());
+		assert(answer[i].size() == my_answer2.size());
+		assert(answer_dup[i].size() == my_answer_dup1.size());
+		assert(answer_dup[i].size() == my_answer_dup2.size());
+		for(int j = 0; j < static_cast<int>(my_answer1.size()); ++j)
+		{
+			set<int>::iterator it1 = answer[i].find(my_answer1[j]);
+			assert(it1 != answer[i].end() && *it1 == my_answer1[j]);
+			set<int>::iterator it2 = answer[i].find(my_answer2[j]);
+			assert(it2 != answer[i].end() && *it2 == my_answer2[j]);
+			multiset<int>::iterator it_dup1 = answer_dup[i].find(my_answer_dup1[j]);
+			assert(it_dup1 != answer_dup[i].end() && *it_dup1 == my_answer_dup1[j]);
+			multiset<int>::iterator it_dup2 = answer_dup[i].find(my_answer_dup2[j]);
+			assert(it_dup2 != answer_dup[i].end() && *it_dup2 == my_answer_dup2[j]);
+		}
+	}
 	printf("All case pass.\n");
 }
 //////////////////////////////////////////////////////////////////////
@@ -187,4 +292,5 @@ int main()
 	TestReOrderArray();
 	TestClockwisePrintMatrix();
 	TestFindMoreThanHalfNumberInArray();
+	TestMinK();
 }

@@ -91,66 +91,57 @@ vector<int> RKStringMatching(const string &text, const string &pattern)
 	return shift;
 }
 /////////////////////////////////////////////////////////////////
-void ComputePrefix(const char *string, int *max_prefix_length, int length)
+void ComputePrefix(const string &str, vector<int> &max_prefix_length)
 {
-	max_prefix_length[0] = 0; // string[0] has no prefix.
-	int matched = 0; // Already matched prefix's length.
-	for(int index = 1; index < length; ++index) // string[1, length - 1] has prefix.
+	int matched_length = 0; // Already matched prefix's length.
+	max_prefix_length[0] = 0; // string[0] has no prefix, [1, length - 1] has prefix.
+	for(int index = 1; index < static_cast<int>(str.size()); ++index)
 	{
-		// 1.	matched == 0: we should check string[0] next, since string[0] has no
-		//		prefix, thus exit while loop.
-		// 2.	matched != 0: we have matched string[0, matched - 1],
-		//		check string[matched] next.
-		// 3.	string[matched] != string[index]: decrease matched to current prefix
-		//		string[0, matched - 1] 's matched prefix length.
-		// 4.	string[matched] == string[index]: match success, increase matched by 1.
-		while(matched > 0 && string[matched] != string[index])
+		// 1.	matched_length == 0: check [0] next, exit while loop.
+		// 2.	matched_length != 0: have matched [0, matched_length - 1],
+		//		check [matched_length] next.
+		// 3.	[matched_length] != [index]: decrease matched_length to current
+		//		prefix [0, matched_length - 1]'s max prefix length.
+		// 4.	[matched_length] == [index]: increase matched_length by 1.
+		while(matched_length > 0 && str[matched_length] != str[index])
 		{
-			matched = max_prefix_length[matched - 1];
+			matched_length = max_prefix_length[matched_length - 1];
 		}
-		if(string[matched] == string[index])
-		{
-			++matched;
-		}
-		max_prefix_length[index] = matched;
+		str[matched_length] == str[index] ? ++matched_length : matched_length;
+		max_prefix_length[index] = matched_length;
 	}
 }
-void KMPStringSearch(const char *text, const char *pattern)
+vector<int> KMPStringMatching(const string &text, const string &pattern)
 {
-	printf("----------KMPStringSearch----------\n");
-	int text_length = static_cast<int>(strlen(text));
-	int pattern_length = static_cast<int>(strlen(pattern));
-	int max_prefix_length[pattern_length];
-	ComputePrefix(pattern, max_prefix_length, pattern_length);
-	int matched = 0;
-	bool good_match = false;
-	for(int index = 0; index < text_length; ++index)
+	if(text.size() <= 0 || pattern.size() <= 0 || text.size() < pattern.size()) // Negative test
 	{
-		while(matched > 0 && pattern[matched] != text[index])
+		return vector<int>();
+	}
+	int text_length = static_cast<int>(text.size());
+	int pattern_length = static_cast<int>(pattern.size());
+	vector<int> max_prefix_length(pattern_length);
+	ComputePrefix(pattern, max_prefix_length);
+	vector<int> shift;
+	for(int matched_length = 0, index = 0; index < text_length; ++index)
+	{
+		while(matched_length > 0 && pattern[matched_length] != text[index])
 		{
-			matched = max_prefix_length[matched - 1];
+			matched_length = max_prefix_length[matched_length - 1];
 		}
-		if(pattern[matched] == text[index])
+		pattern[matched_length] == text[index] ? ++matched_length : matched_length;
+		if(matched_length == pattern_length)
 		{
-			++matched;
-		}
-		if(matched == pattern_length)
-		{
-			good_match = true;
-			printf("%d ", index - matched + 1);
-			matched = max_prefix_length[matched - 1];
+			shift.push_back(index - pattern_length + 1);
+			matched_length = max_prefix_length[matched_length - 1];
 		}
 	}
-	if(good_match == false)
-	{
-		printf("null");
-	}
-	printf("\n");
+	return shift;
 }
 void TestStringMatching()
 {
 	printf("-----TestStringMatching-----\n");
 	vector<string> text { "", "a",/*Negative test*/
+
 	"aaa", "aaa", "aaa",/*Edge test*/
 	"abcdabcaba", "abcdabcaba", "abcdabcaba", "abcdabcaba", "abcdabcaba", "abcdabcaba",
 		"abcdabcaba", /*Function test*/};
@@ -162,6 +153,7 @@ void TestStringMatching()
 	for(int index = 0; index < static_cast<int>(text.size()); ++index)
 	{
 		AssertVectorData(RKStringMatching(text[index], pattern[index]), answer[index]);
+		AssertVectorData(KMPStringMatching(text[index], pattern[index]), answer[index]);
 	}
 	printf("All case pass.\n");
 }
