@@ -240,7 +240,7 @@ vector<int> MinKONLogN(const vector<int> &arr, int k)
 		return vector<int>();
 	}
 	priority_queue<int> pq(arr.begin(), arr.begin() + k);
-	for(int index = k + 1; index < length; ++index)
+	for(int index = k; index < length; ++index)
 	{
 		pq.top() > arr[index] ? pq.pop(), pq.push(arr[index]) : void();
 	}

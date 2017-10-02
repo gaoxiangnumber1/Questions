@@ -1,5 +1,6 @@
-../ds/binary_node.h
-void ConstructBinaryTreeFromPreAndInOrder
+eclipse ../ds/binary_node.cc
+void ConstructBinaryTreeFromPreAndInOrder(BinaryNode<T> *&root, T *pre, int &pre_index,
+	T *in, int in_first, int in_last) // [in_last, in_last)
 
 struct TreeNode
 {

@@ -1,4 +1,4 @@
-eclipse ../ds/binary_tree.cc
+eclipse ../ds/binary_node.cc
 bool IsSubTree(BinaryNode<T> *large, BinaryNode<T> *small)
 
 struct TreeNode

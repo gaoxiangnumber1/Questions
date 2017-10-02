@@ -1,4 +1,4 @@
-eclipse ../ds/binary_tree.cc
+eclipse ../ds/binary_node.cc
 Matrix FindPathSumInBinaryTree(BinaryNode<T> *root, int expect_sum)
 
 struct TreeNode

@@ -9,7 +9,10 @@ template<typename Key, typename Value>
 class PriorityQueue
 {
 public:
-	PriorityQueue(int size = 0): data_(size) {}
+	PriorityQueue(int size = 0) :
+		data_(size)
+	{
+	}
 	void Create();
 
 	void Insert(const Key &key, const Value &value);
@@ -62,9 +65,8 @@ void PriorityQueue<Key, Value>::Insert(const Key &key, const Value &value)
 	FixUp(data_.Size() - 1);
 }
 template<typename Key, typename Value>
-void PriorityQueue<Key, Value>::InsertWithIndex(const Key &key,
-        const Value &value,
-        int *pq_index_ptr)
+void PriorityQueue<Key, Value>::InsertWithIndex(const Key &key, const Value &value,
+	int *pq_index_ptr)
 {
 	data_.PushBack(Pair<Key, Value>(key, value, pq_index_ptr));
 	*pq_index_ptr = data_.Size() - 1;
@@ -117,8 +119,8 @@ void PriorityQueue<Key, Value>::FixDown(int parent_index, int last)
 	int min_child_index = parent_index * 2 + 1;
 	while(min_child_index < last)
 	{
-		if(min_child_index < last - 1 &&
-		        data_[min_child_index] > data_[min_child_index + 1])
+		if(min_child_index < last - 1
+			&& data_[min_child_index] > data_[min_child_index + 1])
 		{
 			++min_child_index;
 		}
@@ -146,18 +148,10 @@ void PriorityQueue<Key, Value>::HuffmanCode()
 	{
 		BinaryNode<int> *left_child = ExtractMinimum();
 		BinaryNode<int> *right_child = ExtractMinimum();
-		BinaryNode<int> *new_node = new BinaryNode<int>(0,
-		        left_child,
-		        right_child,
-		        left_child->weight_ + right_child->weight_);
+		BinaryNode<int> *new_node = new BinaryNode<int>(0, left_child, right_child,
+			left_child->weight_ + right_child->weight_);
 		Insert(new_node->weight_, new_node);
 	}
-
-	BinaryNode<int> *root = ExtractMinimum();
-	printf("LevelOrder: ");
-	LevelOrder(root);
-	Delete(root);
-	printf("\n");
 }
 template<typename Key, typename Value>
 void PriorityQueue<Key, Value>::ShowContent() const
