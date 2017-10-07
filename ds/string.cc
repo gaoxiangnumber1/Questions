@@ -66,23 +66,23 @@ vector<int> RKStringMatching(const string &text, const string &pattern)
 	{
 		return vector<int>();
 	}
-	int text_length = static_cast<int>(text.size());
 	int pattern_length = static_cast<int>(pattern.size());
-	vector<int> text_hash_value(text_length - pattern_length + 1);
+	int substring_number = static_cast<int>(text.size()) - pattern_length + 1;
+	vector<int> text_hash_value(substring_number);
 	text_hash_value[0] = HashValue(text.data(), pattern_length);
 	int pattern_hash_value = HashValue(pattern.data(), pattern_length);
 	vector<int> shift;
-	int max_power = static_cast<int>(pow(kNumberOfChar, pattern_length - 1));
-	for(int index = 0; index < static_cast<int>(text_hash_value.size()); ++index)
+	const int kMaxPower = static_cast<int>(pow(kNumberOfChar, pattern_length - 1));
+	for(int index = 0; index < substring_number; ++index)
 	{
 		if(text_hash_value[index] == pattern_hash_value
 			&& memcmp(&text[index], pattern.data(), pattern_length) == 0)
 		{
 			shift.push_back(index);
 		}
-		if(index + 1 < static_cast<int>(text_hash_value.size()))
+		if(index + 1 < substring_number)
 		{
-			int to_subtract = static_cast<int>(text[index]) * max_power; // %
+			int to_subtract = static_cast<int>(text[index]) * kMaxPower; // %
 			int to_add = static_cast<int>(text[index + pattern_length]);
 			text_hash_value[index + 1] = (text_hash_value[index] - to_subtract)
 				* kNumberOfChar + to_add; // %
@@ -117,12 +117,12 @@ vector<int> KMPStringMatching(const string &text, const string &pattern)
 	{
 		return vector<int>();
 	}
-	int text_length = static_cast<int>(text.size());
 	int pattern_length = static_cast<int>(pattern.size());
 	vector<int> max_prefix_length(pattern_length);
 	ComputePrefix(pattern, max_prefix_length);
 	vector<int> shift;
-	for(int matched_length = 0, index = 0; index < text_length; ++index)
+	for(int matched_length = 0, index = 0; index < static_cast<int>(text.size());
+		++index)
 	{
 		while(matched_length > 0 && pattern[matched_length] != text[index])
 		{
@@ -141,19 +141,20 @@ void TestStringMatching()
 {
 	printf("-----TestStringMatching-----\n");
 	vector<string> text { "", "a",/*Negative test*/
-
 	"aaa", "aaa", "aaa",/*Edge test*/
-	"abcdabcaba", "abcdabcaba", "abcdabcaba", "abcdabcaba", "abcdabcaba", "abcdabcaba",
-		"abcdabcaba", /*Function test*/};
+	"abcdabcaba", "abcdabcaba", "abcdabcaba", "abcdabcaba", "abcdabcaba",
+		"abcdabcaba", "abcdabcaba", /*Function test*/};
 	vector<string> pattern { "", "aa",/*Negative test*/
 	"a", "aa", "aaa",/*Edge test*/
 	"a", "bc", "abc", "bcab", "e", "ac", "dac" /*Function test*/};
-	vector<vector<int>> answer { {}, {}, { 0, 1, 2 }, { 0, 1 }, { 0 }, { 0, 4, 7, 9 }, {
-		1, 5 }, { 0, 4 }, { 5 }, {}, {}, {} };
+	vector<vector<int>> answer { {}, {}, { 0, 1, 2 }, { 0, 1 }, { 0 },
+		{ 0, 4, 7, 9 }, { 1, 5 }, { 0, 4 }, { 5 }, {}, {}, {} };
 	for(int index = 0; index < static_cast<int>(text.size()); ++index)
 	{
-		AssertVectorData(RKStringMatching(text[index], pattern[index]), answer[index]);
-		AssertVectorData(KMPStringMatching(text[index], pattern[index]), answer[index]);
+		AssertVectorData(RKStringMatching(text[index], pattern[index]),
+			answer[index]);
+		AssertVectorData(KMPStringMatching(text[index], pattern[index]),
+			answer[index]);
 	}
 	printf("All case pass.\n");
 }

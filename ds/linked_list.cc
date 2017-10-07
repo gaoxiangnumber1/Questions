@@ -72,7 +72,8 @@ void LinkedList<T>::Insert(int index, const T &data)
 	else
 	{
 		Node<T> *before_node = first_;
-		for(int before_node_index = 0; before_node_index + 1 != index; ++before_node_index)
+		for(int before_node_index = 0; before_node_index + 1 != index;
+			++before_node_index)
 		{
 			before_node = before_node->next_;
 		}
@@ -101,7 +102,8 @@ void LinkedList<T>::Delete(int index)
 	else
 	{
 		Node<T> *before_node = first_;
-		for(int before_node_index = 0; before_node_index + 1 != index; ++before_node_index)
+		for(int before_node_index = 0; before_node_index + 1 != index;
+			++before_node_index)
 		{
 			before_node = before_node->next_;
 		}
@@ -217,12 +219,14 @@ Node<T> *Partition(Node<T> *first, Node<T> *last)
 	{
 		if(node->data_ <= pivot)
 		{
-			node->data_ != divide->data_ ? swap(node->data_, divide->data_) : void(0);
+			node->data_ != divide->data_ ? swap(node->data_, divide->data_) : void(
+												0);
 			divide_before = divide;
 			divide = divide->next_;
 		}
 	}
-	divide_before->data_ != first->data_ ? swap(divide_before->data_, first->data_) : void(0);
+	divide_before->data_ != first->data_ ? swap(divide_before->data_, first->data_) : void(
+												0);
 	return divide_before;
 }
 template<typename T>
@@ -239,8 +243,8 @@ void QuickSort(Node<T> *first, Node<T> *last) // [first, last)
 void TestQuickSort()
 {
 	printf("-----TestQuickSort-----\n");
-	vector<vector<int>> data = { { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, { 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 },
-		{ 0, 2, 4, 6, 8, 9, 7, 5, 3, 1 } };
+	vector<vector<int>> data = { { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, { 9, 8, 7, 6, 5,
+		4, 3, 2, 1, 0 }, { 0, 2, 4, 6, 8, 9, 7, 5, 3, 1 } };
 	for(int index = 0; index < static_cast<int>(data.size()); ++index)
 	{
 		LinkedList<int> obj;
@@ -280,7 +284,8 @@ Node<T> *MergeTwoSortedLinkedList(Node<T> *first, Node<T> *second)
 	for(; first != nullptr && second != nullptr; node = node->next_)
 	{
 		node->next_ = (first->data_ <= second->data_ ? first : second);
-		first->data_ <= second->data_ ? first = first->next_ : second = second->next_;
+		first->data_ <= second->data_ ? first = first->next_ : second =
+											second->next_;
 	}
 	node->next_ = (first != nullptr ? first : second);
 	return head;
@@ -301,8 +306,8 @@ Node<T> *MergeSort(Node<T> *first)
 void TestMergeSort()
 {
 	printf("-----TestMergeSort-----\n");
-	vector<vector<int>> data = { { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, { 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 },
-		{ 0, 2, 4, 6, 8, 9, 7, 5, 3, 1 } };
+	vector<vector<int>> data = { { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, { 9, 8, 7, 6, 5,
+		4, 3, 2, 1, 0 }, { 0, 2, 4, 6, 8, 9, 7, 5, 3, 1 } };
 	for(int index = 0; index < static_cast<int>(data.size()); ++index)
 	{
 		LinkedList<int> obj;
@@ -375,8 +380,7 @@ Node<T> *FindKthToTailNode(Node<T> *first, int k)
 	Node<T> *slow = first, *fast = first;
 	for(int cnt = 1; cnt <= k - 1; ++cnt)
 	{
-		fast = fast->next_;
-		if(fast == nullptr) // Negative test.
+		if((fast = fast->next_) == nullptr) // Negative test.
 		{
 			return nullptr;
 		}
@@ -488,18 +492,23 @@ void TestReversePrintLinkedList()
 	Node<int> node1(1, &node2);
 	Node<int> node0(0, &node1);
 	vector<int> output1 = { 3 };
-	assert(memcmp(output1.data(), ReversePrintLinkedListStack(&node3).data(), output1.size()) == 0);
 	assert(
-		memcmp(output1.data(), ReversePrintLinkedListRecursive(&node3).data(), output1.size())
-			== 0);
+		memcmp(output1.data(), ReversePrintLinkedListStack(&node3).data(),
+			output1.size()) == 0);
+	assert(
+		memcmp(output1.data(), ReversePrintLinkedListRecursive(&node3).data(),
+			output1.size()) == 0);
 	vector<int> output2 = { 3, 2, 1, 0 };
-	assert(memcmp(output2.data(), ReversePrintLinkedListStack(&node0).data(), output2.size()) == 0);
 	assert(
-		memcmp(output2.data(), ReversePrintLinkedListRecursive(&node0).data(), output2.size())
-			== 0);
+		memcmp(output2.data(), ReversePrintLinkedListStack(&node0).data(),
+			output2.size()) == 0);
+	assert(
+		memcmp(output2.data(), ReversePrintLinkedListRecursive(&node0).data(),
+			output2.size()) == 0);
 	assert(
 		ReversePrintLinkedListStack(static_cast<Node<int>*>(nullptr)).size() == 0
-			&& ReversePrintLinkedListRecursive(static_cast<Node<int>*>(nullptr)).size() == 0);
+			&& ReversePrintLinkedListRecursive(static_cast<Node<int>*>(nullptr)).size()
+				== 0);
 	printf("All case pass.\n");
 }
 ///////////////////////////////////////////////////////////////////////////
@@ -512,14 +521,17 @@ RandomNode<T> *CopyRandomLinkedList(RandomNode<T> *first)
 	}
 	for(RandomNode<T> *node = first; node != nullptr;)
 	{
-		RandomNode<T> *copy_node = new RandomNode<T>(node->data_, node->next_, node->random_);
+		RandomNode<T> *copy_node = new RandomNode<T>(node->data_, node->next_,
+			node->random_);
 		node->next_ = copy_node;
 		node = copy_node->next_;
 	}
 	for(RandomNode<T> *copy_node = first->next_; copy_node != nullptr;)
 	{
-		copy_node->random_ = (copy_node->random_ != nullptr ? copy_node->random_->next_ : nullptr);
-		copy_node = (copy_node->next_ != nullptr ? copy_node->next_->next_ : nullptr);
+		copy_node->random_ = (
+			copy_node->random_ != nullptr ? copy_node->random_->next_ : nullptr);
+		copy_node =
+			(copy_node->next_ != nullptr ? copy_node->next_->next_ : nullptr);
 	}
 	RandomNode<T> *copy_first = first->next_;
 	for(RandomNode<T> *node = first, *copy_node = first->next_; node != nullptr;)

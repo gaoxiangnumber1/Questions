@@ -1,6 +1,9 @@
 eclipse ../ds/binary_node.cc
-void ConstructBinaryTreeFromPreAndInOrder(BinaryNode<T> *&root, T *pre, int &pre_index,
-	T *in, int in_first, int in_last) // [in_last, in_last)
+void ConstructBinaryTreeFromPreAndInOrder(BinaryNode<T> *&root, const vector<T> &pre,
+	int &pre_index, const vector<T> &in, int in_first, int in_last) // [in_first, in_last)
+void ConstructBinaryTreeFromPostAndInOrder(BinaryNode<T> *&root,
+	const vector<T> &post, int &post_index, const vector<T> &in, int in_first,
+	int in_last) // [in_last, in_last)
 
 struct TreeNode
 {
@@ -26,8 +29,8 @@ public:
 			root = new TreeNode(pre[pre_index++]);
 			ConstructBinaryTreeFromPreAndInOrder(root->left, pre, pre_index, in, in_first,
 				in_index);
-			ConstructBinaryTreeFromPreAndInOrder(root->right, pre, pre_index, in, in_index + 1,
-				in_last);
+			ConstructBinaryTreeFromPreAndInOrder(root->right, pre, pre_index, in,
+				in_index + 1, in_last);
 		}
 	}
 	TreeNode* reConstructBinaryTree(const vector<int> &pre, const vector<int> &in)

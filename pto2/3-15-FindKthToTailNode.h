@@ -1,4 +1,4 @@
-../ds/linked_list.cc
+eclipse ../ds/linked_list.cc
 Node<T> *FindKthToTailNode(Node<T> *first, int k)
 
 struct ListNode

@@ -103,7 +103,8 @@ void PostOrderLoop(BinaryNode<T> *root)
 			my_stack.pop();
 			Visit(root);
 			while(my_stack.empty() == false
-				&& (my_stack.top()->right_ == nullptr || my_stack.top()->right_ == root))
+				&& (my_stack.top()->right_ == nullptr
+					|| my_stack.top()->right_ == root))
 			{
 				root = my_stack.top();
 				my_stack.pop();
@@ -146,54 +147,6 @@ int NodeCount(BinaryNode<T> *root)
 }
 //////////////////////////////////////////////////////////////////////
 template<typename T>
-void ConstructBinaryTreeFromPreAndInOrder(BinaryNode<T> *&root, T *pre, int &pre_index,
-	T *in, int in_first, int in_last) // [in_first, in_last)
-{
-	if(in_first >= in_last)
-	{
-		return;
-	}
-	int in_index = in_first;
-	for(; in_index < in_last && pre[pre_index] != in[in_index]; ++in_index)
-		;
-	root = new BinaryNode<T>(pre[pre_index++]);
-	ConstructBinaryTreeFromPreAndInOrder(root->left_, pre, pre_index, in, in_first,
-		in_index);
-	ConstructBinaryTreeFromPreAndInOrder(root->right_, pre, pre_index, in, in_index + 1,
-		in_last);
-//	int pre_index = 0;
-}
-void TestConstructBinaryTreeFromPreAndInOrder()
-{
-	printf("-----TestConstructBinaryTreeFromPreAndInOrder-----\n");
-	printf("All case pass.\n");
-}
-//////////////////////////////////////////////////////////////////////
-template<typename T>
-void ConstructBinaryTreeFromPostAndInOrder(BinaryNode<T> *&root, T *post, int &post_index,
-	T *in, int in_first, int in_last) // [in_last, in_last)
-{
-	if(in_first >= in_last)
-	{
-		return;
-	}
-	int in_index = in_first;
-	for(; in_index < in_last && post[post_index] != in[in_index]; ++in_index)
-		;
-	root = new BinaryNode<T>(post[post_index--]);
-	ConstructBinaryTreeFromPostAndInOrder(root->right_, post, post_index, in,
-		in_index + 1, in_last);
-	ConstructBinaryTreeFromPostAndInOrder(root->left_, post, post_index, in, in_first,
-		in_index);
-//	int post_index = data_number - 1;
-}
-void TestConstructBinaryTreeFromPostAndInOrder()
-{
-	printf("-----TestConstructBinaryTreeFromPostAndInOrder-----\n");
-	printf("All case pass.\n");
-}
-//////////////////////////////////////////////////////////////////////
-template<typename T>
 vector<T> LevelOrder(BinaryNode<T> *root)
 {
 	if(root == nullptr) // Negative test
@@ -217,6 +170,67 @@ vector<T> LevelOrder(BinaryNode<T> *root)
 void TestLevelOrder()
 {
 	printf("-----TestLevelOrder-----\n");
+	BinaryNode<int> *root = nullptr;
+	ConstructCompleteBinaryTreeByLevel(root, { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 });
+	AssertVectorData( { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }, LevelOrder(root));
+	printf("All case pass.\n");
+}
+//////////////////////////////////////////////////////////////////////
+template<typename T>
+void ConstructBinaryTreeFromPreAndInOrder(BinaryNode<T> *&root, const vector<T> &pre,
+	int &pre_index, const vector<T> &in, int in_first, int in_last) // [in_first, in_last)
+{
+	if(in_first >= in_last)
+	{
+		return;
+	}
+	int in_index = in_first;
+	for(; in_index < in_last && pre[pre_index] != in[in_index]; ++in_index)
+		;
+	root = new BinaryNode<T>(pre[pre_index++]);
+	ConstructBinaryTreeFromPreAndInOrder(root->left_, pre, pre_index, in, in_first,
+		in_index);
+	ConstructBinaryTreeFromPreAndInOrder(root->right_, pre, pre_index, in,
+		in_index + 1, in_last);
+}
+void TestConstructBinaryTreeFromPreAndInOrder()
+{
+	printf("-----TestConstructBinaryTreeFromPreAndInOrder-----\n");
+	BinaryNode<int> *root = nullptr;
+	int pre_index = 0;
+	ConstructBinaryTreeFromPreAndInOrder(root, { 1, 2, 4, 5, 6, 7, 3, 8, 10, 9, 11 },
+		pre_index, { 4, 2, 6, 7, 5, 1, 8, 10, 3, 9, 11 }, 0, 11);
+	AssertVectorData( { 1, 2, 3, 4, 5, 8, 9, 6, 10, 11, 7 }, LevelOrder(root));
+	printf("All case pass.\n");
+}
+//////////////////////////////////////////////////////////////////////
+template<typename T>
+void ConstructBinaryTreeFromPostAndInOrder(BinaryNode<T> *&root,
+	const vector<T> &post, int &post_index, const vector<T> &in, int in_first,
+	int in_last) // [in_last, in_last)
+{
+	if(in_first >= in_last)
+	{
+		return;
+	}
+	int in_index = in_first;
+	for(; in_index < in_last && post[post_index] != in[in_index]; ++in_index)
+		;
+	root = new BinaryNode<T>(post[post_index--]);
+	ConstructBinaryTreeFromPostAndInOrder(root->right_, post, post_index, in,
+		in_index + 1, in_last);
+	ConstructBinaryTreeFromPostAndInOrder(root->left_, post, post_index, in,
+		in_first, in_index);
+}
+void TestConstructBinaryTreeFromPostAndInOrder()
+{
+	printf("-----TestConstructBinaryTreeFromPostAndInOrder-----\n");
+	BinaryNode<int> *root = nullptr;
+	int post_index = 10;
+	ConstructBinaryTreeFromPostAndInOrder(root,
+		{ 4, 7, 6, 5, 2, 10, 8, 11, 9, 3, 1 }, post_index, { 4, 2, 6, 7, 5, 1, 8, 10,
+			3, 9, 11 }, 0, 11);
+	AssertVectorData( { 1, 2, 3, 4, 5, 8, 9, 6, 10, 11, 7 }, LevelOrder(root));
 	printf("All case pass.\n");
 }
 //////////////////////////////////////////////////////////////////////
@@ -246,8 +260,8 @@ void TestIsSubTree()
 {
 	printf("-----TestIsSubTree-----\n");
 	BinaryNode<int> *large_null = nullptr, *large_zero, *large_one_to_seven;
-	BinaryNode<int> *small_null = nullptr, *small_zero, *small_one, *small_two_four_five,
-		*small_three_four_five;
+	BinaryNode<int> *small_null = nullptr, *small_zero, *small_one,
+		*small_two_four_five, *small_three_four_five;
 	ConstructCompleteBinaryTreeByLevel(large_zero, { 0 });
 	ConstructCompleteBinaryTreeByLevel(large_one_to_seven, { 1, 2, 3, 4, 5, 6, 7 });
 	ConstructCompleteBinaryTreeByLevel(small_zero, { 0 });
@@ -282,10 +296,10 @@ void TestModifyBinaryTreeToItsMirror()
 	printf("-----TestModifyBinaryTreeToItsMirror-----\n");
 	const int kCaseNumber = 5;
 	vector<BinaryNode<int>*> tree(kCaseNumber);
-	vector<vector<int>> before_modify = { {}, { 1 }, { 1, 2, 3 }, { 1, 2, 3, 4, 5, 6, 7 },
-		{ 1, 2, 3, 4, 5, 6, 7, 8 } };
-	vector<vector<int>> after_modify = { {}, { 1 }, { 1, 3, 2 }, { 1, 3, 2, 7, 6, 5, 4 },
-		{ 1, 3, 2, 7, 6, 5, 4, 8 } };
+	vector<vector<int>> before_modify = { {}, { 1 }, { 1, 2, 3 }, { 1, 2, 3, 4, 5, 6,
+		7 }, { 1, 2, 3, 4, 5, 6, 7, 8 } };
+	vector<vector<int>> after_modify = { {}, { 1 }, { 1, 3, 2 }, { 1, 3, 2, 7, 6, 5,
+		4 }, { 1, 3, 2, 7, 6, 5, 4, 8 } };
 	vector<vector<int>> my_modify(kCaseNumber);
 	for(int index = 0; index < kCaseNumber; ++index)
 	{
@@ -329,7 +343,8 @@ void TestFindPathSumInBinaryTree()
 {
 	printf("-----TestFindPathSumInBinaryTree-----\n");
 	BinaryNode<int> *tree;
-	ConstructCompleteBinaryTreeByLevel(tree, { 5, 5, 10, -5, 5, 5, -5, 15, 5, 5, 5 });
+	ConstructCompleteBinaryTreeByLevel(tree,
+		{ 5, 5, 10, -5, 5, 5, -5, 15, 5, 5, 5 });
 	vector<int> expect_sum { 5,/*0 path*/10,/*2 path*/20 /*4 path*/};
 	vector<Matrix> answer { {},/*0 path*/
 	{ { 5, 5, -5, 5 }, { 5, 10, -5 } },/*2 path*/
@@ -344,30 +359,10 @@ void TestFindPathSumInBinaryTree()
 //////////////////////////////////////////////////////////////////////
 int main()
 {
+	TestLevelOrder();
+	TestConstructBinaryTreeFromPreAndInOrder();
+	TestConstructBinaryTreeFromPostAndInOrder();
 	TestIsSubTree();
 	TestModifyBinaryTreeToItsMirror();
 	TestFindPathSumInBinaryTree();
 }
-/*
- 1 11 1 2 3 4 5 6 7 8 9 10 11
- 2 11 1 2 4 5 6 7 3 8 10 9 11 4 2 6 7 5 1 8 10 3 9 11
- 3 11 4 7 6 5 2 10 8 11 9 3 1 4 2 6 7 5 1 8 10 3 9 11
- PreOrder:   1 2 4 8 9 5 10 11 3 6 7
- InOrder:    8 4 9 2 10 5 11 1 6 3 7
- PostOrder:  8 9 4 10 11 5 2 6 7 3 1
- LevelOrder: 1 2 3 4 5 6 7 8 9 10 11
- Height:     4
- NodeCount:  11
- PreOrder:   1 2 4 5 6 7 3 8 10 9 11
- InOrder:    4 2 6 7 5 1 8 10 3 9 11
- PostOrder:  4 7 6 5 2 10 8 11 9 3 1
- LevelOrder: 1 2 3 4 5 8 9 6 10 11 7
- Height:     5
- NodeCount:  11
- PreOrder:   1 2 4 5 6 7 3 8 10 9 11
- InOrder:    4 2 6 7 5 1 8 10 3 9 11
- PostOrder:  4 7 6 5 2 10 8 11 9 3 1
- LevelOrder: 1 2 3 4 5 8 9 6 10 11 7
- Height:     5
- NodeCount:  11
- */

@@ -1,18 +1,3 @@
-/*
-------------------------------Function Test Data------------------------------
-n > 1
-
---------------------------------Edge Test Data--------------------------------
-n = 1
-
-------------------------------Negative Test Data------------------------------
-n < 1
-
-*/
-
-#include <vector>
-#include <iostream>
-using namespace std;
 
 int NumberOf1Between1AndN_Solution(int n)
 {
@@ -45,7 +30,6 @@ int NumberOf1Between1AndN_Solution(int n)
 	}
 	return result;
 }
-
 int Pow(int base, int exponent)
 {
 	int result = 1;
@@ -60,7 +44,6 @@ int Pow(int base, int exponent)
 	}
 	return result;
 }
-
 int Recursive(int num, int length)
 {
 	// terminate condition:
@@ -98,7 +81,6 @@ int Recursive(int num, int length)
 	int other_count = Recursive(num - first * pow, length - 1);
 	return first_count + non_first_count + other_count;
 }
-
 int NumberOf1Between1AndN_Solution(int n)
 {
 	// negative data:
@@ -114,14 +96,4 @@ int NumberOf1Between1AndN_Solution(int n)
 		pow *= 10;
 	}
 	return Recursive(n, length);
-}
-
-int main()
-{
-	for(int num = 1; num < 100000; num = num + 233)
-	{
-		cout << ((Fun1(num) == Fun2(num)) ? "YES\n" : "NO\n");
-	}
-
-	return 0;
 }
