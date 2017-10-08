@@ -3,7 +3,6 @@
 
 #include <bits/stdc++.h>
 using namespace std;
-
 //////////////////////////////////////////////////////////////////////
 using Row = vector<int>;
 using Matrix = vector<vector<int>>;

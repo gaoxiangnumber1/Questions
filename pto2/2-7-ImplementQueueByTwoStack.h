@@ -1,5 +1,5 @@
-../ds/stack.cc
+eclipse ../ds/stack.cc
 class ImplementQueueByTwoStack
 
-../ds/queue.cc
+eclipse ../ds/queue.cc
 class ImplementStackByTwoQueue

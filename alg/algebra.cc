@@ -1,5 +1,4 @@
 #include "../common_system_header.h"
-
 ///////////////////////////////////
 int EuclidGreatestCommonDivisor(int big, int small)
 {
@@ -19,11 +18,13 @@ void TestEuclidGreatestCommonDivisor()
 {
 	printf("----------TestEuclidGreatestCommonDivisor----------\n");
 	const int kCaseNumber = 5;
-	int num[kCaseNumber][2] = { { 100, 9 }, { 1, 55 }, { 11, 1254 }, { 55, 66 }, { 8, 9 } };
+	int num[kCaseNumber][2] = { { 100, 9 }, { 1, 55 }, { 11, 1254 }, { 55, 66 }, { 8,
+		9 } };
 	int answer[kCaseNumber] = { 1, 1, 11, 11, 1 };
 	for(int index = 0; index < kCaseNumber; ++index)
 	{
-		if(EuclidGreatestCommonDivisor(num[index][0], num[index][1]) != answer[index])
+		if(EuclidGreatestCommonDivisor(num[index][0], num[index][1])
+			!= answer[index])
 		{
 			printf("Case %d Not pass.\n", index);
 		}
@@ -119,7 +120,8 @@ int FibonacciO1(int n)
 		return (n <= 0 ? 0 : 1);
 	}
 	const double sqrt5 = sqrt(5);
-	return static_cast<int>((pow((1 + sqrt5) / 2, n) - pow((1 - sqrt5) / 2, n)) / sqrt5);
+	return static_cast<int>((pow((1 + sqrt5) / 2, n) - pow((1 - sqrt5) / 2, n))
+		/ sqrt5);
 }
 void TestFibonacci()
 {
@@ -147,7 +149,8 @@ void Prime()
 		{
 			prime[++prime_count] = num;
 		}
-		for(int index = 1; index <= prime_count && prime[index] * num <= kMax; ++index)
+		for(int index = 1; index <= prime_count && prime[index] * num <= kMax;
+			++index)
 		{
 			is_prime[prime[index] * num] = false;
 			if(num % prime[index] == 0)
@@ -160,9 +163,10 @@ void Prime()
 void TestPrime()
 {
 	printf("----------TestPrime----------\n");
-	const int answer[] = { 0, 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61,
-		67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163,
-		167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229, 233, 239, 241, 251 };
+	const int answer[] = { 0, 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47,
+		53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131,
+		137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211,
+		223, 227, 229, 233, 239, 241, 251 };
 	Prime();
 	for(int index = 1; index <= prime_count; ++index)
 	{
@@ -207,11 +211,70 @@ void TestQuickPower()
 	printf("All case Pass.\n");
 }
 ///////////////////////////////////
-
+int NumberOfOneInDecimalFromOneToNONLogN(int max_num)
+{
+	if(max_num < 1) // Negative test
+	{
+		return 0;
+	}
+	int cnt = 0;
+	for(int num = 1; num <= max_num; ++num)
+	{
+		for(int tmp = num; tmp > 0; tmp /= 10)
+		{
+			tmp % 10 == 1 ? ++cnt : cnt;
+		}
+	}
+	return cnt;
+}
+int NumberOfOneInDecimalFromOneToNOLogN(int max_num)
+{
+	if(max_num < 1) // Negative test
+	{
+		return 0;
+	}
+	const vector<int> kTenPower { 1, 10, 100, 1000, 10000, 100000, 1000000, 10000000,
+		100000000, 1000000000 };
+	vector<int> digit(10), mod(10);
+	int index = 9;
+	for(; index >= 0; --index)
+	{
+		digit[index] = max_num / kTenPower[index];
+		mod[index] = (digit[index] != 0 ? max_num % kTenPower[index] : 0);
+		max_num %= kTenPower[index];
+	}
+	for(index = 9; digit[index] == 0; --index)
+		;
+	int cnt = 0;
+	for(; index >= 1; --index)
+	{
+		cnt += (digit[index] == 1 ? mod[index] + 1 : kTenPower[index]);
+		cnt += kTenPower[index - 1] * digit[index];
+	}
+	return ++cnt;
+}
+void TestNumberOfOneInDecimalFromOneToN()
+{
+	printf("-----TestNumberOfOneInDecimalFromOneToN-----\n");
+	int cnt = 0;
+	for(int num = -5; num < 1000000; ++num)
+	{
+		int cnt1 = NumberOfOneInDecimalFromOneToNONLogN(num);
+		int cnt2 = NumberOfOneInDecimalFromOneToNOLogN(num);
+		if(cnt1 != cnt2)
+		{
+			printf("num=%d,cnt1=%d,cnt2=%d\n", num, cnt1, cnt2);
+			++cnt == 5 ? assert(0) : assert(1);
+		}
+	}
+	printf("All case pass.\n");
+}
+//////////////////////////////////////////////////////////////////////
 int main()
 {
 	TestEuclidGreatestCommonDivisor();
 	TestFibonacci();
 	TestPrime();
 	TestQuickPower();
+	TestNumberOfOneInDecimalFromOneToN();
 }

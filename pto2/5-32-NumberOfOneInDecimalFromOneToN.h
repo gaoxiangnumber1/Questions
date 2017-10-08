@@ -1,49 +1,7 @@
+eclipse ../alg/algebra.cc
+int NumberOfOneInDecimalFromOneToNONLogN(int max_num)
+int NumberOfOneInDecimalFromOneToNOLogN(int max_num)
 
-int NumberOf1Between1AndN_Solution(int n)
-{
-	// negative data:
-	if(n < 1)
-	{
-		return 0;
-	}
-
-	int result = 0;
-	for(int num = 1; num <= n; ++num)  // [1, n]
-	{
-		/*
-		we can't directly use num itself since after the following loop,
-		num = 0, and ++num, num = 1, so this is a dead loop:
-		1 -> 0 -> 1 -> 0 ...
-		Don't modify num, use a temporary variable temp!
-		*/
-		int temp = num;
-		int cnt = 0;
-		while(temp)
-		{
-			if((temp % 10) == 1)  // the current least significant bit
-			{
-				++cnt;
-			}
-			temp = temp / 10;  // cut the last bit
-		}
-		result += cnt;
-	}
-	return result;
-}
-int Pow(int base, int exponent)
-{
-	int result = 1;
-	while(exponent)
-	{
-		if(exponent & 0x1)
-		{
-			result *= base;
-		}
-		exponent >>= 1;
-		base *= base;
-	}
-	return result;
-}
 int Recursive(int num, int length)
 {
 	// terminate condition:
