@@ -1,4 +1,4 @@
-../ds/linked_list.cc
+eclipse ../ds/linked_list.cc
 Node<T> *ReverseLinkedList(Node<T> *first)
 
 struct ListNode

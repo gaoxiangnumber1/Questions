@@ -1,6 +1,6 @@
 #include "queue.h"
 #include "../common_system_header.h"
-
+//////////////////////////////////////////////////////////////////////
 class ImplementStackByTwoQueue
 {
 public:
@@ -14,17 +14,16 @@ public:
 	{
 		if(q1_.empty() == true && q2_.empty() == true) // Negative test.
 		{
-			return 0;
+			return int();
 		}
-		queue<int> &src = (q1_.empty() == false ? q1_ : q2_);
-		queue<int> &dest = (q1_.empty() == false ? q2_ : q1_);
-		while(src.size() > 1)
+		queue<int> &non_empty = (q1_.empty() == false ? q1_ : q2_);
+		queue<int> &empty = (q1_.empty() == false ? q2_ : q1_);
+		for(; non_empty.size() != 1; non_empty.pop())
 		{
-			dest.push(src.front());
-			src.pop();
+			empty.push(non_empty.front());
 		}
-		int result = src.front();
-		src.pop();
+		int result = non_empty.front();
+		non_empty.pop();
 		return result;
 	}
 
@@ -50,7 +49,7 @@ void TestImplementStackByTwoQueue()
 	assert(s.Pop() == 0);
 	printf("All case pass.\n");
 }
-
+//////////////////////////////////////////////////////////////////////
 int main()
 {
 	TestImplementStackByTwoQueue();

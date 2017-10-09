@@ -9,6 +9,10 @@ public:
 	}
 	~BinarySearchTree();
 
+	BinaryNode<T> *root() const;
+	BinaryNode<T> *&root_ref();
+	void set_root(BinaryNode<T> *new_root);
+
 	void CreateFromArray(const vector<T> &arr);
 	// Return nullptr if fails, otherwise return the new node's pointer.
 	BinaryNode<T> *Insert(const T &data);
@@ -17,10 +21,6 @@ public:
 	// Return nullptr if fails, otherwise return the node that replaces deleted node.
 	BinaryNode<T> *Delete(const T &data);
 
-	BinaryNode<T> *root() const;
-	BinaryNode<T> *&root_ref();
-	void set_root(BinaryNode<T> *new_root);
-
 private:
 	BinaryNode<T> *root_;
 };
@@ -28,6 +28,21 @@ template<typename T>
 BinarySearchTree<T>::~BinarySearchTree()
 {
 	::Delete(root_);
+}
+template<typename T>
+BinaryNode<T> *BinarySearchTree<T>::root() const
+{
+	return root_;
+}
+template<typename T>
+BinaryNode<T> *&BinarySearchTree<T>::root_ref()
+{
+	return root_;
+}
+template<typename T>
+void BinarySearchTree<T>::set_root(BinaryNode<T> *new_root)
+{
+	root_ = new_root;
 }
 template<typename T>
 void BinarySearchTree<T>::CreateFromArray(const vector<T> &arr)
@@ -64,7 +79,8 @@ BinaryNode<T>* BinarySearchTree<T>::Insert(const T &data)
 	return new_node;
 }
 template<typename T>
-BinaryNode<T>* BinarySearchTree<T>::Search(const T &data, BinaryNode<T>* &parent_node)
+BinaryNode<T>* BinarySearchTree<T>::Search(const T &data,
+	BinaryNode<T>* &parent_node)
 {
 	BinaryNode<T> *search_node = root_;
 	while(search_node != nullptr)
@@ -128,36 +144,23 @@ BinaryNode<T>* BinarySearchTree<T>::Delete(const T &data)
 	delete delete_node;
 	return child_node;
 }
-template<typename T>
-BinaryNode<T> *BinarySearchTree<T>::root() const
-{
-	return root_;
-}
-template<typename T>
-BinaryNode<T> *&BinarySearchTree<T>::root_ref()
-{
-	return root_;
-}
-template<typename T>
-void BinarySearchTree<T>::set_root(BinaryNode<T> *new_root)
-{
-	root_ = new_root;
-}
 ////////////////////////////////////////////////////////////////////////////////
-bool IsPostOrderTraverseOfBSTMain(const vector<int> &seq, int first, int last) // []
+bool IsPostOrderTraverseOfBSTRecursive(const vector<int> &seq, int first, int last) // []
 {
-	if(first == last || first == last - 1) // Edge test: 1 or 2 elements End recursive.
+	if(last - first <= 1) // Edge test: 1 or 2 elements, end recursive.
 	{
 		return true;
 	}
 	if((seq[first] - seq[last]) * (seq[last - 1] - seq[last]) > 0) // Only has left or right subtree.
 	{
 		int index = first + 1;
-		for(; index < last - 1 && (seq[first] - seq[last]) * (seq[index] - seq[last]) > 0;
-			++index)
+		for(;
+			index < last - 1
+				&& (seq[first] - seq[last]) * (seq[index] - seq[last]) > 0; ++index)
 			;
 		return
-			index < last - 1 ? false : IsPostOrderTraverseOfBSTMain(seq, first, last - 1);
+			index < last - 1 ? false : IsPostOrderTraverseOfBSTRecursive(seq, first,
+									last - 1);
 	}
 	// Now has both subtrees or seq is direct wrong.
 	int divide = first, divide_cnt = 0;
@@ -170,22 +173,25 @@ bool IsPostOrderTraverseOfBSTMain(const vector<int> &seq, int first, int last) /
 		}
 	}
 	return
-		divide_cnt != 1 ? false : (IsPostOrderTraverseOfBSTMain(seq, first, divide)
-								&& IsPostOrderTraverseOfBSTMain(seq, divide + 1, last - 1));
+		seq[first] > seq[last] || divide_cnt != 1 ? false : IsPostOrderTraverseOfBSTRecursive(
+			seq, first, divide)
+														&& IsPostOrderTraverseOfBSTRecursive(
+															seq, divide + 1,
+															last - 1);
 }
 // Assume all elements are not equal.
 bool IsPostOrderTraverseOfBST(const vector<int> &seq)
 {
 	return
-		seq.size() <= 0 ? false/*Negative test*/: IsPostOrderTraverseOfBSTMain(seq, 0,
+		seq.size() <= 0 ? false : IsPostOrderTraverseOfBSTRecursive(seq, 0,
 								static_cast<int>(seq.size()) - 1);
 }
 void TestIsPostOrderTraverseOfBST()
 {
 	printf("-----TestIsPostOrderTraverseOfBST-----\n");
-	vector<vector<int>> test { {}, { 1 }, { 1, 2, 3 }, { 3, 2, 1 }, { 1, 3, 2 }, { 5, 7,
-		6, 9, 11, 10, 8 }, { 5, 70, 6, 9, 11, 10, 8 } };
-	vector<bool> answer { false, true, true, true, true, true, false };
+	vector<vector<int>> test { {}, { 1 }, { 1, 2, 3 }, { 3, 2, 1 }, { 1, 3, 2 }, { 5,
+		7, 6, 9, 11, 10, 8 }, { 5, 70, 6, 9, 11, 10, 8 }, { 100, 13, 16, 14, 15 } };
+	vector<bool> answer { false, true, true, true, true, true, false, false };
 	for(int i = 0; i < static_cast<int>(test.size()); ++i)
 	{
 		assert(IsPostOrderTraverseOfBST(test[i]) == answer[i]);
@@ -194,7 +200,8 @@ void TestIsPostOrderTraverseOfBST()
 }
 ////////////////////////////////////////////////////////////////////////////////
 template<typename T>
-void InOrderConvertBSTToSortedDoubleLinkedList(BinaryNode<T> *node, BinaryNode<T> *&last)
+void InOrderConvertBSTToSortedDoubleLinkedList(BinaryNode<T> *node,
+	BinaryNode<T> *&last)
 {
 	node->left_ != nullptr ? InOrderConvertBSTToSortedDoubleLinkedList(node->left_,
 									last) : void();

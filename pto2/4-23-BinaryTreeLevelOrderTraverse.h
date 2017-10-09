@@ -1,5 +1,5 @@
-eclipse ../ds/binary_node.h
-vector<T> LevelOrder()
+eclipse ../ds/binary_node.cc
+vector<T> LevelOrder(BinaryNode<T> *root)
 
 struct TreeNode
 {

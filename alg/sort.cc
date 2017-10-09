@@ -1,8 +1,5 @@
 #include "../common_system_header.h"
-
-// Assume all inputs are valid.
-// Assume n is the number of elements to be sorted.
-
+// Assume all inputs are valid. Assume n is the number of elements to be sorted.
 // TC: Best = O(n^2), Average = O(n^2), Worst = O(n^2)
 // SC: O(1)
 void SelectionSort(int *data, int first, int last)
@@ -11,7 +8,8 @@ void SelectionSort(int *data, int first, int last)
 	for(int first_unsorted = first; first_unsorted < last - 1; ++first_unsorted)
 	{
 		int min_index = first_unsorted;
-		for(int compare_index = first_unsorted + 1; compare_index < last; ++compare_index)
+		for(int compare_index = first_unsorted + 1; compare_index < last;
+			++compare_index)
 		{
 			if(data[min_index] > data[compare_index])
 			{
@@ -36,7 +34,8 @@ void BubbleSort(int *data, int first, int last) // [first, last)
 	{
 		int last_swap_latter_index = first;
 		// Traverse [first, first_sorted)
-		for(int latter_index = first + 1; latter_index < first_sorted; ++latter_index)
+		for(int latter_index = first + 1; latter_index < first_sorted;
+			++latter_index)
 		{
 			if(data[latter_index - 1] > data[latter_index])
 			{
@@ -57,8 +56,8 @@ void InsertionSort(int *data, int first, int last)
 	for(int first_unsorted = first + 1; first_unsorted < last; ++first_unsorted)
 	{
 		for(int compare_index = first_unsorted;
-			compare_index - 1 >= first && data[compare_index - 1] > data[compare_index];
-			--compare_index)
+			compare_index - 1 >= first
+				&& data[compare_index - 1] > data[compare_index]; --compare_index)
 		{
 			swap(data[compare_index - 1], data[compare_index]);
 		}
@@ -322,14 +321,14 @@ void PrintData(int *data, int first, int last)
 	printf("\n");
 }
 using SortFunction = void(*)(int*, int, int);
-void Test(const char *name, SortFunction Sort)
+void TestSortAlgorithm(const char *name, SortFunction Sort)
 {
 	printf("-----Test%s-----\n", name);
 	int number_count = 10;
 	for(int first = 0; first <= number_count; ++first)
 	{
-		vector<vector<int>> test1 = { { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, { 9, 8, 7, 6, 5,
-			4, 3, 2, 1, 0 }, { 0, 2, 4, 6, 8, 9, 7, 5, 3, 1 } };
+		vector<vector<int>> test1 = { { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, { 9, 8, 7, 6,
+			5, 4, 3, 2, 1, 0 }, { 0, 2, 4, 6, 8, 9, 7, 5, 3, 1 } };
 		vector<vector<int>> test2 = test1;
 		for(int index = 0; index < static_cast<int>(test1.size()); ++index)
 		{
@@ -344,15 +343,33 @@ void Test(const char *name, SortFunction Sort)
 	printf("All case pass.\n");
 }
 /////////////////////////////////////////////
+string SortArrayToMinNumber(const vector<int> &arr)
+{
+	return "";
+}
+void TestSortArrayToMinNumber()
+{
+	printf("-----TestSortArrayToMinNumber-----\n");
+	vector<vector<int>> arr { {},/*Negative test*/{ 123 }, { 1, 1, 10 },/*Edge test*/
+	{ 4, 5, 6, 40, 56, 666, 410, 59, 600, 44, 516, 671, 45, 508, 6 } };
+	vector<string> answer { "", "123", "1011", "40410444455085165565960066666671" };
+	for(int index = 0; index < static_cast<int>(arr.size()); ++index)
+	{
+		assert(SortArrayToMinNumber(arr[index]) == answer[index]);
+	}
+	printf("All case pass.\n");
+}
+//////////////////////////////////////////////////////////////////////
 int main()
 {
-	Test("SelectionSort", SelectionSort);
-	Test("BubbleSort", BubbleSort);
-	Test("InsertionSort", InsertionSort);
-	Test("ShellSort", ShellSort);
-	Test("QuickSort", QuickSort);
-	Test("MergeSort", MergeSort);
-	Test("HeapSort", HeapSort);
-	Test("CountingSort", CountingSort);
-	Test("RadixSort", RadixSort);
+	TestSortAlgorithm("SelectionSort", SelectionSort);
+	TestSortAlgorithm("BubbleSort", BubbleSort);
+	TestSortAlgorithm("InsertionSort", InsertionSort);
+	TestSortAlgorithm("ShellSort", ShellSort);
+	TestSortAlgorithm("QuickSort", QuickSort);
+	TestSortAlgorithm("MergeSort", MergeSort);
+	TestSortAlgorithm("HeapSort", HeapSort);
+	TestSortAlgorithm("CountingSort", CountingSort);
+	TestSortAlgorithm("RadixSort", RadixSort);
+	TestSortArrayToMinNumber();
 }

@@ -1,4 +1,4 @@
-../ds/stack.cc
+eclipse ../ds/stack.cc
 class GetMinStack
 
 class Solution

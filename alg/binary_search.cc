@@ -1,8 +1,5 @@
 #include "../common_system_header.h"
-
-///////////////////////////////////////////
-// Assume: data points to a valid array, first and last are valid indexes.
-// Return: nonnegative if found, otherwise -1.
+//////////////////////////////////////////////////////////////////////
 int BinarySearch(int *data, int first, int last, int target) // [first, last)
 {
 	while(first < last) // []: first <= last
@@ -24,7 +21,9 @@ void TestBinarySearch()
 	vector<int> answer { -1, 0, -1, 2, 5, 8, -1 };
 	for(int i = 0; i < static_cast<int>(target.size()); ++i)
 	{
-		assert(BinarySearch(data.data(), 0, static_cast<int>(data.size()), target[i]) == answer[i]);
+		assert(
+			BinarySearch(data.data(), 0, static_cast<int>(data.size()), target[i])
+				== answer[i]);
 	}
 	printf("All case pass.\n");
 }
@@ -62,9 +61,10 @@ void TestLowerBoundAndUpperBound()
 	for(int i = 0; i < static_cast<int>(target.size()); ++i)
 	{
 		assert(
-			LowerBound(data.data(), 0, static_cast<int>(data.size()), target[i]) == lower[i]
-				&& UpperBound(data.data(), 0, static_cast<int>(data.size()), target[i])
-					== upper[i]);
+			LowerBound(data.data(), 0, static_cast<int>(data.size()), target[i])
+				== lower[i]
+				&& UpperBound(data.data(), 0, static_cast<int>(data.size()),
+					target[i]) == upper[i]);
 	}
 	printf("All case pass.\n");
 }
@@ -81,34 +81,26 @@ int TraverseRotateArray(const vector<int> &vec, int first, int last)
 // T = logn(average), n(worst) S = 1
 int FindMinNumberInRotateArray(const vector<int> &vec)
 {
-	if(vec.size() <= 0) // Negative test: empty array.
+	if(vec.size() <= 0) // Negative test
 	{
-		return 0;
+		return int();
 	}
-	if(vec.front() < vec.back()) // Edge test: not rotated.
+	if(vec.front() < vec.back()) // Edge test
 	{
 		return vec.front();
 	}
-
-	int first = 0, last = static_cast<int>(vec.size()) - 1; // [first, last].
-	while(last - first > 1)
+	int left = 0, right = static_cast<int>(vec.size()) - 1; // [left, right].
+	while(right - left > 1)
 	{
-		int middle = first + (last - first) / 2;
+		int middle = left + (right - left) / 2;
 		// Can't know [middle] is in the 1st or 2nd part, have to traverse.
-		if(vec[first] == vec[middle] && vec[middle] == vec[last])
+		if(vec[left] == vec[middle] && vec[middle] == vec[right])
 		{
-			return TraverseRotateArray(vec, first, last);
+			return TraverseRotateArray(vec, left, right);
 		}
-		if(vec[middle] <= vec[last])  // [middle] is in the 2nd part.
-		{
-			last = middle;
-		}
-		else if(vec[middle] >= vec[first])  // [middle] is in the 1st part.
-		{
-			first = middle;
-		}
+		vec[middle] <= vec[right] ? right = middle : left = middle;
 	}
-	return vec[last];
+	return vec[right];
 }
 void TestFindMinNumberInRotateArray()
 {

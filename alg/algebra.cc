@@ -235,37 +235,35 @@ int NumberOfOneInDecimalFromOneToNOLogN(int max_num)
 	}
 	const vector<int> kTenPower { 1, 10, 100, 1000, 10000, 100000, 1000000, 10000000,
 		100000000, 1000000000 };
-	vector<int> digit(10), mod(10);
-	int index = 9;
-	for(; index >= 0; --index)
-	{
-		digit[index] = max_num / kTenPower[index];
-		mod[index] = (digit[index] != 0 ? max_num % kTenPower[index] : 0);
-		max_num %= kTenPower[index];
-	}
-	for(index = 9; digit[index] == 0; --index)
-		;
+	vector<int> digit(10, 0), mod(10, 0);
 	int cnt = 0;
-	for(; index >= 1; --index)
+	for(int index = 9; index >= 0; --index)
 	{
-		cnt += (digit[index] == 1 ? mod[index] + 1 : kTenPower[index]);
-		cnt += kTenPower[index - 1] * digit[index];
+		if((digit[index] = max_num / kTenPower[index]) > 0)
+		{
+			mod[index] = max_num % kTenPower[index];
+			cnt += (digit[index] == 1 ? mod[index] + 1 : kTenPower[index]); // MSD
+			cnt += (index != 0 ? digit[index] * index * kTenPower[index - 1] : 0); // Other digits.
+			max_num = mod[index];
+		}
 	}
-	return ++cnt;
+	return cnt;
 }
 void TestNumberOfOneInDecimalFromOneToN()
 {
 	printf("-----TestNumberOfOneInDecimalFromOneToN-----\n");
-	int cnt = 0;
-	for(int num = -5; num < 1000000; ++num)
+	int num = -5;
+	for(; num < 10000; ++num)
 	{
-		int cnt1 = NumberOfOneInDecimalFromOneToNONLogN(num);
-		int cnt2 = NumberOfOneInDecimalFromOneToNOLogN(num);
-		if(cnt1 != cnt2)
-		{
-			printf("num=%d,cnt1=%d,cnt2=%d\n", num, cnt1, cnt2);
-			++cnt == 5 ? assert(0) : assert(1);
-		}
+		assert(
+			NumberOfOneInDecimalFromOneToNONLogN(num)
+				== NumberOfOneInDecimalFromOneToNOLogN(num));
+	}
+	for(; num < 10000000; num += 9876543)
+	{
+		assert(
+			NumberOfOneInDecimalFromOneToNONLogN(num)
+				== NumberOfOneInDecimalFromOneToNOLogN(num));
 	}
 	printf("All case pass.\n");
 }

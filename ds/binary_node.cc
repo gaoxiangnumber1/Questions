@@ -155,12 +155,10 @@ vector<T> LevelOrder(BinaryNode<T> *root)
 	}
 	queue<BinaryNode<T>*> node_queue;
 	vector<T> vec;
-	node_queue.push(root);
-	while(node_queue.empty() == false)
+	for(node_queue.push(root); node_queue.empty() == false;)
 	{
 		BinaryNode<T> *node = node_queue.front();
 		node_queue.pop();
-		//Visit(node);
 		vec.push_back(node->data_);
 		node->left_ != nullptr ? node_queue.push(node->left_) : void();
 		node->right_ != nullptr ? node_queue.push(node->right_) : void();

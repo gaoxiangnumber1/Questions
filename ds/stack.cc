@@ -13,15 +13,13 @@ public:
 	{
 		if(s1_.empty() == true && s2_.empty() == true) // Negative test.
 		{
-			return 0;
+			return int();
 		}
-
 		if(s2_.empty() == true)
 		{
-			while(s1_.empty() == false)
+			for(; s1_.empty() == false; s1_.pop())
 			{
 				s2_.push(s1_.top());
-				s1_.pop();
 			}
 		}
 		int result = s2_.top();
@@ -98,11 +96,12 @@ bool IsStackPopOrder(const vector<int> &push_seq, const vector<int> &pop_seq)
 	{
 		return false;
 	}
-	int length = static_cast<int>(push_seq.size()), push_index = 0, pop_index = 0;
+	int length = static_cast<int>(push_seq.size());
 	stack<int> data;
-	while(push_index < length || pop_index < length)
+	for(int push_index = 0, pop_index = 0; pop_index < length; ++pop_index)
 	{
-		for(; data.empty() || data.top() != pop_seq[pop_index]; data.push(push_seq[push_index++]))
+		for(; data.empty() || data.top() != pop_seq[pop_index];
+			data.push(push_seq[push_index++]))
 		{
 			if(push_index >= length)
 			{
@@ -110,7 +109,6 @@ bool IsStackPopOrder(const vector<int> &push_seq, const vector<int> &pop_seq)
 			}
 		}
 		data.pop();
-		++pop_index;
 	}
 	return true;
 }
@@ -124,8 +122,8 @@ void TestIsStackPopOrder()
 	{ 1, 2, 3, 4, 5 },/*size>1,true*/
 	{ 1, 2, 3, 4, 5 },/*size>1,false*/
 	{ 1, 2, 3, 4, 5 }, /*size>1,true*//*Function test*/};
-	vector<vector<int>> pop_seq { { 1 }, { 1 }, { 1 }, { 2 }, { 4, 5, 3, 2, 1 }, { 4, 3, 5, 1, 2 },
-		{ 1, 2, 3, 4, 5 } };
+	vector<vector<int>> pop_seq { { 1 }, { 1 }, { 1 }, { 2 }, { 4, 5, 3, 2, 1 }, { 4,
+		3, 5, 1, 2 }, { 1, 2, 3, 4, 5 } };
 	vector<bool> answer { false, false, true, false, true, false, true };
 	for(int i = 0; i < static_cast<int>(push_seq.size()); ++i)
 	{

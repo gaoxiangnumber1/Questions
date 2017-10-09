@@ -24,8 +24,8 @@ void TestFindInTwoDimensionArray()
 	// Negative TestFindInTwoDimensionArray: empty two dimension array and arbitrary integer.
 	// Function TestFindInTwoDimensionArray: nonempty two dimension array and arbitrary integer.
 	// 		True: min(-16), between(2, 3), max(30). False: min(-17), between(6, 12), max(31).
-	vector<vector<int>> good_vec = { { -16, -7, 0, 8 }, { -15, 3, 10, 20 },
-		{ 1, 4, 13, 25 }, { 2, 5, 19, 30 } };
+	vector<vector<int>> good_vec = { { -16, -7, 0, 8 }, { -15, 3, 10, 20 }, { 1, 4,
+		13, 25 }, { 2, 5, 19, 30 } };
 	vector<vector<int>> bad_vec;
 	vector<vector<int>> test_vec = { { -16, 2, 3, 30 }, { -17, 6, 12, 31 } };
 	for(int row = 0; row < static_cast<int>(test_vec.size()); ++row)
@@ -68,8 +68,8 @@ void TestReOrderArray()
 	printf("-----TestReOrderArray-----\n");
 	vector<vector<int>> test = { {},/*Negative test*/
 	{ 0 }, { 1 }, { 1, 3, 5, 7, 9 }, { 0, 2, 4, 6, 8 }, /*Edge test*/
-	{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, { 0, 2, 4, 6, 8, 1, 3, 5, 7, 9 }, { 1, 3, 5, 7, 9,
-		0, 2, 4, 6, 8 }/*Function test*/};
+	{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, { 0, 2, 4, 6, 8, 1, 3, 5, 7, 9 }, { 1, 3, 5, 7,
+		9, 0, 2, 4, 6, 8 }/*Function test*/};
 	for(int i = 0; i < static_cast<int>(test.size()); ++i)
 	{
 		ReOrderArray(test[i]);
@@ -122,10 +122,10 @@ void TestClockwisePrintMatrix()
 	{ { 1, 2, 3, 4 }, { 5, 6, 7, 8 }, { 9, 10, 11, 12 } },/*rectangle_3_multi_4*/
 	{ { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 }, { 10, 11, 12 } }/*rectangle_4_multi_3*//*Function test*/
 	};
-	vector<Row> answer = { {}, { 1 }, { 1, 2, 3, 4 }, { 1, 2, 3, 4 }, { 1, 2, 4, 3 }, { 1,
-		2, 3, 6, 9, 8, 7, 4, 5 },
-		{ 1, 2, 3, 4, 8, 12, 16, 15, 14, 13, 9, 5, 6, 7, 11, 10 }, { 1, 2, 3, 4, 8, 12,
-			11, 10, 9, 5, 6, 7 }, { 1, 2, 3, 6, 9, 12, 11, 10, 7, 4, 5, 8 } };
+	vector<Row> answer = { {}, { 1 }, { 1, 2, 3, 4 }, { 1, 2, 3, 4 }, { 1, 2, 4, 3 },
+		{ 1, 2, 3, 6, 9, 8, 7, 4, 5 }, { 1, 2, 3, 4, 8, 12, 16, 15, 14, 13, 9, 5, 6,
+			7, 11, 10 }, { 1, 2, 3, 4, 8, 12, 11, 10, 9, 5, 6, 7 }, { 1, 2, 3, 6, 9,
+			12, 11, 10, 7, 4, 5, 8 } };
 	for(int i = 0; i < static_cast<int>(answer.size()); ++i)
 	{
 		Row seq = ClockwisePrintMatrix(test[i]);
@@ -150,12 +150,7 @@ int Partition(vector<int> &arr, int first, int last)
 }
 int FindKthBigNumberInArray(vector<int> arr, int k)
 {
-	int length = static_cast<int>(arr.size());
-	if(length <= 0 || k < 1 || k > length) // Negative test.
-	{
-		return 0;
-	}
-	int target_divide = length - k;
+	int length = static_cast<int>(arr.size()), target_divide = length - k;
 	for(int first = 0, last = length, divide = -1;
 		(divide = Partition(arr, first, last)) != target_divide;
 		divide < target_divide ? first = divide + 1 : last = divide)
@@ -173,6 +168,10 @@ int CheckMoreThanHalfNumber(int num, const vector<int> &arr)
 }
 int FindMoreThanHalfNumberInArrayON2(const vector<int> &arr)
 {
+	if(arr.size() <= 0) // Negative test
+	{
+		return 0;
+	}
 	return CheckMoreThanHalfNumber(
 		FindKthBigNumberInArray(arr, static_cast<int>(arr.size()) / 2 + 1), arr);
 }
@@ -182,8 +181,8 @@ int FindMoreThanHalfNumberInArrayON(const vector<int> &arr)
 	{
 		return 0;
 	}
-	int length = static_cast<int>(arr.size()), num = 0, cnt = 0;
-	for(int index = 0; index < length; ++index)
+	int num = 0, cnt = 0;
+	for(int index = 0; index < static_cast<int>(arr.size()); ++index)
 	{
 		cnt == 0 ? num = arr[index] : num;
 		num == arr[index] ? ++cnt : --cnt;
@@ -193,9 +192,9 @@ int FindMoreThanHalfNumberInArrayON(const vector<int> &arr)
 void TestFindMoreThanHalfNumberInArray()
 {
 	printf("-----TestFindMoreThanHalfNumberInArray-----\n");
-	vector<vector<int>> arr { {}, { 1, 2 }, { 1, 2, 3 }, { 2, 1, 2, 3 }, { 2, 2, 2, 1, 3,
-		4, 5 }, /*Negative test*/{ 2 }, { 2, 2 }, { 1, 2, 3, 2, 4, 2, 2, 2 }, { 2, 2, 2,
-		2, 2, 2, 2, 2 }/*Function test*/};
+	vector<vector<int>> arr { {}, { 1, 2 }, { 1, 2, 3 }, { 2, 1, 2, 3 }, { 2, 2, 2,
+		1, 3, 4, 5 }, /*Negative test*/{ 2 }, { 2, 2 }, { 1, 2, 3, 2, 4, 2, 2, 2 }, {
+		2, 2, 2, 2, 2, 2, 2, 2 }/*Function test*/};
 	vector<int> answer { 0, 0, 0, 0, 0, 2, 2, 2, 2 }, my_answer1, my_answer2;
 	for(int index = 0; index < static_cast<int>(arr.size()); ++index)
 	{
@@ -209,12 +208,7 @@ void TestFindMoreThanHalfNumberInArray()
 //////////////////////////////////////////////////////////////////////
 int FindKthBigNumberInArrayRef(vector<int> &arr, int k)
 {
-	int length = static_cast<int>(arr.size());
-	if(length <= 0 || k < 1 || k > length) // Negative test.
-	{
-		return 0;
-	}
-	int target_divide = length - k;
+	int length = static_cast<int>(arr.size()), target_divide = length - k;
 	for(int first = 0, last = length, divide = -1;
 		(divide = Partition(arr, first, last)) != target_divide;
 		divide < target_divide ? first = divide + 1 : last = divide)
@@ -242,7 +236,7 @@ vector<int> MinKONLogN(const vector<int> &arr, int k)
 	priority_queue<int> pq(arr.begin(), arr.begin() + k);
 	for(int index = k; index < length; ++index)
 	{
-		pq.top() > arr[index] ? pq.pop(), pq.push(arr[index]) : void();
+		pq.top() > arr[index] ? (pq.pop(), pq.push(arr[index])) : void();
 	}
 	vector<int> result;
 	for(; pq.empty() == false; pq.pop())
@@ -257,10 +251,10 @@ void TestMinK()
 	vector<int> arr { 0, 2, 4, 6, 8, 9, 7, 5, 3, 1 };
 	vector<int> arr_dup { 0, 2, 2, 6, 8, 9, 7, 5, 3, 2 };
 	vector<int> k { 0, 11, 1, 3, 5, 10 };
-	vector<set<int>> answer { {}, {}, { 0 }, { 0, 1, 2 }, { 0, 1, 2, 3, 4 }, { 0, 2, 4, 6,
-		8, 9, 7, 5, 3, 1 } };
-	vector<multiset<int>> answer_dup { {}, {}, { 0 }, { 0, 2, 2 }, { 0, 2, 2, 2, 3 }, { 0,
-		2, 2, 6, 8, 9, 7, 5, 3, 2 } };
+	vector<set<int>> answer { {}, {}, { 0 }, { 0, 1, 2 }, { 0, 1, 2, 3, 4 }, { 0, 2,
+		4, 6, 8, 9, 7, 5, 3, 1 } };
+	vector<multiset<int>> answer_dup { {}, {}, { 0 }, { 0, 2, 2 }, { 0, 2, 2, 2, 3 },
+		{ 0, 2, 2, 6, 8, 9, 7, 5, 3, 2 } };
 	for(int i = 0; i < static_cast<int>(k.size()); ++i)
 	{
 		vector<int> my_answer1 = MinKON2(arr, k[i]);
